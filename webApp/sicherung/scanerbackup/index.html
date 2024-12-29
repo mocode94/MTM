@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Search with QR Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        #qr-reader {
+            width: 100%;
+            height: 300px;
+            display: none; /* Hidden initially */
+        }
+        button {
+            padding: 10px 15px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>CSV Search with QR Code</h1>
+    
+    <!-- Entry field and search button -->
+    <input type="text" id="searchInput" placeholder="Enter search value">
+    <button onclick="searchCSV()">Search</button>
+    
+    <!-- Button to open QR code scanner -->
+    <button onclick="openQRScanner()">Scan QR Code</button>
+    
+    <!-- QR code scanner -->
+    <div id="qr-reader"></div>
+
+    <table id="resultTable">
+        <thead>
+            <tr>
+                <th>Column 1</th>
+                <th>Column 2</th>
+                <th>Column 3</th>
+                <th>Column 4</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Search results will be inserted here -->
+        </tbody>
+    </table>
+
+    <!-- Include PapaParse for CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <!-- Include Html5Qrcode library -->
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <script>
+        let scannedValue = '';
+
+        function onScanSuccess(decodedText, decodedResult) {
+            // When QR code is scanned
+            scannedValue = decodedText;
+            document.getElementById('searchInput').value = scannedValue;
+            closeQRScanner(); // Close the scanner after successful scan
+        }
+
+        function onScanError(errorMessage) {
+            // Handle scan error
+            console.error('QR Code scan error: ', errorMessage);
+        }
+
+        function startQRCodeScanner() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert('Web camera streaming is not supported by this browser.');
+                return;
+            }
+
+            const html5QrCode = new Html5Qrcode("qr-reader");
+            html5QrCode.start(
+                { facingMode: "environment" }, 
+                { fps: 10, qrbox: 250 }, 
+                onScanSuccess,
+                onScanError
+            ).catch(err => {
+                console.error('Unable to start QR Code scanner:', err);
+            });
+        }
+
+        function openQRScanner() {
+            // Check if camera is supported before showing the scanner
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert('Web camera streaming is not supported by this browser.');
+                return;
+            }
+            
+            document.getElementById('qr-reader').style.display = 'block';
+            startQRCodeScanner();
+        }
+
+        function closeQRScanner() {
+            document.getElementById('qr-reader').style.display = 'none';
+            const html5QrCode = Html5Qrcode.getInstance();
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    console.log('QR Code scanner stopped.');
+                }).catch(err => {
+                    console.error('Error stopping QR Code scanner:', err);
+                });
+            }
+        }
+
+        function searchCSV() {
+            const searchValue = document.getElementById('searchInput').value.trim().toLowerCase();
+            if (!searchValue) {
+                alert('Please enter a search value.');
+                return;
+            }
+
+            Papa.parse('data.csv', {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    const data = results.data;
+                    const tableBody = document.querySelector('#resultTable tbody');
+                    tableBody.innerHTML = ''; // Clear previous results
+
+                    data.forEach(row => {
+                        if (Object.values(row).slice(0, 3).some(value => value.toLowerCase().includes(searchValue))) {
+                            const rowElement = document.createElement('tr');
+                            Object.values(row).forEach(cell => {
+                                const cellElement = document.createElement('td');
+                                cellElement.textContent = cell;
+                                rowElement.appendChild(cellElement);
+                            });
+                            tableBody.appendChild(rowElement);
+                        }
+                    });
+                },
+                error: function(error) {
+                    console.error('Error loading CSV file:', error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

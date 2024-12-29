@@ -1,0 +1,38 @@
+[
+    {
+        "ip": "192.168.1.115",
+        "device_name": "Mostafa-Iphone"
+    },
+    {
+        "ip": "192.168.1.105",
+        "device_name": "Mostafa\u2014Ipad"
+    },
+    {
+        "ip": "192.168.1.104",
+        "device_name": "Mostafa_Laptop"
+    },
+    {
+        "ip": "192.168.74.28",
+        "device_name": "mostafa_laptop_tedi_netzwerk"
+    },
+    {
+        "ip": "192.168.74.22",
+        "device_name": "mostafa-iphone-tedi-netzwerk"
+    },
+    {
+        "ip": "192.168.74.56",
+        "device_name": "Nico Iphone"
+    },
+    {
+        "ip": "192.168.1.106",
+        "device_name": "iphone14"
+    },
+    {
+        "ip": "192.168.1.101",
+        "device_name": "laptop"
+    },
+    {
+        "ip": "192.168.1.103",
+        "device_name": "ipad"
+    }
+]

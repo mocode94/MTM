@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+</head>
+<body>
+    <input type="text" id="searchQuery" placeholder="Enter search query">
+    <button onclick="search()">Search</button>
+    <div id="results"></div>
+
+    <script>
+        function search() {
+            const query = document.getElementById('searchQuery').value;
+            fetch(`search.php?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById('results');
+                    resultsDiv.innerHTML = ''; // Clear previous results
+
+                    if (data.length === 0 || data.message) {
+                        resultsDiv.innerHTML = data.message || 'No results found';
+                        return;
+                    }
+
+                    data.forEach(item => {
+                        const rowDiv = document.createElement('div');
+                        rowDiv.innerHTML = `<div><strong>Row:</strong></div>`;
+                        for (const [key, value] of Object.entries(item)) {
+                            if (key === 'image' && value) {
+                                rowDiv.innerHTML += `<div><strong>${key}:</strong> <img src="${value}" alt="Image" style="max-width:200px; max-height:200px;"></div>`;
+                            } else {
+                                rowDiv.innerHTML += `<div><strong>${key}:</strong> ${value}</div>`;
+                            }
+                        }
+                        resultsDiv.appendChild(rowDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+</html>

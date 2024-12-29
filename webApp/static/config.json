@@ -1,0 +1,104 @@
+{
+
+    "paths":{
+        "imgpaths": "D:\\Projekt\\mtm\\img\\",
+        "datapath":"D:\\Projekt\\mtm\\data\\",
+        "compimgs": "D:\\Projekt\\mtm\\data\\Hoffmann-Katalog48\\CAT34\\JPG\\",
+        "toolstl": "D:\\Projekt\\Mo Tool Manager\\data\\Werkzeuge_stl\\",
+        "machinecsv": "D:\\Projekt\\mtm\\data\\withoutCol20and21.csv",
+        "mastercsv": "D:\\Projekt\\mtm\\data\\MASTER.csv",
+        "toolcsv": "D:\\Projekt\\Mo Tool Manager\\data\\Werkzeuge.csv",
+        "items":"D:\\Projekt\\mtm\\data\\items.txt",
+        "toolsremark":"D:\\Projekt\\mtm\\data\\wz_bemerkungen\\",
+        "toolCapturedimages":"D:\\Projekt\\mtm\\data\\toolCapturedImages\\",
+        "haimer":"D:\\Projekt\\Mo Tool Manager\\data\\haimer",
+        "TNC640_Daten":"D:\\Projekt\\mtm\\data\\TNC640_Daten.csv",
+        "DNCINPUT":"D:\\Projekt\\mtm\\bin\\MTMSchnittstelle\\",
+        "DNCSchnittstelle":"D:\\Projekt\\mtm\\bin\\MTMSchnittstelle\\DNC_CSharp_ReadTable.exe",
+        "toolTableBackup":"D:\\Projekt\\mtm\\data\\backup\\",
+        "feeddata":"D:\\Projekt\\mtm\\data\\vorschub.json",
+        "temp":"D:\\Projekt\\mtm\\data\\temp\\",
+        "viceNames":"D:\\Projekt\\mtm\\data\\spannmittel.txt",
+        "TNCcmd":"C:\\Program Files (x86)\\HEIDENHAIN\\TNCremo\\TNCcmd.exe"
+    },
+    "places": [
+        {
+            "image_path": "hermlec32logo.png",
+            "placename": "C32",
+            "position_x": 1,
+            "position_y": 1,
+            "status": "machine",
+            "link" :"192.168.1.117",
+            "software":"TNC640Laser",
+            "holdertype": "HSK63",
+            "max":32
+        },
+        {
+            "image_path": "hermlec400logo.png",
+            "placename": "C400",
+            "position_x": 0,
+            "position_y": 2,
+            "status": "machine",
+            "link" :"192.168.81.10",
+            "software":"TNC640",
+            "holdertype": "HSK63",
+            "max":32
+        },
+        {
+            "image_path": "hermlec42logo.png",
+            "placename": "C42",
+            "position_x": 1,
+            "position_y": 0,
+            "status": "machine",
+            "link" :"192.168.81.15",
+            "software":"TNC640Laser",
+            "holdertype": "HSK63",
+            "max":32
+
+        },
+        {
+            "image_path": "dmulogo.png",
+            "placename": "DMU",
+            "position_x": 1,
+            "position_y": 2,
+            "status": "machine",
+            "link" :"192.168.81.15",
+            "software":"TNC640",
+            "holdertype": "SK40",
+            "max":32
+        },
+        {
+            "image_path": "elselogo.png",
+            "placename": "ALL",
+            "position_x": 0,
+            "position_y": 1,
+            "status": "place",
+            "link" :"D:\\Projekt\\mtm\\ALL",
+            "max":999999
+        },
+        {
+            "image_path": "aufnahme.png",
+            "placename": "C32SCHRANK",
+            "position_x": 2,
+            "position_y": 2,
+            "status": "place",
+            "link" :"D:\\Projekt\\mtm\\C32SCHRANK",
+            "max":32,
+            "shelf":4,
+            "pshelf":8
+        }
+    ],
+    "winconfig":{
+        "fullscreen": true,
+        "fonttype": "Helvetica",
+        "fontsize": 13,
+        "fontcolor": "#facf0e",
+        "bgcolor": "#202020"
+
+    },
+    "settings":{
+        "camindex": 0
+
+
+    }
+}

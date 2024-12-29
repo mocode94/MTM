@@ -1,0 +1,361 @@
+import sys  # Make sure to import sys
+
+import xml.etree.ElementTree as ET
+import os
+import csv
+# import cv2
+import tkinter.messagebox as messagebox
+from PIL import Image, ImageTk
+from tkinter import Toplevel, Label, Entry, Button, StringVar,ttk,font
+import tkinter as tk
+# import requests
+# import io
+import os
+from config import winconfig,paths,places,settings
+from TNC640_Daten import TNC640Laser as TNC640Laser
+import platform
+import subprocess
+import threading
+import time
+
+
+
+
+class main:
+    def __init__(self,query,toolPlace):
+        query=[query]
+        # self.platzieren(query,toolPlace)
+        if self.platzieren(query,toolPlace)=="offline":
+            return 0
+        else:
+            return
+
+
+
+    def platzieren(self,query,toolPlace):
+            try:
+                combobox_value = toolPlace  # Get the value from the combobox
+            except:
+                combobox_value=toolPlace
+
+            if self.machineStatus(combobox_value):
+                print("Connection found")
+            else:
+                # messagebox.showerror("No Connection",f"{combobox_value} is offline")
+                print("NO Connection found\nNo Connection",f"{combobox_value} is offline")
+                
+                return "offline"
+
+            file_path = paths["machinecsv"]  # Set your CSV file path here
+            
+            if not combobox_value:
+                messagebox.showerror("Error", "bitte wählen Sie einen Platz aus!")
+                return
+            try:
+                # Get the values in the first column from the second Treeview
+                
+                self.movingTools = query
+
+            except:
+                self.movingTools=query
+
+
+
+
+            rows = []
+            platzierte_rows=[]
+            TNC640DATEN_Rows=[]
+            found = False
+            machines=[]
+
+
+    # Process IP addresses
+            for dictionary in places:
+                if dictionary["placename"] == combobox_value:
+                    ip_address = dictionary["link"]
+                    print(f"this is ip: {ip_address}")
+                    
+                    # Clean and validate IP address format
+                    parts = ip_address.split('.')
+                    
+                    if len(parts) == 4 and all(part.isdigit() for part in parts):
+                        formatted_ip = f"[{ip_address}]"
+                        TNC640DATEN_Rows.append(formatted_ip)  # Append formatted IP address
+                    else:
+                        messagebox.showerror("Error", f"Invalid IP address format: {ip_address}")
+
+            rowData=[]
+
+            for treeViewValuesRow in self.movingTools:
+                QRcode=treeViewValuesRow
+                print(QRcode)
+                try:
+                    with open(paths["machinecsv"], mode='r', newline='') as file:
+                        readerCsv = csv.reader(file, delimiter=";")
+                        for machineCsvRow in readerCsv:
+                            if machineCsvRow[0]==QRcode:
+                                machineCsvRow[15]=machineCsvRow[14]+" + "+machineCsvRow[15]
+                                with open(paths["TNC640_Daten"], mode='r', newline='') as file:
+                                    readerTnc = csv.reader(file, delimiter=";")
+                                    for tnc640Row in readerTnc:
+                                        if tnc640Row[0]==QRcode:
+                                            # Join elements without quotes and add to rowData
+                                            combined_row = machineCsvRow[1:] + tnc640Row[1:]
+                                            rowData.append(f"[{','.join(map(str, combined_row))}]")
+                                            print("2 lists created")
+                                        else:
+                                            continue
+                                            # print("no match in tnc640Row")
+                            else:
+                                continue
+                                # print("no match in machineCsvRow")
+                except Exception as e:
+                    messagebox.showerror("Error2", f"An error occurred while reading the second file: {e}")
+                    return
+                
+
+
+            for row in rowData:
+                print(f"{formatted_ip}{row}")
+
+
+            # Write the combined formatted rows to the DNC_INPUT file
+            try:
+                with open(paths["DNCINPUT"] + "DNCinput.txt", mode='w', newline='') as file:
+                    for row in rowData:
+                        file.write(f"{formatted_ip}{row}\n")  # Join list elements with newlines and write to the file
+            except Exception as e:
+                messagebox.showerror("Error3", f"An error occurred while writing to DNC_INPUT: {e}")
+
+
+            import subprocess
+
+            program_path = paths["DNCSchnittstelle"]
+            # Running the program
+            try:
+                result = subprocess.run([program_path], check=True)
+                print(f"Program executed successfully with return code: {result.returncode}")
+            except subprocess.CalledProcessError as e:
+                print(f"Program failed with return code: {e.returncode}")
+            except FileNotFoundError:
+                print("The specified program was not found.")
+
+            for dictionary in places :
+
+                if dictionary["status"]=="machine":
+                    machines.append(dictionary["placename"])
+        
+
+            try:
+                with open(file_path, mode='r', newline='') as file:
+                    reader = csv.reader(file, delimiter=";")
+                    for row in reader:
+                        if row[0] in self.movingTools:
+                            row[19] = combobox_value
+                            found = True
+                            platzierte_rows.append(row)
+                        rows.append(row)
+
+                if found:
+                    # Write the updated rows back to the CSV file
+                    with open(file_path, mode='w', newline='') as file:
+                        writer = csv.writer(file, delimiter=";")
+                        writer.writerows(rows)
+
+                    for i in platzierte_rows:
+                        if i[1]!="":
+                            with open(paths["TNC640_Daten"], mode='r', newline='') as file:
+                                reader = csv.reader(file, delimiter=";")
+                                for PlcDataRow in reader:
+                                    if PlcDataRow[0]==i[0]:
+                                        self.addToolRowInToolTableBackup(i,PlcDataRow)
+                                        if self.addToolRowInToolTableBackup:
+                                            print("Success", f"Das Werkzeug {i[2]} ist erfolgreich platziert\nUND\nsie wurde in toolTableBackup eingetragen")
+                                            
+                                            # messagebox.showinfo("Success", f"Das Werkzeug {i[2]} ist erfolgreich platziert\nUND\nsie wurde in toolTableBackup eingetragen")
+                                            break
+                                        else:
+                                            messagebox.showerror("Error", f"Das Werkzeug {i[2]} konnte nicht platziert werden!!\nMÖGLICHE FEHLER\n-falsche Daten\nOder\nfehledne PLC-TT-Daten")
+
+                                    else:
+                                        continue
+                        else:
+                            continue
+                            
+                    # self.centerFrame.destroy()
+                    # self.goHome()
+                else:
+                    messagebox.showerror("Erro3", "Die Aufnahme ist nicht registriert")
+            
+            except Exception as e:
+                messagebox.showerror("Erro4", f"An error occurred: {e}")
+
+            return
+
+
+    def machineStatus(self, combobox_value):
+            # Function to check if IP is reachable using Tnccmd
+            def ping_ip(ip):
+                try:
+                    # Full path to Tnccmd (adjust the path if necessary)
+                    tnccmd_cmd = paths["TNCcmd"]
+                    output = subprocess.run(
+                        [tnccmd_cmd, "ping", ip],
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE
+                    )
+                    return output.returncode == 0  # Return True if ping was successful
+                except Exception as e:
+                    print(f"Error pinging {ip} with Tnccmd: {e}")
+                    return False
+
+            # Finding the corresponding IP for the given place (combobox_value)
+            for place in places:
+                if place["placename"] == combobox_value:
+                    ip_address = place["link"]
+
+            # Check the ping status and return the result
+            return ping_ip(ip_address)
+
+
+
+
+    def addToolRowInToolTableBackup(self, toolDataEntriesRow,plcDataRow):
+            def format_column(value, length):
+                """Format the value to a fixed length by padding with spaces on the right."""
+                return str(value).ljust(length)[:length]
+
+            def process_line(line, column_lengths, row):
+                """Replace old_name with new_name in a line, preserving column widths."""
+                # Extract the existing columns
+                columns = []
+                start = 0
+                for length in column_lengths:
+                    end = start + length
+                    columns.append(line[start:end].strip())
+                    start = end
+
+                # Find and replace the old name
+                if int(columns[0]) == int(row[0]):
+                    columns[1] = row[1]
+                    columns[2] = row[2]
+                    columns[3] = row[3]
+                    columns[4] = row[4]
+                    columns[12] = row[12]
+                    columns[13] = row[13]
+                    columns[14] = row[14]
+                    columns[16] = row[16]
+                    columns[17] = row[17]
+                    columns[18] = row[18]
+                    columns[30] = row[30]
+                    columns[34] = row[34] 
+                    columns[41] = row[41]
+                    columns[44] = row[44]
+                    columns[48] = row[48]
+
+                    print(f"Updated line: {columns}")
+
+                # Format the columns according to the fixed lengths
+                new_line = ''.join(format_column(col, length) for col, length in zip(columns, column_lengths))
+                return new_line
+
+            def create_new_line(row, column_lengths):
+                """Create a new line with specified values."""
+                # Ensure columns list matches the length of column_lengths
+                columns = ['' for _ in column_lengths]
+                
+                # Iterate over each element in row and assign it to the corresponding column
+                for i in range(len(row)):
+                    if i < len(columns):
+                        columns[i] = row[i]
+                
+                # Create the new line by formatting each column with its specified length
+                new_line = ''.join(format_column(col, length) for col, length in zip(columns, column_lengths))
+                
+                print(f"Created new line: {new_line}")
+                return new_line
+            
+            def update_file(filename, row):
+                # Define the column lengths as provided
+                column_lengths = [
+                    8, 32, 12, 12, 12, 10, 10, 10, 3, 8, 6, 6, 9, 9, 32, 10, 12, 8, 4, 7, 7, 7, 7, 12, 12, 7, 7, 10, 8, 7, 8, 20, 
+                    5, 8, 10, 7, 7, 7, 7, 7, 7, 7, 10, 4, 8, 9, 10, 10, 20, 16, 8, 30, 32, 20
+                ]
+
+                # Create a temporary file
+                temp_filename = filename + '.tmp'
+
+                try:
+                    with open(filename, 'r') as file:
+                        lines = file.readlines()
+                except FileNotFoundError:
+                    print(f"No toolTable Backup file for {toolDataEntriesRow[19]} found")
+                    return
+
+                found = False
+                nearest_index = None
+
+                for i, line in enumerate(lines):
+                    line_start = line[:8].strip()
+                    if line_start.isdigit():
+                        line_nr = int(line_start)
+                        if line_nr == int(row[0]):
+                            found = True
+                            lines[i] = process_line(line, column_lengths, row) + '\n'
+                            break
+                        if line_nr < int(row[0]):
+                            nearest_index = i
+
+                if not found:
+                    new_line = create_new_line(row, column_lengths)
+                    if nearest_index is not None:
+                        print(f"Inserting new line after index {nearest_index} (line_nr: {lines[nearest_index][:8].strip()})")
+                        lines.insert(nearest_index + 1, new_line + '\n')
+                    else:
+                        print("Appending new line at the end")
+                        lines.append(new_line + '\n')
+
+                with open(temp_filename, 'w') as temp_file:
+                    temp_file.writelines(lines)
+
+                # Replace the original file with the modified temporary file
+                os.replace(temp_filename, filename)
+
+            t_nr = toolDataEntriesRow[1]
+            t_name = toolDataEntriesRow[2]
+            t_l = f"+{toolDataEntriesRow[11]}"
+            t_r = f"+{toolDataEntriesRow[4]}"
+            t_r2 = f"+{toolDataEntriesRow[5]}"
+            t_typ = toolDataEntriesRow[3]
+            t_doc = f"{toolDataEntriesRow[14]} + {toolDataEntriesRow[15]}"
+            t_lcut = f"+{toolDataEntriesRow[9]}"
+            t_cut = toolDataEntriesRow[8]
+            t_angle = f"+{toolDataEntriesRow[7]}"
+            t_tangle = f"+{toolDataEntriesRow[6]}"
+            t_nmax=plcDataRow[1]
+            t_time1=plcDataRow[2]
+            t_time2=plcDataRow[3]
+            t_curtime=plcDataRow[4]
+            t_loffs=f"+{plcDataRow[5]}"
+            t_roffs=f"+{plcDataRow[6]}"
+            t_ltol=plcDataRow[7]
+            t_rtol=plcDataRow[8]
+            t_lbreak=plcDataRow[9]
+            t_rbreak=plcDataRow[10]
+            t_direct=plcDataRow[11]
+            t_p1 = plcDataRow[12]
+            t_p2=plcDataRow[14]
+            t_p8 =plcDataRow[13]
+            t_pitch = f"+{toolDataEntriesRow[13]}"
+            t_kinematic = plcDataRow[20]
+            t_plc=plcDataRow[21]
+
+            toolRow = [t_nr, t_name, t_l, t_r, t_r2, "+0", "+0", "+0", "0", "", t_time1, t_time2, t_curtime, t_typ, t_doc, t_plc, t_lcut, t_angle, t_cut, t_ltol, t_rtol, "0", t_direct, t_roffs, t_loffs, t_lbreak, t_rbreak, t_nmax, "0", "", t_tangle, "", "0", "0", t_p1, t_p2, "0", "0", "0", "0", "0", t_p8, "", "0", t_pitch, "", "", "", t_kinematic, "", "", "", ""]
+            print(toolRow)
+            print(paths["toolTableBackup"])
+            print(toolDataEntriesRow[19])
+            print(str(toolDataEntriesRow[19]))
+            print(paths["toolTableBackup"]+str(toolDataEntriesRow[19])+".t")
+            update_file(paths["toolTableBackup"]+str(toolDataEntriesRow[19])+".t", toolRow)
+
+if __name__ == "__main__":
+    my_instance = main()

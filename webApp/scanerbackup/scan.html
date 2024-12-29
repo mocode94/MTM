@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataMatrix Scanner</title>
+    <!-- Load the html5-qrcode library -->
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+</head>
+<body>
+    <h1>DataMatrix Scanner</h1>
+    <button id="scanButton">Scan</button>
+    
+    <!-- The div where the camera view will be rendered -->
+    <div id="reader" style="width: 300px; height: 300px; margin-top: 20px;"></div>
+
+    <!-- JavaScript to handle the scanning -->
+    <script>
+        document.getElementById("scanButton").addEventListener("click", function() {
+            // Ensure that the Html5Qrcode object is available
+            if (typeof Html5Qrcode !== "undefined") {
+                const html5QrCode = new Html5Qrcode("reader");
+
+                html5QrCode.start(
+                    { facingMode: "environment" }, // Use the back camera
+                    {
+                        fps: 10,    // Frame rate per second
+                        qrbox: { width: 250, height: 250 }  // Display box size
+                    },
+                    (decodedText, decodedResult) => {
+                        // Handle on success
+                        alert(`Code scanned: ${decodedText}`);
+                        html5QrCode.stop(); // Stop scanning once a code is found
+                    },
+                    (errorMessage) => {
+                        // Handle errors
+                        console.log(`Scanning failed: ${errorMessage}`);
+                    }
+                ).catch((err) => {
+                    // Handle errors during the start of the scanner
+                    console.log(`Error in scanning: ${err}`);
+                });
