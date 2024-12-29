@@ -74,7 +74,7 @@
             "placename": "ALL",
             "position_x": 0,
             "position_y": 1,
-            "status": "place",
+            "status": "ALL",
             "link": "X:\\Projekt\\mtm\\ALL",
             "max": 999999
         },
@@ -96,10 +96,9 @@
             "position_x": 2,
             "position_y": 1,
             "status": "place",
-            "Regale": 1,
-            "Reihen": 3,
+            "subplace": [],
             "max": 29,
-            "belegt": 0
+            "busy": 0
         }
     ],
     "winconfig": {
