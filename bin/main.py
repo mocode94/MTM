@@ -8,7 +8,7 @@ import threading
 from queue import Queue, Empty
 from config import paths,places
 import sqlite3
-#sync test
+
 
 # _________________________________________________________________________
 from config import imgpaths,winconfig,paths
