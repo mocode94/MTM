@@ -22,7 +22,7 @@ class AddPlace:
 
         # Calculate the position to center the window
         x = (screen_width // 2) - (window_width // 2)
-        y = (screen_height // 2) - (window_height // 2)
+        y = (screen_height // 3) - (window_height // 1)
 
         # Set the geometry of the window
         self.window.geometry(f"{window_width}x{window_height}+{x}+{y}")
@@ -48,20 +48,34 @@ class AddPlace:
         # This function opens the Add Place window (the existing add place interface)
         addPlaceWindow = tk.Toplevel(self.window)
         addPlaceWindow.title("Maschine einfügen")
+        addPlaceWindow.configure(bg="#202020")
+
+        window_width = 700
+        window_height = 300
+        screen_width = addPlaceWindow.winfo_screenwidth()
+        screen_height = addPlaceWindow.winfo_screenheight()
+        x = (screen_width // 2) - (window_width // 2)
+        y = (screen_height // 2) - (window_height // 2)
+        addPlaceWindow.geometry(f"{window_width}x{window_height}+{x}+{y}")
+
+        labelFontConfiguration = font.Font(family=winconfig["fonttype"], size=winconfig["fontsize"], weight="bold")
+
 
         # Labels for the Entry fields
         entryLabels = ["Image", "Name", "IP", "Max", "Belegt"]
         self.entries = []
 
         for i, labelText in enumerate(entryLabels):
-            label = tk.Label(addPlaceWindow, text=f"{labelText}:")
+            label = tk.Label(addPlaceWindow, text=f"{labelText}:",font=winconfig["fonttype"],bg="#202020",fg=winconfig["fontcolor"])
             label.grid(row=i, column=0, padx=10, pady=5)
             entry = tk.Entry(addPlaceWindow, width=40)
             entry.grid(row=i, column=1, padx=10, pady=5)
+            entry.configure(font=(winconfig["fonttype"], winconfig["fontsize"]))
+
             self.entries.append(entry)
 
         # File browser for the first entry (Image)
-        self.browseButton = tk.Button(addPlaceWindow, text="Browse", command=self.browseFile)
+        self.browseButton = tk.Button(addPlaceWindow, text="Browse", command=self.browseFile,font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
         self.browseButton.grid(row=0, column=2, padx=10, pady=5)
 
         # Combobox 1 (TNC640, TNC640+Laser)
@@ -69,19 +83,25 @@ class AddPlace:
         self.comboBox1 = ttk.Combobox(addPlaceWindow, textvariable=self.comboValue1, values=["TNC640", "TNC640+Laser"])
         self.comboBox1.grid(row=6, column=0, padx=10, pady=5)
         self.comboBox1.set("TNC640")  # Default value
+        self.comboBox1.configure(font=(winconfig["fonttype"], winconfig["fontsize"]))
+        # Change the font for the dropdown list items
+        self.comboBox1.option_add("*TCombobox*Listbox*Font", (winconfig["fonttype"], winconfig["fontsize"]))
 
         # Combobox 2 (HSK63, SK40)
         self.comboValue2 = StringVar()
         self.comboBox2 = ttk.Combobox(addPlaceWindow, textvariable=self.comboValue2, values=["HSK63", "SK40"])
         self.comboBox2.grid(row=6, column=1, padx=10, pady=5)
         self.comboBox2.set("HSK63")  # Default value
+        self.comboBox2.configure(font=(winconfig["fonttype"], winconfig["fontsize"]))
+        # Change the font for the dropdown list items
+        self.comboBox2.option_add("*TCombobox*Listbox*Font", (winconfig["fonttype"], winconfig["fontsize"]))
 
         # Button to open the 5x5 grid window
-        self.gridButton = tk.Button(addPlaceWindow, text="Platz", command=self.showGridWindow)
+        self.gridButton = tk.Button(addPlaceWindow, text="Platz", command=self.showGridWindow,font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
         self.gridButton.grid(row=6, column=2, padx=10, pady=5)
 
         # Button to save the data into JSON
-        self.saveButton = tk.Button(addPlaceWindow, text="Speichern", command=self.saveToJson)
+        self.saveButton = tk.Button(addPlaceWindow, text="Speichern", command=self.saveToJson,font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
         self.saveButton.grid(row=7, column=0, columnspan=2, pady=10)
 
         # Variables to store grid position
@@ -97,9 +117,10 @@ class AddPlace:
         placeWindow.title("Platz einfügen")
         placeWindow.configure(bg="#202020")
 
+
         self.placeWindow=placeWindow
                 # Center the window on the screen
-        window_width = 450
+        window_width = 570
         window_height = 300
         screen_width = placeWindow.winfo_screenwidth()
         screen_height = placeWindow.winfo_screenheight()
@@ -115,6 +136,8 @@ class AddPlace:
             label.grid(row=i, column=0, padx=10, pady=5)
             entry = tk.Entry(placeWindow, width=40)
             entry.grid(row=i, column=1, padx=10, pady=5)
+            entry.configure(font=(winconfig["fonttype"], winconfig["fontsize"]))
+
             self.entries.append(entry)
 
         # File browser for the first entry (Image)
@@ -156,6 +179,8 @@ class AddPlace:
         return {"places": []}
 
     def showGridWindow(self):
+        self.positionX = None
+        self.positionY = None
         gridWindow = tk.Toplevel(self.window)
         gridWindow.title("5x5 Grid")
                 # Center the window on the screen
@@ -217,28 +242,78 @@ class AddPlace:
         software = self.comboValue1.get()
         holdertype = self.comboValue2.get()
 
-        # Create the place dictionary entry
-        newPlace = {
-            "image_path": image_path,
-            "placename": placename,
-            "position_x": self.positionX,
-            "position_y": self.positionY,
-            "status": "machine",  # Now always 'machine' since we removed the radiobox
-            "link": ip_link,
-            "software": software,
-            "holdertype": holdertype,
-            "max": int(max_value),
-            "belegt": int(belegt_value)
-        }
+        # Validation check for missing values
+        missing_fields = []
+        if not placename:
+            missing_fields.append("Place Name")
+        if not ip_link:
+            missing_fields.append("IP Link")
+        if not max_value:
+            missing_fields.append("Max Value")
+        if not belegt_value:
+            missing_fields.append("Belegt Value")
+        if not software:
+            missing_fields.append("Software")
+        if not holdertype:
+            missing_fields.append("Holder Type")
+        if self.positionX is None or self.positionX == "":
+            missing_fields.append("Position X")
+        if self.positionY is None or self.positionY == "":
+            missing_fields.append("Position Y")
 
-        # Append the new place entry to the "places" list
-        self.placesData["places"].append(newPlace)
+        # Show error message if there are missing fields
+        if missing_fields:
+            missing_fields_str = ", ".join(missing_fields)
+            messagebox.showerror("Validation Error", f"Please fill in the following fields: {missing_fields_str}")
+            return
 
-        # Write the updated data back to the JSON file
-        with open(paths["configJson"], "w") as json_file:
-            json.dump(self.placesData, json_file, indent=4)
+        # Validate max_value and belegt_value are integers
+        try:
+            max_value = int(max_value)
+        except ValueError:
+            messagebox.showerror("Validation Error", "Max Value must be an integer.")
+            return
 
-        print("Data saved to JSON successfully!")
+        try:
+            belegt_value = int(belegt_value)
+        except ValueError:
+            messagebox.showerror("Validation Error", "Belegt Value must be an integer.")
+            return
+
+
+ 
+        
+        # Validate that max_value is greater than belegt_value
+        if max_value <= belegt_value:
+            messagebox.showerror("Validation Error", "Max Value must be greater than Belegt Value.")
+            return
+
+        # Proceed only if all fields are valid
+        try:
+            newPlace = {
+                "image_path": image_path,
+                "placename": placename,
+                "position_x": self.positionX,
+                "position_y": self.positionY,
+                "status": "machine",  # Now always 'machine' since we removed the radiobox
+                "link": ip_link,
+                "software": software,
+                "holdertype": holdertype,
+                "max": max_value,
+                "belegt": belegt_value
+            }
+
+            # Append the new place entry to the "places" list
+            self.placesData["places"].append(newPlace)
+
+            # Write the updated data back to the JSON file
+            with open(paths["configJson"], "w") as json_file:
+                json.dump(self.placesData, json_file, indent=4)
+
+            messagebox.showinfo("Success", f"{placename} created successfully!")
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred while saving the data: {e}")
+
 
 
     def saveToJsonPlaceButton(self):
@@ -248,29 +323,70 @@ class AddPlace:
         max_value = self.entries[2].get()
         belegt_value = self.entries[3].get()
 
+        # Validation check for missing values
+        missing_fields = []
 
-        # Create the place dictionary entry
-        newPlace = {
-            "image_path": image_path,
-            "placename": placename,
-            "position_x": self.positionX,
-            "position_y": self.positionY,
-            "status": "place",  # Now always 'machine' since we removed the radiobox
-            "subplace": [],
-            "max": int(max_value),
-            "belegt": int(belegt_value)
-        }
+        if not placename:
+            missing_fields.append("Place Name")
+        if not max_value:
+            missing_fields.append("Max Value")
+        if not belegt_value:
+            missing_fields.append("Belegt Value")
+        if self.positionX is None or self.positionX == "":
+            missing_fields.append("Position X")
+        if self.positionY is None or self.positionY == "":
+            missing_fields.append("Position Y")
 
-        # Append the new place entry to the "places" list
-        self.placesData["places"].append(newPlace)
+        # Show error message if there are missing fields
+        if missing_fields:
+            missing_fields_str = ", ".join(missing_fields)
+            messagebox.showerror("Validation Error", f"Please fill in the following fields: {missing_fields_str}")
+            return
 
-        # Write the updated data back to the JSON file
-        with open(paths["configJson"], "w") as json_file:
-            json.dump(self.placesData, json_file, indent=4)
+        # Validate max_value and belegt_value are integers
+        try:
+            max_value = int(max_value)
+        except ValueError:
+            messagebox.showerror("Validation Error", "Max Value must be an integer.")
+            return
 
-        print("Data saved to JSON successfully!")
-        self.placeWindow.destroy()
-        
+        try:
+            belegt_value = int(belegt_value)
+        except ValueError:
+            messagebox.showerror("Validation Error", "Belegt Value must be an integer.")
+            return
+
+        # Validate that max_value is greater than belegt_value
+        if max_value <= belegt_value:
+            messagebox.showerror("Validation Error", "Max Value must be greater than Belegt Value.")
+            return
+
+        # Proceed only if all fields are valid
+        try:
+            newPlace = {
+                "image_path": image_path,
+                "placename": placename,
+                "position_x": self.positionX,
+                "position_y": self.positionY,
+                "status": "place",
+                "subplace": [],
+                "max": max_value,
+                "belegt": belegt_value
+            }
+
+            # Append the new place entry to the "places" list
+            self.placesData["places"].append(newPlace)
+
+            # Write the updated data back to the JSON file
+            with open(paths["configJson"], "w") as json_file:
+                json.dump(self.placesData, json_file, indent=4)
+
+            messagebox.showinfo("Success", "Data saved to JSON successfully!")
+            self.placeWindow.destroy()
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred while saving the data: {e}")
+
+            
     def addSubPlace(self):
         placesList=[]
         for place in places:
@@ -282,7 +398,8 @@ class AddPlace:
         addSubPlaceWindow.title("Subplace einfügen")
         addSubPlaceWindow.configure(bg="#202020")
         addSubPlaceWindow.geometry("500x200")
-                # Center the window
+
+        # Center the window
         window_width = 500
         window_height = 200
         screen_width = addSubPlaceWindow.winfo_screenwidth()
@@ -312,14 +429,14 @@ class AddPlace:
         # Change the font for the dropdown list items
         addSubPlaceWindow.option_add("*TCombobox*Listbox*Font", (winconfig["fonttype"], winconfig["fontsize"]))
 
-        self.selectPlacebutton = tk.Button(addSubPlaceWindow, text="auswählen", command=self.createSubplace, height=2, width=40,font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+        self.selectPlacebutton = tk.Button(addSubPlaceWindow, text="Auswählen", command=self.createSubplace, height=2, width=40,font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
         self.selectPlacebutton.grid(row=2, column=0, padx=50, pady=50)
 
     def createSubplace(self):
         self.addSubPlaceWindow.geometry("700x500")
 
 
-                        # Center the window
+        # Center the window
         window_width = 700
         window_height = 500
         screen_width = self.addSubPlaceWindow.winfo_screenwidth()
@@ -395,6 +512,13 @@ class AddPlace:
                 subPlaceBusy = int(subPlaceBusy)
             except ValueError:
                 errors.append("Sub Place Busy (must be a number)")
+
+
+            # Validate that max_value is greater than belegt_value
+            if subPlaceCapacity <= subPlaceBusy:
+                messagebox.showerror("Validation Error", "Capacity Value must be greater than Belegt Value.")
+                return
+
 
             # Show error message if there are issues
             if errors:

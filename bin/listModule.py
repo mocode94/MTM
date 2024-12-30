@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 # import os
 import csv
 # import cv2
-# import tkinter.messagebox as messagebox
+import tkinter.messagebox as messagebox
 import json
 import sys
 import tkinter.font as font
@@ -99,6 +99,13 @@ class listModule:
         self.wz_info_frame = tk.Frame(master_table)
         self.wz_info_frame.pack(side=tk.RIGHT, fill=tk.Y, padx=10, pady=10)
         
+      # Define a custom style for the Treeview
+        style = ttk.Style()
+        style.configure("Treeview", font=("Arial", 12))  # Set font size to 12
+        style.configure("Treeview.Heading", font=("Arial", 14, "bold"))  # Set header font size to 14
+
+
+
         # Create the Treeview widget
         self.table_master = ttk.Treeview(master_table, columns=('T_Nummer', 'T_Name', 'T_Radius',"Schnittlänge",'Ausspann_Laenge','SOLL_Laenge','Wzg_ArtNr','Aufn_ArtNr','zus_Komp','zus_Komp2','Spann_Sys'))
 
@@ -127,8 +134,8 @@ class listModule:
         self.table_master.column('Spann_Sys', width=100, anchor='center')
 
         # Configure tag for row colors
-        self.table_master.tag_configure('evenrow', background='#7daad4')
-        self.table_master.tag_configure('oddrow', background='#a4b2bf')
+        self.table_master.tag_configure('evenrow', background='#eeeeee')
+        self.table_master.tag_configure('oddrow', background='#ffdd77')
         self.table_master.tag_configure('highlight', background='yellow')  # Change highlight color to yellow
         self.table_master.pack(expand=True, fill="both")
 
@@ -159,7 +166,7 @@ class listModule:
         search_entry.pack(side=tk.LEFT, padx=5)
         search_entry.focus_set()
         
-        search_button = tk.Button(search_frame, text="Search", command=self.search_treeview)
+        search_button = tk.Button(search_frame, text="Search", command=self.search_treeview,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
         search_button.pack(side=tk.LEFT, padx=5)
 
         self.table_master.bind("<ButtonRelease-1>", self.show_value)
@@ -184,11 +191,11 @@ class listModule:
             # Add new content
             tk.Label(self.wz_info_frame, text=value_in_second_column).pack()
 
-            button_schnittdaten = Button(self.wz_info_frame, text="Die Schnittdaten aus SolidCAM",command=lambda: self.schnittdaten(values), width=30, bg="coral").pack(pady=5)
+            button_schnittdaten = Button(self.wz_info_frame, text="Die Schnittdaten aus SolidCAM",command=lambda: self.schnittdaten(values), width=30,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"]).pack(pady=5)
             stl = values[1] + '.stl'
-            button_3d = Button(self.wz_info_frame, text='Das 3D-Model',command=lambda: self.visualize_stl(paths["toolstl"] + stl), width=30).pack(pady=5)
-            button_komp = Button(self.wz_info_frame, text="Die Komponenten",command=lambda: self.komp_images(values), width=30).pack(pady=5)
-            button_info = Button(self.wz_info_frame, text="Die Info",command=lambda: self.wz_info(values), width=30).pack(pady=5)
+            button_3d = Button(self.wz_info_frame, text='Das 3D-Model',command=lambda: self.visualize_stl(paths["toolstl"] + stl), width=30,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"]).pack(pady=5)
+            button_komp = Button(self.wz_info_frame, text="Die Komponenten",command=lambda: self.komp_images(values), width=30,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"]).pack(pady=5)
+            button_info = Button(self.wz_info_frame, text="Die Info",command=lambda: self.wz_info(values), width=30,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"]).pack(pady=5)
 
     def search_treeview(self):
         search_value = self.search_var_master.get().strip().lower()
@@ -532,53 +539,55 @@ class Liste:
         self.info_frame.pack(side=tk.RIGHT, fill=tk.Y, padx=10, pady=10)
 
 
+      # Define a custom style for the Treeview
+        style = ttk.Style()
+        style.configure("Treeview", font=("Arial", 12))  # Set font size to 12
+        style.configure("Treeview.Heading", font=("Arial", 14, "bold"))  # Set header font size to 14
 
-
-        self.table = ttk.Treeview(self.liste, columns=('QR', 'T_Nummer', 'T_Name','Typ', 'T_Radius', 'Eckenradius','Spitzenwinkel','Eintauchwinkel','Schneiden','Schnittlaenge' ,'Ausspann_Laenge'
-                                                  ,'IST_Laenge', 'SOLL_Laenge', 'Steigung','Wzg_ArtNr', 'Aufn_ArtNr', 'zus_Komp', 'zus_Komp2', 'Spann_Sys', 'Wo'))
+        self.table = ttk.Treeview(self.liste, columns=('QR', 'T_Nummer', 'T_Name', 'T_Radius','Schnittlaenge' ,'Ausspann_Laenge','IST_Laenge'))
 
         self.table.heading('QR', text='QR', anchor='center')
         self.table.heading('T_Nummer', text='T_Nummer', anchor='center')
         self.table.heading('T_Name', text='T_Name', anchor='center')
-        self.table.heading('Typ', text='Typ', anchor='center')
+        # self.table.heading('Typ', text='Typ', anchor='center')
         self.table.heading('T_Radius', text='T_Radius', anchor='center')
-        self.table.heading('Eckenradius', text='Eckenradius', anchor='center')
-        self.table.heading('Spitzenwinkel', text='Spitzenwinkel', anchor='center')
-        self.table.heading('Eintauchwinkel', text='Eintauchwinkel', anchor='center')
-        self.table.heading('Schneiden', text='Schneiden', anchor='center')
+        # self.table.heading('Eckenradius', text='Eckenradius', anchor='center')
+        # self.table.heading('Spitzenwinkel', text='Spitzenwinkel', anchor='center')
+        # self.table.heading('Eintauchwinkel', text='Eintauchwinkel', anchor='center')
+        # self.table.heading('Schneiden', text='Schneiden', anchor='center')
         self.table.heading('Schnittlaenge', text='Schnittlaenge', anchor='center')
         self.table.heading('Ausspann_Laenge', text='Ausspann_Laenge', anchor='center')
         self.table.heading('IST_Laenge', text='IST_Laenge', anchor='center')
-        self.table.heading('SOLL_Laenge', text='SOLL_Laenge', anchor='center')
-        self.table.heading('Steigung', text='Steigung', anchor='center')
-        self.table.heading('Wzg_ArtNr', text='Wzg_ArtNr', anchor='center')
-        self.table.heading('Aufn_ArtNr', text='Aufn_ArtNr', anchor='center')
-        self.table.heading('zus_Komp', text='zus_Komp', anchor='center')
-        self.table.heading('zus_Komp2', text='zus_Komp2', anchor='center')
-        self.table.heading('Spann_Sys', text='Spann_Sys', anchor='center')
-        self.table.heading('Wo', text='Wo', anchor='center')
+        # self.table.heading('SOLL_Laenge', text='SOLL_Laenge', anchor='center')
+        # self.table.heading('Steigung', text='Steigung', anchor='center')
+        # self.table.heading('Wzg_ArtNr', text='Wzg_ArtNr', anchor='center')
+        # self.table.heading('Aufn_ArtNr', text='Aufn_ArtNr', anchor='center')
+        # self.table.heading('zus_Komp', text='zus_Komp', anchor='center')
+        # self.table.heading('zus_Komp2', text='zus_Komp2', anchor='center')
+        # self.table.heading('Spann_Sys', text='Spann_Sys', anchor='center')
+        # self.table.heading('Wo', text='Wo', anchor='center')
 
         self.table.column("#0", width=0, stretch=tk.NO)
         self.table.column('QR', width=50, anchor='center')
         self.table.column('T_Nummer', width=50, anchor='center')
         self.table.column('T_Name', width=170, anchor='center')
-        self.table.column('Typ', width=50, anchor='center')
+        # self.table.column('Typ', width=50, anchor='center')
         self.table.column('T_Radius', width=40, anchor='center')
-        self.table.column('Eckenradius', width=40, anchor='center')
-        self.table.column('Spitzenwinkel', width=40, anchor='center')
-        self.table.column('Eintauchwinkel', width=40, anchor='center')
-        self.table.column('Schneiden', width=20, anchor='center')
+        # self.table.column('Eckenradius', width=40, anchor='center')
+        # self.table.column('Spitzenwinkel', width=40, anchor='center')
+        # self.table.column('Eintauchwinkel', width=40, anchor='center')
+        # self.table.column('Schneiden', width=20, anchor='center')
         self.table.column('Schnittlaenge', width=20, anchor='center')
         self.table.column('Ausspann_Laenge', width=20, anchor='center')
         self.table.column('IST_Laenge', width=40, anchor='center')
-        self.table.column('SOLL_Laenge', width=40, anchor='center')
-        self.table.column('Steigung', width=20, anchor='center')
-        self.table.column('Wzg_ArtNr', width=100, anchor='center')
-        self.table.column('Aufn_ArtNr', width=100, anchor='center')
-        self.table.column('zus_Komp', width=100, anchor='center')
-        self.table.column('zus_Komp2', width=100, anchor='center')
-        self.table.column('Spann_Sys', width=30, anchor='center')
-        self.table.column('Wo', width=20, anchor='center')
+        # self.table.column('SOLL_Laenge', width=40, anchor='center')
+        # self.table.column('Steigung', width=20, anchor='center')
+        # self.table.column('Wzg_ArtNr', width=100, anchor='center')
+        # self.table.column('Aufn_ArtNr', width=100, anchor='center')
+        # self.table.column('zus_Komp', width=100, anchor='center')
+        # self.table.column('zus_Komp2', width=100, anchor='center')
+        # self.table.column('Spann_Sys', width=30, anchor='center')
+        # self.table.column('Wo', width=20, anchor='center')
 
         self.table.tag_configure('yellowcell', background='yellow')
         self.table.tag_configure('greencell', background='lightgreen')
@@ -601,11 +610,11 @@ class Liste:
         search_entry.pack(side=tk.LEFT, padx=5)
         search_entry.focus_set()
         
-        search_button = tk.Button(self.search_frame, text="Search", command=self.search_treeview)
+        search_button = tk.Button(self.search_frame, text="Search", command=self.search_treeview,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
         search_button.pack(side=tk.LEFT, padx=5)
 
 
-        button_check=tk.Button(self.search_frame,text="Check-up",command=self.checkUP,width=25)
+        button_check=tk.Button(self.search_frame,text="Check-up",command=self.checkUP,width=25,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
         button_check.pack(side='right', padx=25)
 
         self.populate_table( paths["mastercsv"], lageort)
@@ -712,23 +721,32 @@ class Liste:
                         t_row[15] == [row[46] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[16] == [row[47] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[15][:6] in ["304272", "304450"]:
-                    self.table.insert('', 'end', values=t_row, tags=('yellowcell',))
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+
+                    self.table.insert('', 'end', values=short_t_row, tags=('yellowcell',))
 
                 elif t_row[2] in [row[1] for row in master_data] and \
                         t_row[11] >= float([row[22] for row in master_data if row[1] == t_row[2]][0]) and \
                         t_row[14] == [row[45] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[15] == [row[46] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[16] == [row[47] for row in master_data if row[1] == t_row[2]][0]:
-                    self.table.insert('', 'end', values=t_row, tags=('greencell',))
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+
+                    self.table.insert('', 'end', values=short_t_row, tags=('greencell',))
 
                 elif t_row[2] not in [row[1] for row in master_data]:
-                    self.table.insert('', 'end', values=t_row, tags=('bluecell',))
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+
+                    self.table.insert('', 'end', values=short_t_row, tags=('bluecell',))
 
                 elif t_row[11] < float([row[22] for row in master_data if row[1] == t_row[2]][0]) or \
                         t_row[14] != [row[45] for row in master_data if row[1] == t_row[2]][0] or \
                         t_row[15] != [row[46] for row in master_data if row[1] == t_row[2]][0] or \
                         t_row[16] != [row[47] for row in master_data if row[1] == t_row[2]][0]:
-                    self.table.insert('', 'end', values=t_row, tags=('orangecell',))
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+
+
+                    self.table.insert('', 'end', values=short_t_row, tags=('orangecell',))
 
             elif lageort == "ALL":
                 # Apply the same logic for "ALL" condition
@@ -738,23 +756,35 @@ class Liste:
                         t_row[15] == [row[46] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[16] == [row[47] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[15][:6] in ["304272", "304450"]:
-                    self.table.insert('', 'end', values=t_row, tags=('yellowcell',))
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+
+
+                    self.table.insert('', 'end', values=short_t_row, tags=('yellowcell',))
 
                 elif t_row[2] in [row[1] for row in master_data] and \
                         t_row[11] >= float([row[22] for row in master_data if row[1] == t_row[2]][0]) and \
                         t_row[14] == [row[45] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[15] == [row[46] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[16] == [row[47] for row in master_data if row[1] == t_row[2]][0]:
-                    self.table.insert('', 'end', values=t_row, tags=('greencell',))
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+
+
+                    self.table.insert('', 'end', values=short_t_row, tags=('greencell',))
 
                 elif t_row[2] not in [row[1] for row in master_data]:
-                    self.table.insert('', 'end', values=t_row, tags=('bluecell',))
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+
+
+                    self.table.insert('', 'end', values=short_t_row, tags=('bluecell',))
 
                 elif t_row[11] < float([row[22] for row in master_data if row[1] == t_row[2]][0]) or \
                         t_row[14] != [row[45] for row in master_data if row[1] == t_row[2]][0] or \
                         t_row[15] != [row[46] for row in master_data if row[1] == t_row[2]][0] or \
                         t_row[16] != [row[47] for row in master_data if row[1] == t_row[2]][0]:
-                    self.table.insert('', 'end', values=t_row, tags=('orangecell',))
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+
+
+                    self.table.insert('', 'end', values=short_t_row, tags=('orangecell',))
 
         # Close the database connection after finishing
         conn.close()
@@ -796,6 +826,26 @@ class Liste:
 
     def on_row_click_simulated(self, item):
         selected_row = self.table.item(item, "values")
+
+        # Connect to the MTMDB.db SQLite database
+        conn = sqlite3.connect(paths["MTMDB"])
+        cur = conn.cursor()
+        
+        # Fetch all data from the currentTools table
+        cur.execute("SELECT * FROM currentTools")
+        currentToolsData = cur.fetchall()
+
+        for tool in currentToolsData:
+            if tool[0] == selected_row[0]:
+                selected_row = tool
+                break
+            
+
+               
+
+
+
+
         for widget in self.info_frame.winfo_children():
             widget.destroy()
         bold_font = ("Helvetica", 10, "bold")
@@ -813,7 +863,7 @@ class Liste:
 
             img1_path = (paths["toolCapturedimages"]+selected_row[0]+".png")
             tk.Label(self.info_frame, text=f"Tool: {selected_row[2]}\n \n",font=bold_font).grid(row=0)
-            button=tk.Button(self.info_frame, text="+", font=("Helvetica", 14),command= lambda: self.im_liste(img1_path))
+            button=tk.Button(self.info_frame, text="+",command= lambda: self.im_liste(img1_path),font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
             button.grid(row=1,column=2)
             try:
                 # Load and display the first image
@@ -834,7 +884,7 @@ class Liste:
                 img1_label.grid(row=1,column=0,pady=20)
                 self.photo_images_list.append(default_img1_photo)  # Store reference in the list
                 
-            if selected_row[11] < master_row[22]:
+            if selected_row[11] < float(master_row[22]):
                 tk.Label(self.info_frame, text=f"Die Gesamtlänge soll: {selected_row[12]} mm",fg="red",font=bold_font).grid()
             if selected_row[14] != master_row[45]:
                 tk.Label(self.info_frame, text=f"Das Wz soll: {master_row[45]}",fg="red",font=bold_font).grid()
@@ -845,18 +895,21 @@ class Liste:
             if float(selected_row[9])<=(float(master_row[21])-float(master_row[21])*0.2):
                 tk.Label(self.info_frame, text=f"Das Werkzeug nicht mehr nachschleifen lassen",fg="orange",font=bold_font).grid()
 
-            if selected_row[16] == master_row[47] and selected_row[15] == master_row[46] and selected_row[14] == master_row[45] and selected_row[11] >= master_row[22]:
+            if selected_row[16] == master_row[47] and selected_row[15] == master_row[46] and selected_row[14] == master_row[45] and selected_row[11] >= float(master_row[22]):
                 thumb_up = u'\u2713'
                 label_text = "Dieses Wz. ist mit SolidCAM identisch"
 
 
                 tk.Label(self.info_frame, text=label_text, fg="green",font=bold_font).grid()
                 tk.Label(self.info_frame, text=thumb_up, fg="green",font=bold_font2).grid()
-            button_schnittdaten=tk.Button(self.info_frame,text="Schnittdaten aus SolidCAM",command= lambda: self.schnittdaten(master_row),width=25)
+            button_schnittdaten=tk.Button(self.info_frame,text="Schnittdaten aus SolidCAM",command= lambda: self.schnittdaten(master_row),width=25,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
             button_schnittdaten.grid(pady=10)
 
 
-            button_bemerkungen=tk.Button(self.info_frame,text="Bemerkungen",command= lambda: self.bemerkungen_lesen(selected_row[0]),width=25)
+            button_bemerkungen=tk.Button(self.info_frame,text="Bemerkungen",command= lambda: self.bemerkungen_lesen(selected_row[0]),width=25,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
+            button_bemerkungen.grid(pady=10)
+
+            button_bemerkungen=tk.Button(self.info_frame,text="Tool Details",command= lambda: self.showToolDetails(selected_row),width=25,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
             button_bemerkungen.grid(pady=10)
 
 
@@ -886,6 +939,47 @@ class Liste:
                 self.photo_images_list.append(default_img1_photo)  # Store reference in the list
             tk.Label(self.info_frame, text="Das ist ein Sonderwerkzeug",font=bold_font).grid()
             tk.Label(self.info_frame, text="Keine Schnittdaten vorhanden",font=bold_font).grid()
+
+
+
+
+    def showToolDetails(self,selected_row):
+        # Create a Toplevel window
+        table_window = tk.Toplevel()
+        table_window.title("Selected Row Details")
+        table_window.geometry("400x600")  # Adjust window size as needed
+
+        # Example usage
+        headers = [
+            'QR', 'T_Nummer', 'T_Name', 'Typ', 'T_Radius', 'Eckenradius',
+            'Spitzenwinkel', 'Eintauchwinkel', 'Schneiden', 'Schnittlaenge',
+            'Ausspann_Laenge', 'IST_Laenge', 'SOLL_Laenge', 'Steigung',
+            'Wzg_ArtNr', 'Aufn_ArtNr', 'zus_Komp', 'zus_Komp2',
+            'Spann_Sys', 'Wo'
+        ]
+
+        # Define a custom style for the Treeview
+        style = ttk.Style()
+        style.configure("Treeview", font=("Arial", 12))  # Set font size to 12
+        style.configure("Treeview.Heading", font=("Arial", 14, "bold"))  # Set header font size to 14
+
+        # Define the Treeview widget with two columns
+        tree = ttk.Treeview(table_window, columns=("Name", "Werte"), show="headings", height=20)
+
+        # Define column headings
+        tree.heading("Name", text="Name")
+        tree.heading("Werte", text="Werte")
+
+        # Configure column widths
+        tree.column("Name", width=200, anchor="w")  # Adjust as needed
+        tree.column("Werte", width=200, anchor="w")  # Adjust as needed
+
+        # Insert data into the table
+        for header, value in zip(headers, selected_row):
+            tree.insert("", tk.END, values=(header, value))
+
+        # Add Treeview to the window
+        tree.pack(expand=True, fill="both")
 
 
 
