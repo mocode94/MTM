@@ -544,7 +544,7 @@ class Liste:
         style.configure("Treeview", font=("Arial", 12))  # Set font size to 12
         style.configure("Treeview.Heading", font=("Arial", 14, "bold"))  # Set header font size to 14
 
-        self.table = ttk.Treeview(self.liste, columns=('QR', 'T_Nummer', 'T_Name', 'T_Radius','Schnittlaenge' ,'Ausspann_Laenge','IST_Laenge'))
+        self.table = ttk.Treeview(self.liste, columns=('QR', 'T_Nummer', 'T_Name', 'T_Radius','Schnittlaenge' ,'Ausspann_Laenge','IST_Laenge','Status'))
 
         self.table.heading('QR', text='QR', anchor='center')
         self.table.heading('T_Nummer', text='T_Nummer', anchor='center')
@@ -566,6 +566,7 @@ class Liste:
         # self.table.heading('zus_Komp2', text='zus_Komp2', anchor='center')
         # self.table.heading('Spann_Sys', text='Spann_Sys', anchor='center')
         # self.table.heading('Wo', text='Wo', anchor='center')
+        self.table.heading('Status', text='Status', anchor='center')
 
         self.table.column("#0", width=0, stretch=tk.NO)
         self.table.column('QR', width=50, anchor='center')
@@ -588,6 +589,7 @@ class Liste:
         # self.table.column('zus_Komp2', width=100, anchor='center')
         # self.table.column('Spann_Sys', width=30, anchor='center')
         # self.table.column('Wo', width=20, anchor='center')
+        self.table.column('Status', width=40, anchor='center')
 
         self.table.tag_configure('yellowcell', background='yellow')
         self.table.tag_configure('greencell', background='lightgreen')
@@ -721,7 +723,7 @@ class Liste:
                         t_row[15] == [row[46] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[16] == [row[47] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[15][:6] in ["304272", "304450"]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
 
                     self.table.insert('', 'end', values=short_t_row, tags=('yellowcell',))
 
@@ -730,12 +732,12 @@ class Liste:
                         t_row[14] == [row[45] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[15] == [row[46] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[16] == [row[47] for row in master_data if row[1] == t_row[2]][0]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
 
                     self.table.insert('', 'end', values=short_t_row, tags=('greencell',))
 
                 elif t_row[2] not in [row[1] for row in master_data]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
 
                     self.table.insert('', 'end', values=short_t_row, tags=('bluecell',))
 
@@ -743,7 +745,7 @@ class Liste:
                         t_row[14] != [row[45] for row in master_data if row[1] == t_row[2]][0] or \
                         t_row[15] != [row[46] for row in master_data if row[1] == t_row[2]][0] or \
                         t_row[16] != [row[47] for row in master_data if row[1] == t_row[2]][0]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
 
 
                     self.table.insert('', 'end', values=short_t_row, tags=('orangecell',))
@@ -756,7 +758,7 @@ class Liste:
                         t_row[15] == [row[46] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[16] == [row[47] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[15][:6] in ["304272", "304450"]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
 
 
                     self.table.insert('', 'end', values=short_t_row, tags=('yellowcell',))
@@ -766,13 +768,13 @@ class Liste:
                         t_row[14] == [row[45] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[15] == [row[46] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[16] == [row[47] for row in master_data if row[1] == t_row[2]][0]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
 
 
                     self.table.insert('', 'end', values=short_t_row, tags=('greencell',))
 
                 elif t_row[2] not in [row[1] for row in master_data]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
 
 
                     self.table.insert('', 'end', values=short_t_row, tags=('bluecell',))
@@ -781,17 +783,210 @@ class Liste:
                         t_row[14] != [row[45] for row in master_data if row[1] == t_row[2]][0] or \
                         t_row[15] != [row[46] for row in master_data if row[1] == t_row[2]][0] or \
                         t_row[16] != [row[47] for row in master_data if row[1] == t_row[2]][0]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
 
 
                     self.table.insert('', 'end', values=short_t_row, tags=('orangecell',))
 
         # Close the database connection after finishing
         conn.close()
+        # def monitor_output(process, output_queue):
+        #     """
+        #     Continuously read the output of the process and add it to the queue.
+        #     """
+        #     try:
+        #         for line in iter(process.stdout.readline, ''):
+        #             output_queue.put(line.strip())
+        #     except Exception as e:
+        #         print(f"Error reading process output: {e}")
+
+        # for place in places:
+        #     if place["status"] == "machine" and place["placename"] == self.listname :
+        #         ip_address = place["link"]
+        #         place_name = place["placename"]
+        #         # Path to the TNCCmd executable
+        #         tnc_cmd_path = paths["TNCcmd"]  # Replace with the actual path
+
+        #         try:
+        #             print(f"Connecting with {place_name} with Ip Address : {ip_address}.....")
+
+        #             # Start the TNCCmd process
+        #             process = subprocess.Popen(
+        #                 tnc_cmd_path,
+        #                 stdin=subprocess.PIPE,
+        #                 stdout=subprocess.PIPE,
+        #                 stderr=subprocess.PIPE,
+        #                 text=True
+        #             )
+
+        #             # Allow the program to start
+        #             time.sleep(1)
+
+        #             # Monitor process output using a queue
+        #             output_queue = Queue()
+        #             output_thread = threading.Thread(target=monitor_output, args=(process, output_queue))
+        #             output_thread.daemon = True
+        #             output_thread.start()
+
+        #             # Send the 'connect' command
+        #             process.stdin.write("connect\n")
+        #             process.stdin.flush()
+        #             time.sleep(1)
+
+        #             # Send the 'i' command
+        #             process.stdin.write("i\n")
+        #             process.stdin.flush()
+        #             time.sleep(1)
+
+        #             # Send the IP address
+        #             process.stdin.write(f"{ip_address}\n")
+        #             process.stdin.flush()
+        #             time.sleep(1)
+
+        #             start_time = time.time()
+        #             connected = False
+
+        #             while time.time() - start_time < 5:  # Wait up to 5 seconds
+        #                 try:
+        #                     line = output_queue.get(timeout=0.1)
+        #                     print(line)  # Print output for debugging purposes
+
+        #                     if "Connection established" in line:
+        #                         connected = True
+        #                         print(f"Connection to {place_name} with Ip Address: {ip_address} established.")
+        #                         break
+        #                     elif "abort with ESC!" in line:
+        #                         print(f"Connection to {place_name} with Ip Address: {ip_address} in progress...")
+        #                 except Empty:
+        #                     continue
+
+        #             if not connected:
+        #                 print(f"Connection to {ip_address} timed out. Aborting...")
+        #                 process.stdin.write("\x1b\n")  # Send ESC key
+        #                 process.stdin.flush()
+        #                 process.terminate()
+        #                 continue
+
+        #             # Proceed with file operations if connected
+        #             print(f"Successfully connected to {place_name} with Ip Address: {ip_address}. Proceeding with file operations...")
+
+        #             # # Get tool.t
+        #             # process.stdin.write(f"get TNC:\\table\\tool.t X:\\Projekt\\{ip_address}.t\n")
+        #             # process.stdin.flush()
+        #             # time.sleep(1)
+
+        #             # Get tool_p.tch
+        #             process.stdin.write(f"get TNC:\\table\\tool_p.tch X:\\Projekt\\{ip_address}.tch\n")
+        #             process.stdin.flush()
+        #             time.sleep(1)
+
+        #             # Close the stdin to signal end of input
+        #             process.stdin.close()
+
+        #             # Read and print the output (optional)
+        #             output, error = process.communicate()
+        #             # print("Output:\n", output)
+        #             print("Error:\n", error if error else "No errors.")
+
+        #         except FileNotFoundError:
+        #             print("Error: TNCCmd executable not found. Please check the path.")
+        #             break
+        #         except Exception as e:
+        #             print(f"An error occurred: {e}")
+        #             break
 
 
+        #         # Path to the generated .tch file
+        #         tch_file_path = f"X:\\Projekt\\{ip_address}.tch"
+
+        #         # List to store the extracted data from .tch
+        #         tchData = []
+
+        #         try:
+        #             # Open the .tch file for reading
+        #             with open(tch_file_path, 'r') as tch_file:
+        #                 # Skip the first two lines
+        #                 next(tch_file)
+        #                 next(tch_file)
+
+        #                 # Process the remaining lines
+        #                 for line in tch_file:
+        #                     # Extract columns based on fixed widths
+        #                     tchCol1 = line[:8].strip()  # First column (ignored)
+        #                     tchCol2 = line[8:14].strip()  # Second column
+        #                     tchCol3 = line[14:46].strip()  # Third column
+
+        #                     # Skip lines where the third column is empty
+        #                     if tchCol3:
+        #                         tchData.append([tchCol2, tchCol3])
+
+        #             print("Extracted Data from .tch:", tchData ,"\n")
+
+        #         except FileNotFoundError:
+        #             print(f"Error: File {tch_file_path} not found.")
+        #             break
+        #         except Exception as e:
+        #             print(f"An error occurred: {e}")
+        #             break
+
+        #         # Connect to the MTMDB.db SQLite database
+        #         conn = sqlite3.connect(paths["MTMDB"])
+        #         cur = conn.cursor()
+                
+        #         # Fetch all data from the currentTools table
+        #         cur.execute("SELECT * FROM currentTools")
+        #         currentToolsData = cur.fetchall()
+        #         currentToolDataList=[]
+
+        #         for tool in currentToolsData:
+        #             if tool[19]==self.listname:
+        #                 currentToolDataList.append([str(tool[1]),tool[2]])
+        #             else:
+        #                 pass
+
+        #         for i in currentToolDataList:
+        #             print(i)
 
 
+        # # Sort and align matched items
+        # matched_items = []
+        # unmatched_tch = []
+        # unmatched_tools = []
+
+        # # Find matched and unmatched items
+        # for tch_item in tchData:
+        #     if tch_item in currentToolDataList:
+        #         matched_items.append((tch_item, tch_item))
+        #     else:
+        #         unmatched_tch.append((tch_item, None))
+
+        # for tool_item in currentToolDataList:
+        #     if tool_item not in tchData:
+        #         unmatched_tools.append((None, tool_item))
+
+        # for tool in currentToolsData:
+        #     if t_row[19] == lageort:
+        #         for checkingTool in matched_items:
+        #             if tool[2] == checkingTool[0][1] and tool[1] == checkingTool[0][0]:
+        #                 short_t_row [7]= ("Vorhanden",)
+        #                 self.table.insert('', 'end', values=short_t_row)
+        #             else:
+        #                 short_t_row [7]= ("Nicht Vorhanden",)
+        #                 self.table.insert('', 'end', values=short_t_row)
+
+
+        # for i, t_row in enumerate(currentToolsData):
+        #     if t_row[19] == lageort:
+        #         # Apply conditions and insert rows into the table with appropriate tags
+        #         if t_row[1] in [row[1] for row in master_data] and \
+        #                 float(t_row[11]) + float([row[21] for row in master_data if row[1] == t_row[2]][0]) * 0.2 > float([row[22] for row in master_data if row[1] == t_row[2]][0]) and \
+        #                 t_row[14] == [row[45] for row in master_data if row[1] == t_row[2]][0] and \
+        #                 t_row[15] == [row[46] for row in master_data if row[1] == t_row[2]][0] and \
+        #                 t_row[16] == [row[47] for row in master_data if row[1] == t_row[2]][0] and \
+        #                 t_row[15][:6] in ["304272", "304450"]:
+        #             short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
+
+        #             self.table.insert('', 'end', values=short_t_row, tags=('yellowcell',))
 
     def search_treeview(self):
         search_value = self.search_var.get().strip().lower()
@@ -912,6 +1107,8 @@ class Liste:
             button_bemerkungen=tk.Button(self.info_frame,text="Tool Details",command= lambda: self.showToolDetails(selected_row),width=25,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
             button_bemerkungen.grid(pady=10)
 
+            button_bemerkungen=tk.Button(self.info_frame,text="line",command= self.showline,width=25,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
+            button_bemerkungen.grid(pady=10)
 
 
         else:
@@ -941,7 +1138,15 @@ class Liste:
             tk.Label(self.info_frame, text="Keine Schnittdaten vorhanden",font=bold_font).grid()
 
 
-
+    def showline(self):
+        # Get all items in the Treeview
+        items = self.table.get_children()
+        # Check if there are at least two rows
+        if len(items) > 1:
+            second_row = self.table.item(items[1], 'values')  # Get the second row
+            print(f"Second row: {second_row}")
+        else:
+            print("No second row available.")
 
     def showToolDetails(self,selected_row):
         # Create a Toplevel window
