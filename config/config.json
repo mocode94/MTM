@@ -51,7 +51,7 @@
             "position_x": 1,
             "position_y": 0,
             "status": "machine",
-            "link": "192.168.81.15",
+            "link": "192.168.81.11",
             "software": "TNC640Laser",
             "holdertype": "HSK63",
             "max": 32,
