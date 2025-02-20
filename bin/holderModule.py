@@ -332,7 +332,8 @@ class holderModule:
                                 )
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                             """, neutool)
-                            conn.commit()
+                            conn.commit()  # Commit the transaction first
+                            cur.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
                             messagebox.showinfo("Registriert", f"Die Aufnahme {QR} ist erfolgreich registriert.")
                         except Exception as e:
                             messagebox.showerror("Fehler", f"Fehler beim Einfügen in die Datenbank: {e}")
@@ -366,7 +367,7 @@ class holderModule:
             self.center.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
 
-            artno = set()
+            artno = []
 
             # Connect to the MTMDB.db SQLite database
             conn = sqlite3.connect(paths["MTMDB"])
@@ -378,10 +379,10 @@ class holderModule:
 
             for row in currentToolsData:
                 if len(row) > 16:  # Ensure there are at least 13 columns in the row
-                    currentToolsData.append(row[15])
+                    artno.append(row[15])
 
 
-            self.artno = list(currentToolsData)  # Convert set to list for use in Combobox
+            self.artno = artno  # Convert set to list for use in Combobox
 
 
 

@@ -81,11 +81,11 @@ class HauptFenster:
         button_Add_Win = Button(self.center, image=self.photo10, command= self.tool, bd=0, bg=self.bg_color,highlightthickness=0, activebackground=self.bg_color)
         button_Add_Win.grid(row=1, column=0, padx=50, pady=10)
 
-        image_suche_maschine_button = Image.open(imgpaths+"button6.png")
-        photo_suche_maschine_button = ImageTk.PhotoImage(image_suche_maschine_button)
-        button_Suche = Button(self.center, image=photo_suche_maschine_button, command= self.maschinewz, bd=0, bg=self.bg_color, highlightthickness=0, activebackground=self.bg_color)
-        button_Suche.image = photo_suche_maschine_button  # Prevent garbage collection
-        button_Suche.grid(row=2, column=0, padx=50, pady=10)
+        # image_suche_maschine_button = Image.open(imgpaths+"button6.png")
+        # photo_suche_maschine_button = ImageTk.PhotoImage(image_suche_maschine_button)
+        # button_Suche = Button(self.center, image=photo_suche_maschine_button, command= self.maschinewz, bd=0, bg=self.bg_color, highlightthickness=0, activebackground=self.bg_color)
+        # button_Suche.image = photo_suche_maschine_button  # Prevent garbage collection
+        # button_Suche.grid(row=2, column=0, padx=50, pady=10)
       
         image_register_button = Image.open(imgpaths+"button2.png")
         photo_register_button = ImageTk.PhotoImage(image_register_button)
@@ -131,7 +131,7 @@ class HauptFenster:
 
         master.bind("<Escape>", lambda e: master.quit())
                 # Start the database update thread
-        # threading.Thread(target=self.callUpdate, daemon=True).start()
+        threading.Thread(target=self.callUpdate, daemon=True).start()
 
 
 
@@ -247,6 +247,7 @@ class HauptFenster:
         # Fetch all data from the currentTools table
         cur.execute("SELECT * FROM currentTools")
         currentToolsData = cur.fetchall()
+        conn.close()
         for tool in currentToolsData:
             if tool[0]==iDEntry:
                 found=True
@@ -256,16 +257,6 @@ class HauptFenster:
                 found=False
 
 
-        # with open(paths["machinecsv"],"r") as machineCsvReader:
-        #     machineCsvReader=csv.reader(machineCsvReader, delimiter=";")
-        #     next(machineCsvReader)
-        #     for row in machineCsvReader:
-        #         if row[0]==iDEntry:
-        #             found=True
-        #             break
-                    
-        #         else:
-        #             found=False
 
         if found==True:
             from haimerInterface import HaimerInterface as HaimerInterFace
@@ -393,12 +384,12 @@ class HauptFenster:
                     print(f"Successfully connected to {place_name} with Ip Address: {ip_address}. Proceeding with file operations...")
 
                     # Get tool.t
-                    process.stdin.write(f"get TNC:\\table\\tool.t X:\\Projekt\\temp\\{ip_address}.t\n")
+                    process.stdin.write(f"get TNC:\\table\\tool.t {paths["temp"]}{ip_address}.t\n")
                     process.stdin.flush()
                     time.sleep(1)
 
                     # Get tool_p.tch
-                    process.stdin.write(f"get TNC:\\table\\tool_p.tch X:\\Projekt\\temp\\{ip_address}.tch\n")
+                    process.stdin.write(f"get TNC:\\table\\tool_p.tch {paths["temp"]}{ip_address}.tch\n")
                     process.stdin.flush()
                     time.sleep(1)
 
@@ -419,7 +410,7 @@ class HauptFenster:
 
 
                 # Path to the generated .tch file
-                tch_file_path = f"X:\\Projekt\\temp\\{ip_address}.tch"
+                tch_file_path = paths["temp"]+ip_address+".tch"
 
                 # List to store the extracted data from .tch
                 tchData = []
@@ -452,7 +443,7 @@ class HauptFenster:
                     break
 
                 # Path to the generated .t file
-                t_file_path = f"X:\\Projekt\\temp\\{ip_address}.t"
+                t_file_path =paths["temp"]+ip_address+".t"
 
                 # List to store the extracted data from .t
                 tData = []
@@ -486,13 +477,17 @@ class HauptFenster:
                     break
 
 
-                # Connect to the MTMDB.db SQLite database
-                conn = sqlite3.connect(paths["MTMDB"])
-                cur = conn.cursor()
+                # # Connect to the MTMDB.db SQLite database
+                # conn = sqlite3.connect(paths["MTMDB"])
+                # cur = conn.cursor()
 
                 try:
                     counter=0
+                                        # Connect to the MTMDB.db SQLite database
+                    conn = sqlite3.connect(paths["MTMDB"])
+                    cur = conn.cursor()
                     for t in tData:
+  
                         toolNummer, toolName, toolIstLaenge, toolRadius = t
 
                         # Debugging: Check what we're comparing
@@ -524,14 +519,18 @@ class HauptFenster:
                             AND LOWER(TRIM(platz)) = LOWER(?)
                         """, (toolRadius, toolIstLaenge, toolNummer.strip(), toolName.strip(), place_name.strip()))
 
-                    conn.commit()
+                    conn.commit()  # Commit the transaction first
+                    cur.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
                     print(f"Updated {counter} rows in the database for {place_name}.")
+                                        # Close the connection
+                    conn.close()
                 except sqlite3.Error as e:
                     print(f"An error occurred while updating the database: {e}")
 
                 finally:
+                    if conn:
                     # Close the connection
-                    conn.close()
+                      conn.close()
 
             else:
                 pass
@@ -542,3 +541,4 @@ if __name__ == "__main__":
     root.withdraw()  # Hide the main root window
     welcome_window = WelcomeWindow(root)
     root.mainloop()
+    

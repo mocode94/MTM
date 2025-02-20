@@ -1,0 +1,327 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|x:\\projekt\\mtmgithub\\mtm\\bin\\mtmschnittstelle\\neue schnittstelle\\remotools\\examples\\dncdemo\\usercontrols\\remoteerror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\remoteerror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|x:\\projekt\\mtmgithub\\mtm\\bin\\mtmschnittstelle\\neue schnittstelle\\remotools\\examples\\dncdemo\\usercontrols\\remoteerror.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\remoteerror.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|x:\\projekt\\mtmgithub\\mtm\\bin\\mtmschnittstelle\\neue schnittstelle\\remotools\\examples\\dncdemo\\usercontrols\\remoteerror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\remoteerror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|x:\\projekt\\mtmgithub\\mtm\\bin\\mtmschnittstelle\\neue schnittstelle\\remotools\\examples\\dncdemo\\usercontrols\\error.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\error.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|x:\\projekt\\mtmgithub\\mtm\\bin\\mtmschnittstelle\\neue schnittstelle\\remotools\\examples\\dncdemo\\usercontrols\\dataaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\dataaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\usercontrols\\dataaccess2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\dataaccess2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\usercontrols\\dataaccess2.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\dataaccess2.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\usercontrols\\dataaccess3.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\dataaccess3.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\usercontrols\\dataaccess3.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\dataaccess3.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\usercontrols\\dataaccess3.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\dataaccess3.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\usercontrols\\dncinterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\dncinterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\usercontrols\\automatic4.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\automatic4.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\usercontrols\\automatic4.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\automatic4.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\usercontrols\\automatic.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\automatic.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\usercontrols\\automatic.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\automatic.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 274,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RemoteError.designer.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\RemoteError.designer.cs",
+              "RelativeDocumentMoniker": "UserControls\\RemoteError.designer.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\RemoteError.designer.cs",
+              "RelativeToolTip": "UserControls\\RemoteError.designer.cs",
+              "ViewState": "AgIAAMAAAAAAAAAAAIAwwNEAAACIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T21:42:06.849Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RemoteError.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\RemoteError.cs",
+              "RelativeDocumentMoniker": "UserControls\\RemoteError.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\RemoteError.cs",
+              "RelativeToolTip": "UserControls\\RemoteError.cs",
+              "ViewState": "AgIAAOYAAAAAAAAAAAAhwOwAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T21:41:15.432Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "RemoteError.cs [Entwurf]",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\RemoteError.cs",
+              "RelativeDocumentMoniker": "UserControls\\RemoteError.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\RemoteError.cs [Entwurf]",
+              "RelativeToolTip": "UserControls\\RemoteError.cs [Entwurf]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T21:41:12.909Z",
+              "EditorCaption": " [Entwurf]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Error.cs [Entwurf]",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\Error.cs",
+              "RelativeDocumentMoniker": "UserControls\\Error.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\Error.cs [Entwurf]",
+              "RelativeToolTip": "UserControls\\Error.cs [Entwurf]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T21:41:07.229Z",
+              "EditorCaption": " [Entwurf]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "DataAccess3.Designer.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\DataAccess3.Designer.cs",
+              "RelativeDocumentMoniker": "UserControls\\DataAccess3.Designer.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\DataAccess3.Designer.cs",
+              "RelativeToolTip": "UserControls\\DataAccess3.Designer.cs",
+              "ViewState": "AgIAAJoAAAAAAAAAAIAwwKsAAACIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-07T21:54:05.905Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "DataAccess2.Designer.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\DataAccess2.Designer.cs",
+              "RelativeDocumentMoniker": "UserControls\\DataAccess2.Designer.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\DataAccess2.Designer.cs",
+              "RelativeToolTip": "UserControls\\DataAccess2.Designer.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAIAwwDMAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-07T21:53:44.128Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "DataAccess3.cs [Entwurf]",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\DataAccess3.cs",
+              "RelativeDocumentMoniker": "UserControls\\DataAccess3.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\DataAccess3.cs [Entwurf]",
+              "RelativeToolTip": "UserControls\\DataAccess3.cs [Entwurf]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-07T19:35:09.301Z",
+              "EditorCaption": " [Entwurf]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Automatic.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\Automatic.cs",
+              "RelativeDocumentMoniker": "UserControls\\Automatic.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\Automatic.cs",
+              "RelativeToolTip": "UserControls\\Automatic.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAABRwBEAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-03T22:29:37.023Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "DataAccess2.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\DataAccess2.cs",
+              "RelativeDocumentMoniker": "UserControls\\DataAccess2.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\DataAccess2.cs",
+              "RelativeToolTip": "UserControls\\DataAccess2.cs",
+              "ViewState": "AgIAAN4AAAAAAAAAAAAgwBIBAABQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-30T21:36:24.416Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "DataAccess.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\DataAccess.cs",
+              "RelativeDocumentMoniker": "UserControls\\DataAccess.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\DataAccess.cs",
+              "RelativeToolTip": "UserControls\\DataAccess.cs",
+              "ViewState": "AgIAAGkBAAAAAAAAAAAgwHcBAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-03T22:46:31.22Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Automatic.designer.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\Automatic.Designer.cs",
+              "RelativeDocumentMoniker": "UserControls\\Automatic.Designer.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\Automatic.Designer.cs",
+              "RelativeToolTip": "UserControls\\Automatic.Designer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAxwAAAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-03T22:29:39.072Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Automatic4.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\Automatic4.cs",
+              "RelativeDocumentMoniker": "UserControls\\Automatic4.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\Automatic4.cs",
+              "RelativeToolTip": "UserControls\\Automatic4.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAABRwBEAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-03T22:29:43.955Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Automatic4.designer.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\Automatic4.Designer.cs",
+              "RelativeDocumentMoniker": "UserControls\\Automatic4.Designer.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\Automatic4.Designer.cs",
+              "RelativeToolTip": "UserControls\\Automatic4.Designer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAxwAAAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-03T22:29:45.036Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "MainForm.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\MainForm.cs",
+              "RelativeDocumentMoniker": "MainForm.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\MainForm.cs",
+              "RelativeToolTip": "MainForm.cs",
+              "ViewState": "AgIAAOQCAAAAAAAAAABRwOcCAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-03T22:29:50.992Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "DataAccess3.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\DataAccess3.cs",
+              "RelativeDocumentMoniker": "UserControls\\DataAccess3.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\DataAccess3.cs",
+              "RelativeToolTip": "UserControls\\DataAccess3.cs",
+              "ViewState": "AgIAAIcBAAAAAAAAAAAYwJgBAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-07T19:31:29.769Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "DncInterface.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\DncInterface.cs",
+              "RelativeDocumentMoniker": "UserControls\\DncInterface.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\UserControls\\DncInterface.cs",
+              "RelativeToolTip": "UserControls\\DncInterface.cs",
+              "ViewState": "AgIAALUBAAAAAAAAAAAkwMwBAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-03T22:35:51.031Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "MainForm.cs [Entwurf]",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\MainForm.cs",
+              "RelativeDocumentMoniker": "MainForm.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo\\MainForm.cs [Entwurf]",
+              "RelativeToolTip": "MainForm.cs [Entwurf]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-30T12:29:56.384Z",
+              "EditorCaption": " [Entwurf]"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 126,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

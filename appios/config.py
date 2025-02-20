@@ -1,7 +1,7 @@
 import json
 
 # Load the JSON data from the config file
-with open(r"X:\Projekt\mtm\config\config.json", 'r') as file:  # Replace 'config.json' with the actual path to your JSON file
+with open("..\config\config.json", 'r') as file:  # Replace 'config.json' with the actual path to your JSON file
     config_data = json.load(file)
 
 # Access the paths

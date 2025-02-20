@@ -373,7 +373,8 @@ class TNC640Laser:
             #             print(f"New row with CODE {new_row[0]} added.")
 
             #         # Commit changes to the database
-            #         conn.commit()
+            #         conn.commit()  # Commit the transaction first
+                    # cur.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
 
             #         print("Data saved to MTMDB.db")
             #         TNC_win.destroy()
@@ -418,35 +419,35 @@ class TNC640Laser:
                 AM = int(data.get("AM", "0"))
                 
                 if BC == 1 and IKZ == 0 and ML == 0 and MLR == 0 and AM == 0:
-                    data["PLC"] = "%00000001"
+                    data["PLC"] = "1"
                 elif BC == 0 and IKZ == 1 and ML == 0 and MLR == 0 and AM == 0:
-                    data["PLC"] = "%00000010"
+                    data["PLC"] = "2"
                 elif BC == 1 and IKZ == 1 and ML == 0 and MLR == 0 and AM == 0:
-                    data["PLC"] = "%00000011"
+                    data["PLC"] = "3"
                 elif BC == 0 and IKZ == 0 and ML == 1 and MLR == 0 and AM == 0:
-                    data["PLC"] = "%00000100"
+                    data["PLC"] = "4"
                 elif BC == 0 and IKZ == 1 and ML == 1 and MLR == 0 and AM == 0:
-                    data["PLC"] = "%00000110"
+                    data["PLC"] = "6"
                 elif BC == 1 and IKZ == 1 and ML == 1 and MLR == 0 and AM == 0:
-                    data["PLC"] = "%00000111"
+                    data["PLC"] = "7"
                 elif BC == 1 and IKZ == 0 and ML == 1 and MLR == 0 and AM == 0:
-                    data["PLC"] = "%00000101"
+                    data["PLC"] = "5"
                 elif BC == 0 and IKZ == 1 and ML == 0 and MLR == 1 and AM == 0:
-                    data["PLC"] = "%00001010"
+                    data["PLC"] = "10"
                 elif BC == 1 and IKZ == 0 and ML == 0 and MLR == 1 and AM == 0:
-                    data["PLC"] = "%00001001"
+                    data["PLC"] = "9"
                 elif BC == 0 and IKZ == 1 and ML == 0 and MLR == 0 and AM == 1:
-                    data["PLC"] = "%00010010"
+                    data["PLC"] = "18"
                 elif BC == 1 and IKZ == 0 and ML == 0 and MLR == 0 and AM == 1:
-                    data["PLC"] = "%00010001"
+                    data["PLC"] = "17"
                 elif BC == 1 and IKZ == 1 and ML == 0 and MLR == 0 and AM == 1:
-                    data["PLC"] = "%00010011"
+                    data["PLC"] = "19"
                 elif BC == 1 and IKZ == 1 and ML == 0 and MLR == 1 and AM == 0:
-                    data["PLC"] = "%00001011"
+                    data["PLC"] = "11"
                 elif BC == 0 and IKZ == 0 and ML == 0 and MLR == 0 and AM == 1:
-                    data["PLC"] = "%00010000"
+                    data["PLC"] = "16"
                 else:
-                    data["PLC"] = "%00000000"  # Default value if none of the conditions match
+                    data["PLC"] = "0"  # Default value if none of the conditions match
 
                 # Ensure no empty values in the new row (replace with '0')
                 new_row = [data.get(col, '0') if data.get(col) in (None, '', ' ') else data.get(col) for col in header]
@@ -480,7 +481,8 @@ class TNC640Laser:
                         print(f"New row with CODE {new_row[0]} added.")
 
                     # Commit changes to the database
-                    conn.commit()
+                    conn.commit()  # Commit the transaction first
+                    cursor.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
 
                     print("Data saved to MTMDB.db")
                     TNC_win.destroy()

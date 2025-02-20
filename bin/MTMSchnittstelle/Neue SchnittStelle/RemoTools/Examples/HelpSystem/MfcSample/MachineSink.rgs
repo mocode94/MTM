@@ -1,0 +1,23 @@
+HKCR
+{
+	MfcSample.MachineSink.1 = s 'MachineSink Class'
+	{
+		CLSID = s '{6DEC8521-28AD-4EA7-A116-CF4701E66B0D}'
+	}
+	MfcSample.MachineSink = s 'MachineSink Class'
+	{
+		CLSID = s '{6DEC8521-28AD-4EA7-A116-CF4701E66B0D}'
+		CurVer = s 'MfcSample.MachineSink.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {6DEC8521-28AD-4EA7-A116-CF4701E66B0D} = s 'MachineSink Class'
+		{
+			ProgID = s 'MfcSample.MachineSink.1'
+			VersionIndependentProgID = s 'MfcSample.MachineSink'
+			LocalServer32 = s '%MODULE%'
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{1B86DB0C-07D4-4A11-B426-262CECEA0B13}'
+		}
+	}
+}

@@ -221,7 +221,8 @@ for place in places:
                     AND LOWER(TRIM(platz)) = LOWER(?)
                 """, (toolRadius, toolIstLaenge, toolNummer.strip(), toolName.strip(), place_name.strip()))
 
-            conn.commit()
+            conn.commit()  # Commit the transaction first
+            cur.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
             print(f"Updated {counter} rows in the database for {place_name}.")
         except sqlite3.Error as e:
             print(f"An error occurred while updating the database: {e}")

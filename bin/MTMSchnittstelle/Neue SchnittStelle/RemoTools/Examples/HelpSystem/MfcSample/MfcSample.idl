@@ -1,0 +1,50 @@
+// MfcSample.idl : IDL source for MfcSample
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (MfcSample.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(B9950DB2-F783-4D51-A9A8-C0DE0EDBFF03),
+	helpstring("IMachineSink Interface"),
+	pointer_default(unique)
+]
+interface IMachineSink : IUnknown{
+};
+[
+	object,
+	uuid(BB348B3C-1587-4882-B5B5-DA11E4D9872B),
+	helpstring("IAutomaticSink Interface"),
+	pointer_default(unique)
+]
+interface IAutomaticSink : IUnknown{
+};
+[
+	uuid(C70AD91A-E938-479A-A708-4FA42FC2C9BB),
+	version(1.0),
+	helpstring("MfcSample 1.0 Type Library")
+]
+library MfcSampleLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(6DEC8521-28AD-4EA7-A116-CF4701E66B0D),
+		helpstring("MachineSink Class")
+	]
+	coclass MachineSink
+	{
+		[default] interface IMachineSink;
+	};
+	[
+		uuid(C7B64E20-B8F6-476D-B4F2-FC5DAD2BDBDC),
+		helpstring("AutomaticSink Class")
+	]
+	coclass AutomaticSink
+	{
+		[default] interface IAutomaticSink;
+	};
+};

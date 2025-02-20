@@ -1,0 +1,23 @@
+HKCR
+{
+	MfcSample.AutomaticSink.1 = s 'AutomaticSink Class'
+	{
+		CLSID = s '{C7B64E20-B8F6-476D-B4F2-FC5DAD2BDBDC}'
+	}
+	MfcSample.AutomaticSink = s 'AutomaticSink Class'
+	{
+		CLSID = s '{C7B64E20-B8F6-476D-B4F2-FC5DAD2BDBDC}'
+		CurVer = s 'MfcSample.AutomaticSink.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {C7B64E20-B8F6-476D-B4F2-FC5DAD2BDBDC} = s 'AutomaticSink Class'
+		{
+			ProgID = s 'MfcSample.AutomaticSink.1'
+			VersionIndependentProgID = s 'MfcSample.AutomaticSink'
+			LocalServer32 = s '%MODULE%'
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{}'
+		}
+	}
+}

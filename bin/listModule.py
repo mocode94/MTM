@@ -414,7 +414,7 @@ class listModule:
             label_index.grid(row=0, column=0, sticky=tk.W)
             label_tnum = Label(wz_info_win, text="Wz Nummer ist : " + str(nr_value_str),font=label_font)
             label_tnum.grid(row=1, column=0, sticky=tk.W)
-            label_lag = Label(wz_info_win, text="Wo: " + str(lag_value_str),font=label_font)
+            label_lag = Label(wz_info_win, text="Platz: " + str(lag_value_str),font=label_font)
             label_lag.grid(row=3, column=0, sticky=tk.W)
 
     def showsonstiges(self):
@@ -423,7 +423,7 @@ class listModule:
         sonstiges_table.geometry("2000x800")
         
         table = ttk.Treeview(sonstiges_table, columns=('QR', 'T_Nummer', 'T_Name','Typ', 'T_Radius', 'Eckenradius','Spitzenwinkel','Eintauchwinkel','Schneiden','Schnittlaenge' ,'Ausspann_Laenge'
-                                                  ,'IST_Laenge', 'SOLL_Laenge', 'Steigung','Wzg_ArtNr', 'Aufn_ArtNr', 'zus_Komp', 'zus_Komp2', 'Spann_Sys', 'Wo'))
+                                                  ,'IST_Laenge', 'SOLL_Laenge', 'Steigung','Wzg_ArtNr', 'Aufn_ArtNr', 'zus_Komp', 'zus_Komp2', 'Spann_Sys', 'Platz'))
         table.column('#0', width=0, stretch=tk.NO)
         table.heading('QR', text='QR', anchor='center')
         table.heading('T_Nummer', text='T_Nummer', anchor='center')
@@ -444,7 +444,7 @@ class listModule:
         table.heading('zus_Komp', text='zus_Komp', anchor='center')
         table.heading('zus_Komp2', text='zus_Komp2', anchor='center')
         table.heading('Spann_Sys', text='Spann_Sys', anchor='center')
-        table.heading('Wo', text='Wo', anchor='center')
+        table.heading('Platz', text='Platz', anchor='center')
 
         table.column('QR', width=50, anchor='center')
         table.column('T_Nummer', width=60, anchor='center')
@@ -465,7 +465,7 @@ class listModule:
         table.column('zus_Komp', width=80, anchor='center')
         table.column('zus_Komp2', width=80, anchor='center')
         table.column('Spann_Sys', width=80, anchor='center')
-        table.column('Wo', width=40, anchor='center')
+        table.column('Platz', width=40, anchor='center')
 
         table.tag_configure('evenrow', background='#ad1010')
         table.tag_configure('oddrow', background='#ffffff')
@@ -541,9 +541,8 @@ class Liste:
 
       # Define a custom style for the Treeview
         style = ttk.Style()
-        style.configure("Treeview", font=("Arial", 12))  # Set font size to 12
+        style.configure("Treeview", font=("Arial", 12,"bold"))  # Set font size to 12
         style.configure("Treeview.Heading", font=("Arial", 14, "bold"))  # Set header font size to 14
-
         self.table = ttk.Treeview(self.liste, columns=('QR', 'T_Nummer', 'T_Name', 'T_Radius','Schnittlaenge' ,'Ausspann_Laenge','IST_Laenge','Status'))
 
         self.table.heading('QR', text='QR', anchor='center')
@@ -565,7 +564,7 @@ class Liste:
         # self.table.heading('zus_Komp', text='zus_Komp', anchor='center')
         # self.table.heading('zus_Komp2', text='zus_Komp2', anchor='center')
         # self.table.heading('Spann_Sys', text='Spann_Sys', anchor='center')
-        # self.table.heading('Wo', text='Wo', anchor='center')
+        # self.table.heading('Platz', text='Platz', anchor='center')
         self.table.heading('Status', text='Status', anchor='center')
 
         self.table.column("#0", width=0, stretch=tk.NO)
@@ -588,7 +587,7 @@ class Liste:
         # self.table.column('zus_Komp', width=100, anchor='center')
         # self.table.column('zus_Komp2', width=100, anchor='center')
         # self.table.column('Spann_Sys', width=30, anchor='center')
-        # self.table.column('Wo', width=20, anchor='center')
+        # self.table.column('Platz', width=20, anchor='center')
         self.table.column('Status', width=40, anchor='center')
 
         self.table.tag_configure('yellowcell', background='yellow')
@@ -626,11 +625,11 @@ class Liste:
         self.liste.mainloop()
 
 
-
-
-
-
     def machineStatus(self, lageort):
+        for dict in places:
+            if dict["placename"] == lageort:
+                if dict["status"] =="place":
+                    return
         # Function to check if IP is reachable using Tnccmd
         def ping_ip(ip):
             try:
@@ -715,7 +714,8 @@ class Liste:
         
         # Iterate through the data and apply the same conditions as before
         for i, t_row in enumerate(currentToolsData):
-            if t_row[19] == lageort:
+            if t_row[19] == lageort or (t_row[19] and t_row[19].split(' - ')[0].strip() == lageort):
+
                 # Apply conditions and insert rows into the table with appropriate tags
                 if t_row[2] in [row[1] for row in master_data] and \
                         float(t_row[11]) + float([row[21] for row in master_data if row[1] == t_row[2]][0]) * 0.2 > float([row[22] for row in master_data if row[1] == t_row[2]][0]) and \
@@ -723,7 +723,7 @@ class Liste:
                         t_row[15] == [row[46] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[16] == [row[47] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[15][:6] in ["304272", "304450"]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Prüfen...\U0001F50D",)
 
                     self.table.insert('', 'end', values=short_t_row, tags=('yellowcell',))
 
@@ -732,12 +732,12 @@ class Liste:
                         t_row[14] == [row[45] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[15] == [row[46] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[16] == [row[47] for row in master_data if row[1] == t_row[2]][0]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Prüfen...\U0001F50D",)
 
                     self.table.insert('', 'end', values=short_t_row, tags=('greencell',))
 
                 elif t_row[2] not in [row[1] for row in master_data]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Prüfen...\U0001F50D",)
 
                     self.table.insert('', 'end', values=short_t_row, tags=('bluecell',))
 
@@ -745,7 +745,7 @@ class Liste:
                         t_row[14] != [row[45] for row in master_data if row[1] == t_row[2]][0] or \
                         t_row[15] != [row[46] for row in master_data if row[1] == t_row[2]][0] or \
                         t_row[16] != [row[47] for row in master_data if row[1] == t_row[2]][0]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Prüfen...\U0001F50D",)
 
 
                     self.table.insert('', 'end', values=short_t_row, tags=('orangecell',))
@@ -758,7 +758,7 @@ class Liste:
                         t_row[15] == [row[46] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[16] == [row[47] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[15][:6] in ["304272", "304450"]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+(t_row[19],)
 
 
                     self.table.insert('', 'end', values=short_t_row, tags=('yellowcell',))
@@ -768,13 +768,13 @@ class Liste:
                         t_row[14] == [row[45] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[15] == [row[46] for row in master_data if row[1] == t_row[2]][0] and \
                         t_row[16] == [row[47] for row in master_data if row[1] == t_row[2]][0]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+(t_row[19],)
 
 
                     self.table.insert('', 'end', values=short_t_row, tags=('greencell',))
 
                 elif t_row[2] not in [row[1] for row in master_data]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+(t_row[19],)
 
 
                     self.table.insert('', 'end', values=short_t_row, tags=('bluecell',))
@@ -783,210 +783,275 @@ class Liste:
                         t_row[14] != [row[45] for row in master_data if row[1] == t_row[2]][0] or \
                         t_row[15] != [row[46] for row in master_data if row[1] == t_row[2]][0] or \
                         t_row[16] != [row[47] for row in master_data if row[1] == t_row[2]][0]:
-                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
+                    short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+(t_row[19],)
 
 
                     self.table.insert('', 'end', values=short_t_row, tags=('orangecell',))
 
         # Close the database connection after finishing
         conn.close()
-        # def monitor_output(process, output_queue):
-        #     """
-        #     Continuously read the output of the process and add it to the queue.
-        #     """
-        #     try:
-        #         for line in iter(process.stdout.readline, ''):
-        #             output_queue.put(line.strip())
-        #     except Exception as e:
-        #         print(f"Error reading process output: {e}")
 
-        # for place in places:
-        #     if place["status"] == "machine" and place["placename"] == self.listname :
-        #         ip_address = place["link"]
-        #         place_name = place["placename"]
-        #         # Path to the TNCCmd executable
-        #         tnc_cmd_path = paths["TNCcmd"]  # Replace with the actual path
+        def monitor_output(process, output_queue):
+            """
+            Continuously read the output of the process and add it to the queue.
+            """
+            try:
+                for line in iter(process.stdout.readline, ''):
+                    output_queue.put(line.strip())
+            except Exception as e:
+                print(f"Error reading process output: {e}")
 
-        #         try:
-        #             print(f"Connecting with {place_name} with Ip Address : {ip_address}.....")
+        def run_long_process():
+            for place in places:
+                print({place["placename"]})
+                print(self.listname)
+                if place["placename"] == self.listname :
+                    if place["status"] == "machine" :
+                        print(f"here is placename {place["placename"]} and here is status {place["status"]}")
+                        ip_address = place["link"]
+                        place_name = place["placename"]
+                        # Path to the TNCCmd executable
+                        tnc_cmd_path = paths["TNCcmd"]  # Replace with the actual path
 
-        #             # Start the TNCCmd process
-        #             process = subprocess.Popen(
-        #                 tnc_cmd_path,
-        #                 stdin=subprocess.PIPE,
-        #                 stdout=subprocess.PIPE,
-        #                 stderr=subprocess.PIPE,
-        #                 text=True
-        #             )
+                        try:
+                            print(f"Connecting with {place_name} with Ip Address : {ip_address}.....")
 
-        #             # Allow the program to start
-        #             time.sleep(1)
+                            # Start the TNCCmd process
+                            process = subprocess.Popen(
+                                tnc_cmd_path,
+                                stdin=subprocess.PIPE,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                text=True
+                            )
 
-        #             # Monitor process output using a queue
-        #             output_queue = Queue()
-        #             output_thread = threading.Thread(target=monitor_output, args=(process, output_queue))
-        #             output_thread.daemon = True
-        #             output_thread.start()
+                            # Allow the program to start
+                            time.sleep(1)
 
-        #             # Send the 'connect' command
-        #             process.stdin.write("connect\n")
-        #             process.stdin.flush()
-        #             time.sleep(1)
+                            # Monitor process output using a queue
+                            output_queue = Queue()
+                            output_thread = threading.Thread(target=monitor_output, args=(process, output_queue))
+                            output_thread.daemon = True
+                            output_thread.start()
 
-        #             # Send the 'i' command
-        #             process.stdin.write("i\n")
-        #             process.stdin.flush()
-        #             time.sleep(1)
+                            # Send the 'connect' command
+                            process.stdin.write("connect\n")
+                            process.stdin.flush()
+                            time.sleep(1)
 
-        #             # Send the IP address
-        #             process.stdin.write(f"{ip_address}\n")
-        #             process.stdin.flush()
-        #             time.sleep(1)
+                            # Send the 'i' command
+                            process.stdin.write("i\n")
+                            process.stdin.flush()
+                            time.sleep(1)
 
-        #             start_time = time.time()
-        #             connected = False
+                            # Send the IP address
+                            process.stdin.write(f"{ip_address}\n")
+                            process.stdin.flush()
+                            time.sleep(1)
 
-        #             while time.time() - start_time < 5:  # Wait up to 5 seconds
-        #                 try:
-        #                     line = output_queue.get(timeout=0.1)
-        #                     print(line)  # Print output for debugging purposes
+                            start_time = time.time()
+                            connected = False
 
-        #                     if "Connection established" in line:
-        #                         connected = True
-        #                         print(f"Connection to {place_name} with Ip Address: {ip_address} established.")
-        #                         break
-        #                     elif "abort with ESC!" in line:
-        #                         print(f"Connection to {place_name} with Ip Address: {ip_address} in progress...")
-        #                 except Empty:
-        #                     continue
+                            while time.time() - start_time < 5:  # Wait up to 5 seconds
+                                try:
+                                    line = output_queue.get(timeout=0.1)
+                                    print(line)  # Print output for debugging purposes
 
-        #             if not connected:
-        #                 print(f"Connection to {ip_address} timed out. Aborting...")
-        #                 process.stdin.write("\x1b\n")  # Send ESC key
-        #                 process.stdin.flush()
-        #                 process.terminate()
-        #                 continue
+                                    if "Connection established" in line:
+                                        connected = True
+                                        print(f"Connection to {place_name} with Ip Address: {ip_address} established.")
+                                        break
+                                    elif "abort with ESC!" in line:
+                                        print(f"Connection to {place_name} with Ip Address: {ip_address} in progress...")
+                                except Empty:
+                                    continue
 
-        #             # Proceed with file operations if connected
-        #             print(f"Successfully connected to {place_name} with Ip Address: {ip_address}. Proceeding with file operations...")
+                            if not connected:
+                                print(f"Connection to {ip_address} timed out. Aborting...")
+                                process.stdin.write("\x1b\n")  # Send ESC key
+                                process.stdin.flush()
+                                process.terminate()
+                                continue
 
-        #             # # Get tool.t
-        #             # process.stdin.write(f"get TNC:\\table\\tool.t X:\\Projekt\\{ip_address}.t\n")
-        #             # process.stdin.flush()
-        #             # time.sleep(1)
-
-        #             # Get tool_p.tch
-        #             process.stdin.write(f"get TNC:\\table\\tool_p.tch X:\\Projekt\\{ip_address}.tch\n")
-        #             process.stdin.flush()
-        #             time.sleep(1)
-
-        #             # Close the stdin to signal end of input
-        #             process.stdin.close()
-
-        #             # Read and print the output (optional)
-        #             output, error = process.communicate()
-        #             # print("Output:\n", output)
-        #             print("Error:\n", error if error else "No errors.")
-
-        #         except FileNotFoundError:
-        #             print("Error: TNCCmd executable not found. Please check the path.")
-        #             break
-        #         except Exception as e:
-        #             print(f"An error occurred: {e}")
-        #             break
+                            # Proceed with file operations if connected
+                            print(f"Successfully connected to {place_name} with Ip Address: {ip_address}. Proceeding with file operations...")
 
 
-        #         # Path to the generated .tch file
-        #         tch_file_path = f"X:\\Projekt\\{ip_address}.tch"
+                            # Get tool_p.tch
+                            process.stdin.write(f"get TNC:\\table\\tool_p.tch {paths["temp"]}{ip_address}.tch\n")
+                            process.stdin.flush()
+                            time.sleep(1)
 
-        #         # List to store the extracted data from .tch
-        #         tchData = []
+                            # Close the stdin to signal end of input
+                            process.stdin.close()
 
-        #         try:
-        #             # Open the .tch file for reading
-        #             with open(tch_file_path, 'r') as tch_file:
-        #                 # Skip the first two lines
-        #                 next(tch_file)
-        #                 next(tch_file)
+                            # Read and print the output (optional)
+                            output, error = process.communicate()
+                            # print("Output:\n", output)
+                            print("Error:\n", error if error else "No errors.")
 
-        #                 # Process the remaining lines
-        #                 for line in tch_file:
-        #                     # Extract columns based on fixed widths
-        #                     tchCol1 = line[:8].strip()  # First column (ignored)
-        #                     tchCol2 = line[8:14].strip()  # Second column
-        #                     tchCol3 = line[14:46].strip()  # Third column
+                        except FileNotFoundError:
+                            print("Error: TNCCmd executable not found. Please check the path.")
+                            break
+                        except Exception as e:
+                            print(f"An error occurred: {e}")
+                            break
 
-        #                     # Skip lines where the third column is empty
-        #                     if tchCol3:
-        #                         tchData.append([tchCol2, tchCol3])
 
-        #             print("Extracted Data from .tch:", tchData ,"\n")
+                        # Path to the generated .tch file
+                        tch_file_path = paths["temp"]+ip_address+".tch"
 
-        #         except FileNotFoundError:
-        #             print(f"Error: File {tch_file_path} not found.")
-        #             break
-        #         except Exception as e:
-        #             print(f"An error occurred: {e}")
-        #             break
+                        # List to store the extracted data from .tch
+                        tchData = []
 
-        #         # Connect to the MTMDB.db SQLite database
-        #         conn = sqlite3.connect(paths["MTMDB"])
-        #         cur = conn.cursor()
+                        try:
+                            # Open the .tch file for reading
+                            with open(tch_file_path, 'r') as tch_file:
+                                # Skip the first two lines
+                                next(tch_file)
+                                next(tch_file)
+
+                                # Process the remaining lines
+                                for line in tch_file:
+                                    # Extract columns based on fixed widths
+                                    tchCol1 = line[:8].strip()  # First column (ignored)
+                                    tchCol2 = line[8:14].strip()  # Second column
+                                    tchCol3 = line[14:46].strip()  # Third column
+
+                                    # Skip lines where the third column is empty
+                                    if tchCol3:
+                                        tchData.append([tchCol2, tchCol3])
+
+                            print("Extracted Data from .tch:", tchData ,"\n")
+
+                        except FileNotFoundError:
+                            print(f"Error: File {tch_file_path} not found.")
+                            break
+                        except Exception as e:
+                            print(f"An error occurred: {e}")
+                            break
+
+                        # Connect to the MTMDB.db SQLite database
+                        conn = sqlite3.connect(paths["MTMDB"])
+                        cur = conn.cursor()
+                        
+                        # Fetch all data from the currentTools table
+                        cur.execute("SELECT * FROM currentTools")
+                        currentToolsData = cur.fetchall()
+                        currentToolDataList=[]
+
+                        for tool in currentToolsData:
+                            if tool[19]==self.listname:
+
+                                currentToolDataList.append([tool[1],tool[2]])
+            
+                    # Sort and align matched items
+                    tchItemIndex0Int=[]
+                    matched_items = []
+
+                    # Find matched and unmatched items
+                    for tch_item in tchData:
+                        if tch_item:
+                            tch_item[0]=int(tch_item[0])
+                            tchItemIndex0Int.append(tch_item)
+                            print(f"here is tch_item modified {tch_item}")
+                    for modifiedTchItem in tchItemIndex0Int:
+                        if any(modifiedTchItem[0] == currentTool[0] for currentTool in currentToolDataList):
+                            print(f"here is tch_item integer {modifiedTchItem}")
+                            matched_items.append(modifiedTchItem)
+
+                    treeviewRows=[]
+                    for row_id in self.table.get_children():  # Get all row identifiers (iids)
+                        values = self.table.item(row_id, "values")  # Get the current values for this row
+                        values=list(values)
+                        values[1]=int(values[1])
+                        treeviewRows.append(values)
+
+                    treeviewRows = []
+
+                    # Collect row data with their IDs
+                    for row_id in self.table.get_children():  # Get all row identifiers (iids)
+                        values = self.table.item(row_id, "values")  # Get the current values for this row
+                        values = list(values)
+                        values[1] = int(values[1])  # Convert the second column to an integer
+                        treeviewRows.append((row_id, values))  # Store row_id along with the row values
+
+                    # Check and update matching tools
+                    for checkingTool in matched_items:
+                        for row_id, treeviewRow in treeviewRows:
+                            if checkingTool[0] == treeviewRow[1] and checkingTool[1] == treeviewRow[2]:
+                                # Update column 8 (index 7, zero-based) to "Vorhanden ✅"
+                                treeviewRow[7] = "Vorhanden \u2705"
+                                
+                                # Update the row in the Treeview with the modified values
+                                self.table.item(row_id, values=treeviewRow)
+                                break
                 
-        #         # Fetch all data from the currentTools table
-        #         cur.execute("SELECT * FROM currentTools")
-        #         currentToolsData = cur.fetchall()
-        #         currentToolDataList=[]
-
-        #         for tool in currentToolsData:
-        #             if tool[19]==self.listname:
-        #                 currentToolDataList.append([str(tool[1]),tool[2]])
-        #             else:
-        #                 pass
-
-        #         for i in currentToolDataList:
-        #             print(i)
 
 
-        # # Sort and align matched items
-        # matched_items = []
-        # unmatched_tch = []
-        # unmatched_tools = []
-
-        # # Find matched and unmatched items
-        # for tch_item in tchData:
-        #     if tch_item in currentToolDataList:
-        #         matched_items.append((tch_item, tch_item))
-        #     else:
-        #         unmatched_tch.append((tch_item, None))
-
-        # for tool_item in currentToolDataList:
-        #     if tool_item not in tchData:
-        #         unmatched_tools.append((None, tool_item))
-
-        # for tool in currentToolsData:
-        #     if t_row[19] == lageort:
-        #         for checkingTool in matched_items:
-        #             if tool[2] == checkingTool[0][1] and tool[1] == checkingTool[0][0]:
-        #                 short_t_row [7]= ("Vorhanden",)
-        #                 self.table.insert('', 'end', values=short_t_row)
-        #             else:
-        #                 short_t_row [7]= ("Nicht Vorhanden",)
-        #                 self.table.insert('', 'end', values=short_t_row)
 
 
-        # for i, t_row in enumerate(currentToolsData):
-        #     if t_row[19] == lageort:
-        #         # Apply conditions and insert rows into the table with appropriate tags
-        #         if t_row[1] in [row[1] for row in master_data] and \
-        #                 float(t_row[11]) + float([row[21] for row in master_data if row[1] == t_row[2]][0]) * 0.2 > float([row[22] for row in master_data if row[1] == t_row[2]][0]) and \
-        #                 t_row[14] == [row[45] for row in master_data if row[1] == t_row[2]][0] and \
-        #                 t_row[15] == [row[46] for row in master_data if row[1] == t_row[2]][0] and \
-        #                 t_row[16] == [row[47] for row in master_data if row[1] == t_row[2]][0] and \
-        #                 t_row[15][:6] in ["304272", "304450"]:
-        #             short_t_row = t_row[:3] + (t_row[4],) + t_row[9:12]+("Checking",)
 
-        #             self.table.insert('', 'end', values=short_t_row, tags=('yellowcell',))
+
+            # for checkingTool in matched_items:
+            #     if any(checkingTool[0] == treeviewRow[1] and checkingTool[1] == treeviewRow[2] for treeviewRow in treeviewRows):
+            #         # Convert values to a list for modification
+            #         # new_values = treeviewRow
+                    
+            #         # Update column 8 (index 7, zero-based) to "ok"
+            #         treeviewRow[7] = "Vorhanden \u2705"
+                    
+            #         # Update the row in the Treeview with new values
+            #         self.table.item(row_id, values=treeviewRow)
+
+
+
+
+
+                # elif checkingTool not in treeviewRows:
+                #     # new_values = list(values)
+
+                #     treeviewRow[7] = "Nicht Vorhanden \u274C"
+                    
+                #     # Update the row in the Treeview with new values
+                #     self.table.item(row_id, values=treeviewRow)
+
+
+            # for checkingTool in matched_items:
+            #     print(f"here is checkingTool {checkingTool}")
+            #     if checkingTool:
+
+            #             for treeviewRow in values:
+            #                 # print(f"here is treeviewRow {treeviewRow}")
+            #                 treeviewRows.append([str(treeviewRow[1]),treeviewRow[2]])
+
+            #             if checkingTool in treeviewRows:
+            #                 # Convert values to a list for modification
+            #                 new_values = list(values)
+                            
+            #                 # Update column 8 (index 7, zero-based) to "ok"
+            #                 new_values[7] = "Vorhanden \u2705"
+                            
+            #                 # Update the row in the Treeview with new values
+            #                 self.table.item(row_id, values=new_values)
+            #             elif checkingTool not in treeviewRows:
+            #                 new_values = list(values)
+
+            #                 new_values[7] = "Nicht Vorhanden \u274C"
+                            
+            #                 # Update the row in the Treeview with new values
+            #                 self.table.item(row_id, values=new_values)
+        # Start the long-running process in a separate thread
+        process_thread = threading.Thread(target=run_long_process)
+        process_thread.daemon = True
+        process_thread.start()
+
+        # Continue with the rest of your code
+        # You can wait for the thread to finish if necessary, or handle it asynchronously
+        # process_thread.join()  # Optional, only if you need to wait for it to complete
+
+        # Close the database connection
+        conn.close()
 
     def search_treeview(self):
         search_value = self.search_var.get().strip().lower()
@@ -1107,8 +1172,6 @@ class Liste:
             button_bemerkungen=tk.Button(self.info_frame,text="Tool Details",command= lambda: self.showToolDetails(selected_row),width=25,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
             button_bemerkungen.grid(pady=10)
 
-            button_bemerkungen=tk.Button(self.info_frame,text="line",command= self.showline,width=25,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
-            button_bemerkungen.grid(pady=10)
 
 
         else:
@@ -1136,23 +1199,21 @@ class Liste:
                 self.photo_images_list.append(default_img1_photo)  # Store reference in the list
             tk.Label(self.info_frame, text="Das ist ein Sonderwerkzeug",font=bold_font).grid()
             tk.Label(self.info_frame, text="Keine Schnittdaten vorhanden",font=bold_font).grid()
+            button_bemerkungen=tk.Button(self.info_frame,text="Bemerkungen",command= lambda: self.bemerkungen_lesen(selected_row[0]),width=25,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
+            button_bemerkungen.grid(pady=10)
+
+            button_bemerkungen=tk.Button(self.info_frame,text="Tool Details",command= lambda: self.showToolDetails(selected_row),width=25,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
+            button_bemerkungen.grid(pady=10)
 
 
-    def showline(self):
-        # Get all items in the Treeview
-        items = self.table.get_children()
-        # Check if there are at least two rows
-        if len(items) > 1:
-            second_row = self.table.item(items[1], 'values')  # Get the second row
-            print(f"Second row: {second_row}")
-        else:
-            print("No second row available.")
 
-    def showToolDetails(self,selected_row):
+
+
+    def showToolDetails(self, selected_row):
         # Create a Toplevel window
         table_window = tk.Toplevel()
         table_window.title("Selected Row Details")
-        table_window.geometry("400x600")  # Adjust window size as needed
+        table_window.geometry("400x450")  # Adjust window size as needed
 
         # Example usage
         headers = [
@@ -1160,13 +1221,13 @@ class Liste:
             'Spitzenwinkel', 'Eintauchwinkel', 'Schneiden', 'Schnittlaenge',
             'Ausspann_Laenge', 'IST_Laenge', 'SOLL_Laenge', 'Steigung',
             'Wzg_ArtNr', 'Aufn_ArtNr', 'zus_Komp', 'zus_Komp2',
-            'Spann_Sys', 'Wo'
+            'Spann_Sys', 'Platz'
         ]
 
         # Define a custom style for the Treeview
         style = ttk.Style()
-        style.configure("Treeview", font=("Arial", 12))  # Set font size to 12
-        style.configure("Treeview.Heading", font=("Arial", 14, "bold"))  # Set header font size to 14
+        style.configure("Treeview", font=("Arial", 12, "bold"), background="yellow")  # Set bold font and yellow background for the whole table
+        style.configure("Treeview.Heading", font=("Arial", 14, "bold"), background="yellow")  # Set bold font and yellow background for the headers
 
         # Define the Treeview widget with two columns
         tree = ttk.Treeview(table_window, columns=("Name", "Werte"), show="headings", height=20)
@@ -1179,12 +1240,24 @@ class Liste:
         tree.column("Name", width=200, anchor="w")  # Adjust as needed
         tree.column("Werte", width=200, anchor="w")  # Adjust as needed
 
-        # Insert data into the table
-        for header, value in zip(headers, selected_row):
+        # Define two alternating shades of yellow
+        even_row_color = "#FFFF99"  # Lighter yellow
+        odd_row_color = "#FFEB99"   # Slightly darker yellow
+
+        # Insert data into the table with alternating row colors
+        for idx, (header, value) in enumerate(zip(headers, selected_row)):
+            # Alternate row colors
+            bg_color = even_row_color if idx % 2 == 0 else odd_row_color
+
+            # Insert row with background color
             tree.insert("", tk.END, values=(header, value))
+            tree.tag_configure(f"row{idx}", background=bg_color)
+            tree.item(tree.get_children()[-1], tags=f"row{idx}")
 
         # Add Treeview to the window
         tree.pack(expand=True, fill="both")
+
+
 
 
 
@@ -1271,13 +1344,9 @@ class Liste:
                     # Proceed with file operations if connected
                     print(f"Successfully connected to {place_name} with Ip Address: {ip_address}. Proceeding with file operations...")
 
-                    # # Get tool.t
-                    # process.stdin.write(f"get TNC:\\table\\tool.t X:\\Projekt\\{ip_address}.t\n")
-                    # process.stdin.flush()
-                    # time.sleep(1)
 
                     # Get tool_p.tch
-                    process.stdin.write(f"get TNC:\\table\\tool_p.tch X:\\Projekt\\{ip_address}.tch\n")
+                    process.stdin.write(f"get TNC:\\table\\tool_p.tch {paths["temp"]}{ip_address}.tch\n")
                     process.stdin.flush()
                     time.sleep(1)
 
@@ -1298,7 +1367,7 @@ class Liste:
 
 
                 # Path to the generated .tch file
-                tch_file_path = f"X:\\Projekt\\{ip_address}.tch"
+                tch_file_path = paths["temp"]+ip_address+".tch"
 
                 # List to store the extracted data from .tch
                 tchData = []
@@ -1558,8 +1627,3 @@ class Liste:
 
 
 
-    # def load_variables_from_json(self,path):
-    #     with open(f"D:\\Projekt\\Mo Tool Manager\\motoolmanager\\{path}", 'r') as f:
-    #         file_paths = json.load(f)
-    #     return file_paths
-    

@@ -103,7 +103,8 @@ else:
     print("No data was inserted. Please check the CSV file or delimiter.")
 
 # Commit changes and close the connection
-conn.commit()
+conn.commit()  # Commit the transaction first
+cur.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
 conn.close()
 
 

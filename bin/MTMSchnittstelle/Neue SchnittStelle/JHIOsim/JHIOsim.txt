@@ -1,0 +1,148 @@
+Versionsdokumentation JHIOsim SDK
+---------------------------------
+
+09.03.2022 JHIOsim.dll v5.2.033
+===============================
+- Unterstützt auch MAP 5.00 Format (32 Zeichen lange Symbolnamen)
+- Platform Toolset v140 (Studio 2015) 
+
+01.11.2019 JHIOsim.dll v5.1.031
+===============================
+- Es wird kein Fehler mehr bei InternInit zurückgegeben, wenn der Speicher 
+  schon als initialisiert markiert ist. Das hatte in einem bestimmten Anwendungsfall 
+  zum Absturz des jhiosimhostd Prozesses geführt (Call 130856, CR 78646)
+
+20.02.2017 JHIOsim.dll v5.0.030
+===============================
+- Unterstützung von mehreren parallelen Instanzen auf einem Rechner (MLST 12)
+
+14.05.2016 JHIOsim.dll v4.2.029
+===============================
+- Unterstützt auch das MAP 4.10 Format
+- Signierte Version
+
+18.01.2016 JHIOsim.dll v4.1.028
+===============================
+- Unterstützt auch MAP 4.00 Format (MST 11)
+
+
+06.03.2015 JHIOsim.dll v4.0.026 
+===============================
+- Zugriff auf _JHIOInternGetDataSize und _JHIOInternGetHeaderSize über Funktionspointer hat nicht funktioniert
+
+
+19.11.2014 JHIOsim.dll v4.0.025 Releaseversion (IOsim.010 z.B. für TNC 640 340595 05)
+=====================================================================================
+- Problem mit Synchronisation bei Neustart der iTNC 530 behoben
+
+
+02.10.2014 JHIOsim.dll v4.0.024 Releaseversion
+==============================================
+- Shared Memory mit Speicherlayout 4.0
+- Shared Memory Größe 64 kByte statt 16 kByte
+
+
+12.02.2014 JHIOsim.dll v3.1.023 Releaseversion (für 606425 03, 340595 04) 
+=========================================================================
+(Shared Memory hat weiterhin Speicherlayout 3.0)
+
+- Auch ohne dass der Programmierplatz eine MAP Datei bereitstellt können bei GetAddressByName
+  jetzt logische I/O Namen aufgelöst werden
+- Neue Funktionen _JHIOInternGetBlockEx und _JHIOInternPutBlockEx
+
+
+08.01.2014 JHIOsim.dll v3.0.022 Releaseversion (für MLST8) 
+==========================================================
+- VERBOSE Logging-Datei wird über Environment-Variable JHIOLOG gesetzt
+- Die DLL meldet jetzt Fehler JHIO_ERROR_VERSION, wenn von der NC Software mit der _JHIOInternInit() Funktion
+  eine neuere Versionsnummer in den Header eingesetzt wird, als von der DLL unterstützt wird.
+- IOsimTest Anwendung um einen Toggle Button für logische I/Os erweitert
+
+
+22.06.2012 JHIOsim.dll v3.0.021 Releaseversion (für 340494 08/606424 03) 
+========================================================================
+- Weil die PLC jetzt für den ganzen zyklischen PLC Lauf einen Lock setzt, konnte es dazu kommen, dass der 
+  IPO für das Setzen/Lesen der Tasterein-/ausgänge und schnellen Eingänge bis zu 1 Sek. blockiert war. 
+  Für eine Lösung dieses Problems wurde _JHIOInternGetBlockEx(), _JHIOInternPutBlockEx() ohne Locking bzw. 
+  mit Angabe des Timeouts eingeführt.
+
+
+
+22.06.2012 JHIOsim.dll v3.0.020 Releaseversion (für 340494 08/606424 03) 
+========================================================================
+- util -> common
+
+18.04.2012 JHIOsim.dll v3.0.019 Testversion DMG
+===============================================
+- Support von x64 Images (VS2010)
+
+26.03.2012 JHIOsim.dll v3.0.018 Testversion DMG
+===============================================
+- Es wird jetzt mehreren Anwendungen, die JHIOsim für die I/O Simulation einsetzen, 
+  mittels WaitForPlcCycleDone() ermöglicht, sich mit dem PLC Lauf der virtualTNC zu synchronisieren. 
+  (Call 73405)
+
+22.09.2011 JHIOsim.dll v3.0.017 (für 606424 02) 
+===============================================
+- SPLC Support: 
+  - Neue Funktion GetSPLCAddressByName()
+  - Shared Memory Header enthält jetzt SPLC Map-Dateiname
+  - Shared Memory enthält Datenbereiche für SPLC I/Os
+- Shared Memory Header enthält jetzt Startposition des Datenbereichs
+
+
+09.12.2010 JHIOsim.dll v2.0.016 (für 606424 01 2. Testversion vor erster Ausgabe)
+=================================================================================
+- Abwärtskompatibilität der DLL 
+  Das bedeutet, man kann in eine ältere PP Installation die aktuellste DLL kopieren
+  und hat dann auf Clientseite alle neuen Funktionen zur Verfügung.
+
+
+20.10.2010 JHIOsim.dll v2.0.015 (606424 01 SP2 Als Testversion vor erster Ausgabe)
+==================================================================================
+- Unterstützung von HSCI Hardwarekonfigurationen
+
+29.06.2009 JHIOsim.dll v1.6.014 (340490 06)
+===========================================
+- HEROS 5 Problem behoben:
+  Parameter fSynchronous in JHIOSetSynchronousMode() nicht mehr optional
+
+  
+26.10.2007 JHIOsim.dll v1.5.013 (340490 04)
+===========================================
+- Battery low Signal für TS unterstützt
+
+
+20.08.2007 JHIOsim.dll v1.4.012
+===============================
+- SimulationId und SynchronousOperation-Flag bleiben erhalten bei 
+  Reinitialisierung durch die Steuerung wegen Änderung der MP's zur Laufzeit
+
+
+05.06.2007 JHIOsim.dll v1.4.010
+===============================
+- Support "Betriebsbereit" Signal:
+  Abfrage mit IsControlReady()
+- Synchronisationsfunktionen für PLC-synchrone Maschinensimulation
+- Setzen einer SimulationsId, die in der PLC abgefragt werden kann
+
+
+03.03.2007 JHIOsim.dll v1.2.008
+===============================
+- Ausgabe an DMG (Hr. Herz)
+
+
+03.03.2007 JHIOsim.dll v1.2.006 (340490 03)
+===========================================
+- Support X150/X151
+- Unterstützung konfigurierbarer PLC Speicher
+
+
+09.12.2004 JHIOsim.dll v1.1.006
+===============================
+- Ausgabe mit 340494 02
+
+  
+09.12.2004 JHIOsim.dll v1.0.005
+===============================
+- erste Ausgabe an DMG (Hr. Herz)

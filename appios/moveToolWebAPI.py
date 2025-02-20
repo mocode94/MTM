@@ -1,24 +1,9 @@
-import sys  # Make sure to import sys
-
-import xml.etree.ElementTree as ET
 import os
-import csv
-# import cv2
-import tkinter.messagebox as messagebox
-from PIL import Image, ImageTk
-from tkinter import Toplevel, Label, Entry, Button, StringVar,ttk,font
-import tkinter as tk
-# import requests
-# import io
-import os
-from config import winconfig,paths,places
+from config import paths,places
 from TNC640_Daten import TNC640Laser as TNC640Laser
-
 import subprocess
-
 import time
 import sqlite3
-
 import sys
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -29,18 +14,123 @@ class main:
             print("Fetig.")
 
         else:
-            print("Error: PROZESS FEHLGESCHLAGEN.")
+            print("Error0: PROZESS FEHLGESCHLAGEN.")
+
+
 
     def platzieren(self,query,toolPlace):
 
+        if not self.inputCheck4PlattzierenFunc(query, toolPlace):
+            print("Error1: PROZESS FEHLGESCHLAGEN.")
+            return False
+
+        if self.destination=="machine":
+            if self.machineStatus(toolPlace):
+                print(f"Verbindung zu {toolPlace} gefunden \u2713")
+            else:
+                print(f"Keine Verbindung zu {toolPlace} gefunden\nbzw. {toolPlace} ist offline")
+                return False
+            
+        else:
+            if self.changeDataInDatabase(query,toolPlace):
+                return True
+            else:
+                print("Error2: PROZESS FEHLGESCHLAGEN.")
+                return False
+
+        if self.preparePLCData(query):
+            pass
+        else:
+            print("Error3: PROZESS FEHLGESCHLAGEN.")
+            return False
+
+        if self.prepareDNCDATA(toolPlace):
+            pass
+        else:
+            print("Error4: PROZESS FEHLGESCHLAGEN.")
+            return False
+         
+        if self.runDNCSchnittstelle():
+            pass
+        else:
+            print("Error5: PROZESS FEHLGESCHLAGEN.")
+            return False
+
+        if self.changeDataInDatabase(query,toolPlace):
+            pass
+        else:
+            print("Error6: PROZESS FEHLGESCHLAGEN.")
+            return False
+
+        if self.putToolinBackup(query):
+            return True
+        else:
+            print("Error7: Backup FEHLGESCHLAGEN.")
+            return True
+
+
+    def putToolinBackup(self,query):
+        try:
+            # Connect to the SQLite database
+            conn = sqlite3.connect(paths["MTMDB"])
+            cur = conn.cursor()
+            # Query the database for the matching PLC data
+            cur.execute("SELECT * FROM tnc640Data WHERE CODE = ?", (query,))
+            PlcDataRow = cur.fetchone()
+            conn.close()
+
+            # Connect to the SQLite database
+            conn = sqlite3.connect(paths["MTMDB"])
+            cur = conn.cursor()
+            # Query the database for the matching PLC data
+            cur.execute("SELECT * FROM currentTools WHERE idCode = ?", (query,))
+            ToolDataRow = cur.fetchone()
+            conn.close()
+
+
+            if PlcDataRow and ToolDataRow:
+                # Pass the current row and fetched PLC data to the addToolRowInToolTableBackup method
+                success = self.addToolRowInToolTableBackup(ToolDataRow, PlcDataRow)
+                if success is True:
+                    print(
+                        "ERFOLG",
+                        f"Das Werkzeug ist erfolgreich platziert \u2713\nUND\nsie wurde in toolTableBackup eingetragen \u2713"
+                    )
+                    return True
+                else:
+                    print(
+                        "FEHLER",
+                        f"Das Werkzeug konnte nicht platziert werden!!\nMÖGLICHE FEHLER\n-falsche Daten\nOder\nfehlende PLC-Daten."
+                    )
+                    return False
+            else:
+                # No matching PLC data found for the CODE
+                print(f"Keine passenden PLC-Daten für CODE {ToolDataRow[0]} gefunden.\nKeine passenden Daten für CODE {ToolDataRow[0]} gefunden.")
+                return False
+        except sqlite3.OperationalError as e:
+            print("Fehler", f"Fehler beim Zugriff auf die Datenbank: {e}")
+            return False
+        except Exception as e:
+            print("Fehler", f"Fehler: {str(e)}")
+            return False
+
+    def inputCheck4PlattzierenFunc(self,query, toolPlace):
+        
         selectedPlaces=[]
-        dmCodes=[]
+        maschinenNamen=[]
+        self.destination=None
    
         for place in places:
             if place["status"] == "place" and place.get("subplace"):  
                 # Add only subplace names if subplaces exist
                 for subplace in place["subplace"]:
                     selectedPlaces.append(place["placename"] + " - " + subplace["subplacename"])
+            elif  place["status"] == "place" and place.get("subplace") is None:
+                # Add the placename directly if no subplaces
+                selectedPlaces.append(place["placename"])
+            elif place["status"] == "machine":
+                # Add the placename directly if it is machine
+                maschinenNamen.append(place["placename"])
             else:
                 # Add the placename directly if no subplaces
                 selectedPlaces.append(place["placename"])
@@ -48,11 +138,17 @@ class main:
 
         if toolPlace in selectedPlaces:
             print("Platz geprueft \u2713")
-            time.sleep(2)
-
+            time.sleep(1)
+            checkPlace=True
+            self.destination="place"
+        elif toolPlace in maschinenNamen:
+            print("Platz geprueft \u2713")
+            time.sleep(1)
+            checkPlace=True
+            self.destination="machine"
         else:
             print("Error, unbekannter Platz")
-            return False
+            checkPlace=False
 
         # Connect to the MTMDB.db SQLite database
         conn = sqlite3.connect(paths["MTMDB"])
@@ -61,89 +157,68 @@ class main:
         # Fetch all data from the currentTools table
         cur.execute("SELECT * FROM currentTools")
         currentToolsData = cur.fetchall()
+        conn.close()
+
         # Iterate over the rows and update the 'platz' field if idCode is found in movingTools
         for row in currentToolsData:
             if row[0] == query:
-                dmCodes.append(row[0])
+                dmCode=row[0]
 
         
-        if query in dmCodes:
+        if query == dmCode:
             print("Code gefunden \u2713")
-            time.sleep(2)
+            time.sleep(1)
+            checkCode=True
         else:
             print("Error, unbekannter Code")
-            return False
+            checkCode=False
         
 
-        maschinenNamen=[]
-
-        for place in places:
-            if place["placename"] == toolPlace and place["status"]=="machine":
-                maschinenNamen.append(place["placename"])
-
-        rows = []
-        platzierte_rows=[]
-        TNC640DATEN_Rows=[]
-        found = False
-         
-
-
-        if toolPlace in maschinenNamen:
-            if self.machineStatus(toolPlace):
-                print(f"Verbindung zu {toolPlace} gefunden \u2713")
-            else:
-                print(f"Keine Verbindung zu {toolPlace} gefunden\nbzw. {toolPlace} ist offline")
-                return False
+        if checkPlace and checkCode:
+            return True
         else:
-            conn = sqlite3.connect(paths["MTMDB"])
-            cur = conn.cursor()
+            return False
 
+    def changeDataInDatabase(self,query,toolPlace):
+        platzierteRow=[]
 
-            # Fetch all data from the currentTools table
-            cur.execute("SELECT * FROM currentTools")
-            currentToolsData = cur.fetchall()
-            # Iterate over the rows and update the 'platz' field if idCode is found in movingTools
-            for row in currentToolsData:
-                if row[0] in query:
-                    row = list(row)  # Convert tuple to list to modify
-                    row[19] = toolPlace  # Update the 'platz' field
-                    platzierte_rows.append(row)
-                    found = True
-                    break
+        conn = sqlite3.connect(paths["MTMDB"])
+        cur = conn.cursor()
+        # Fetch all data from the currentTools table
+        cur.execute("SELECT * FROM currentTools")
+        currentToolsData = cur.fetchall()
+        conn.close()
+        # Iterate over the rows and update the 'platz' field if idCode is found in movingTools
+        for row in currentToolsData:
+            if row[0] in query:
+                row = list(row)  # Convert tuple to list to modify
+                row[19] = toolPlace  # Update the 'platz' field
+                platzierteRow.append(row)
+                found = True
+                break
 
-            # Update the database if any matching rows were found
-            if found:
-                for row in platzierte_rows:
-                    cur.execute("""
-                        UPDATE currentTools
-                        SET platz = ?
-                        WHERE idCode = ?
-                    """, (row[19], row[0]))
+        # Update the database if any matching rows were found
+        if found:
+            if platzierteRow is not None:
+                conn = sqlite3.connect(paths["MTMDB"])
+                cur = conn.cursor() 
+                cur.execute("""
+                    UPDATE currentTools
+                    SET platz = ?
+                    WHERE idCode = ?
+                """, (row[19], row[0]))
                 # Commit the changes after all updates are done
-                conn.commit()
+                conn.commit()  # Commit the transaction first
+                cur.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
                 # Ensure the connection is closed properly
                 conn.close()
                 print("Das Werkzeug ist erfolgreich platziert \u2713")
                 return True
-            else:
-                print("FEHLER", f"{row[0]} nicht in die Datenbank")
-                return False
+        else:
+            print("FEHLER", f"{row[0]} nicht in die Datenbank")
+            return False
 
-
-        # Process IP addresses
-        for dictionary in places:
-            if dictionary["placename"] == toolPlace and dictionary["status"]=="machine":
-                ip_address = dictionary["link"]
-                print(f"Verbindung zu {toolPlace} etabliert \u2713")
-                # Clean and validate IP address format
-                parts = ip_address.split('.')
-                
-                if len(parts) == 4 and all(part.isdigit() for part in parts):
-                    formatted_ip = f"[{ip_address}]"
-                    TNC640DATEN_Rows.append(formatted_ip)  # Append formatted IP address
-                else:
-                    print("FEHLER", f"falsche IP Adresseformat: {ip_address}")
-                    return False
+    def preparePLCData(self,query):
         rowData=[]
 
 
@@ -151,120 +226,128 @@ class main:
             # Connect to the MTMDB.db SQLite database
             conn = sqlite3.connect(paths["MTMDB"])
             cur = conn.cursor()
-
-
             # Fetch all data from the currentTools table
             cur.execute("SELECT * FROM currentTools")
             currentToolsData = cur.fetchall()
-
+            conn.close()
+            
             for machineCsvRow in currentToolsData:
-                if machineCsvRow:
-                    if machineCsvRow[0] == query:
-                        # Convert the tuple to a list to modify it
-                        machineCsvRow = list(machineCsvRow)
-                        machineCsvRow[15]=machineCsvRow[14]+" + "+machineCsvRow[15]
+                # KRValue=int(machineCsvRow[4]*2)
+                if machineCsvRow[0] == query:
+                    KRValue=int(int(machineCsvRow[4])*2)
+                    cfgData=machineCsvRow[15].replace(" ", "_") + ".CFG"
+                    # Convert the tuple to a list to modify it
+                    machineCsvRow = list(machineCsvRow)
+                    machineCsvRow[15]=machineCsvRow[14]+" + "+machineCsvRow[15]
+                    try:
+                        # Connect to the SQLite database
+                        conn = sqlite3.connect(paths["MTMDB"])
+                        cursor = conn.cursor()
 
-                        try:
-                            # Connect to the SQLite database
-                            conn = sqlite3.connect(paths["MTMDB"])
-                            cursor = conn.cursor()
+                        # Query the database for the matching QR code
+                        cursor.execute("SELECT * FROM tnc640Data WHERE CODE = ?", (query,))
+                        tnc640Row = cursor.fetchone()
+                        conn.close()
+                        if tnc640Row:
+                            # Join elements from machineCsvRow (excluding the first element) with tnc640Row (excluding the first element)
+                            combined_row = machineCsvRow[1:] + list(tnc640Row[1:])
+                            rowData.append(f"[{','.join(map(str, combined_row))}]")
+                            print(f"PLC-Daten für {query} gefunden \u2713")
+                            self.rowData=rowData
+                            Standart=False
+                            return True
+                            
+                        else:
+                            print(f"Warnung, Keine PLC-Daten für {query} gefunden")
+                            Standart=True
 
-                            # Query the database for the matching QR code
-                            cursor.execute("SELECT * FROM tnc640Data WHERE CODE = ?", (query,))
-                            tnc640Row = cursor.fetchone()
+                        if  Standart:
+                            if KRValue < 35:
+                                KRValue = 35
+                            elif 35<=KRValue<=80:
+                                KRValue = 80
+                            elif 80<KRValue<=125:
+                                KRValue = 125
+                            plcDataRow = [
+                                query, "0", "0", "0", "0", "0", "0", "0", "0", "0.5", "0.5",
+                                        "-1", str(KRValue), "0", "0", "0", "0", "0", "0", "0", str(cfgData), "0"
+                            ]
 
-                            if tnc640Row:
-                                # Join elements from machineCsvRow (excluding the first element) with tnc640Row (excluding the first element)
+                            try:
+                                # Connect to the SQLite database
+                                conn = sqlite3.connect(paths["MTMDB"])
+                                cursor = conn.cursor()
+
+                                # Insert the default PLC data
+                                insert_query = '''
+                                INSERT INTO tnc640Data (
+                                    CODE, NMAX, TIME1, TIME2, CURTIME, LOFFS, ROFFS, LTOL, RTOL,
+                                    LBREAK, RBREAK, DIRECT, Max_Durchmesser, Max_Laenge,P2, BC,
+                                    IKZ, ML, MLR, AM, KINEMATIC,PLC
+                                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                '''
+                                cursor.execute(insert_query, plcDataRow)
+                                conn.commit()  # Commit the transaction first
+                                cur.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
+                                conn.close()
+                                # Connect to the SQLite database
+                                conn = sqlite3.connect(paths["MTMDB"])
+                                cursor = conn.cursor()
+
+                                # Query the database for the matching QR code
+                                cursor.execute("SELECT * FROM tnc640Data WHERE CODE = ?", (query,))
+                                tnc640Row = cursor.fetchone()
+                                conn.close()
+
                                 combined_row = machineCsvRow[1:] + list(tnc640Row[1:])
                                 rowData.append(f"[{','.join(map(str, combined_row))}]")
-                                print(f"PLC-Daten für {query} gefunden \u2713")
-                                Standart=False
-                            else:
-                                print(f"FEHLER, Keine PLC-Daten für {query} gefunden")
-                                if  Standart:
-                                    plcDataRow = [
-                                        query, "0", "0", "0", "0", "0", "0", "0", "0", "0.5", "0.5",
-                                                "-1", "80", "0", "0", "0", "0", "0", "0", "0", "", "%00000000"
-                                    ]
-
-                                    try:
-                                        # Connect to the SQLite database
-                                        conn = sqlite3.connect(paths["MTMDB"])
-                                        cursor = conn.cursor()
-
-                                        # Insert the default PLC data
-                                        insert_query = '''
-                                        INSERT INTO tnc640Data (
-                                            CODE, NMAX, TIME1, TIME2, CURTIME, LOFFS, ROFFS, LTOL, RTOL,
-                                            LBREAK, RBREAK, DIRECT, Max_Durchmesser, P2, BC,
-                                            IKZ, ML, MLR, AM, PLC
-                                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                                        '''
-                                        cursor.execute(insert_query, plcDataRow)
-                                        conn.commit()
-                                        # Connect to the SQLite database
-                                        conn = sqlite3.connect(paths["MTMDB"])
-                                        cursor = conn.cursor()
-
-                                        # Query the database for the matching QR code
-                                        cursor.execute("SELECT * FROM tnc640Data WHERE CODE = ?", (query,))
-                                        tnc640Row = cursor.fetchone()
-
-
-                                        combined_row = machineCsvRow[1:] + list(tnc640Row[1:])
-                                        rowData.append(f"[{','.join(map(str, combined_row))}]")
-                                        print(f"Kein PLC Daten gefunden\nStandard PLC für {query} erstellt.\u2713")
-
-                                    except sqlite3.OperationalError as e:
-                                        print(f"Fehler beim Zugriff auf die Datenbank: {e}")
-                                        return False
-                                    except Exception as e:
-                                        print(f"Fehler beim Erstellen der PLC-Daten: {e}")
-                                        return False
-                                    finally:
-                                        # Close the database connection
-                                        conn.close()
-                                else:
-                                    print("Kein PLC-Datensatz erstellt")
-                                    return False
-
-                        except sqlite3.OperationalError as e:
-                            print(f"Fehler beim Zugriff auf die Datenbank: {e}")
-                            return False
-                        except Exception as e:
-                            print(f"Fehler: {str(e)}")
-                            return False
-                        finally:
-                            # Close the database connection
+                                print(f"Standard PLC für {query} erstellt.\u2713")
+                                self.rowData=rowData
+                                return True
+                            except sqlite3.OperationalError as e:
+                                print(f"Fehler beim Zugriff auf die Datenbank: {e}")
+                                return False
+                            except Exception as e:
+                                print(f"Fehler beim Erstellen der PLC-Daten: {e}")
+                                return False
+                            finally:
+                                if conn:# Close the database connection
+                                    conn.close()
+                    except sqlite3.OperationalError as e:
+                        print(f"Fehler beim Zugriff auf die Datenbank: {e}")
+                        return False
+                    except Exception as e:
+                        print(f"Fehler: {str(e)}")
+                        return False
+                    finally:
+                        if conn:# Close the database connection
                             conn.close()
-
-
-
-                else:
-                    print(f"{query} nicht in der Datenbank gefunden")
-                    return False
-
+            
         except Exception as e:
             print("Error2", f"An error occurred while reading the second file: {e}")
             return False
-            
-
-
-        # for row in rowData:
-        #     print(f"{formatted_ip}{row}")
-
-
-        # Write the combined formatted rows to the DNC_INPUT file
+        
+    def prepareDNCDATA(self,toolPlace):
         try:
+            for dictionary in places:
+                if dictionary["placename"] == toolPlace and dictionary["status"] == "machine":
+                    ip_address = [dictionary["link"]]
+                    print(f"Verbindung zu {toolPlace} etabliert \u2713")
+                    # Clean and validate IP address format
+
+            # Manually format the list for printing
+            formatted_ip_address = f"[{', '.join(ip_address)}]"
+
             with open(paths["DNCINPUT"] + "DNCinput.txt", mode='w', newline='') as file:
-                for row in rowData:
-                    file.write(f"{formatted_ip}{row}\n")  # Join list elements with newlines and write to the file
+                for row in self.rowData:
+                    file.write(f"{formatted_ip_address}{row}\n")  # Join list elements with newlines and write to the file
                     print(f"Daten zu der Schnittstelle vorbereitet \u2713")
+                    return True
         except Exception as e:
             print("Error3", f"An error occurred while writing to DNC_INPUT: {e}")
             return False
-
-
+        
+    def runDNCSchnittstelle(self):
         import subprocess
 
         program_path = paths["DNCSchnittstelle"]
@@ -272,99 +355,14 @@ class main:
         try:
             result = subprocess.run([program_path], check=True)
             print(f"Daten zu {toolPlace} gescheckt \u2713")
+            return True
         except subprocess.CalledProcessError as e:
             print(f"Program failed with return code: {e.returncode}")
             return False
         except FileNotFoundError:
             print("The specified program was not found.")
             return False
-
-        try:
-            # Connect to the MTMDB.db SQLite database
-            conn = sqlite3.connect(paths["MTMDB"])
-            cur = conn.cursor()
-
-            # Fetch all data from the currentTools table
-            cur.execute("SELECT * FROM currentTools")
-            currentToolsData = cur.fetchall()
-
-            platzierte_rows = []
-            found = False
-
-            # Iterate over the rows and update the 'platz' field if idCode is found in movingTools
-            for row in currentToolsData:
-                if row[0] in query:
-                    row = list(row)  # Convert tuple to list to modify
-                    row[19] = toolPlace  # Update the 'platz' field
-                    platzierte_rows.append(row)
-                    found = True
-
-            # Update the database if any matching rows were found
-            if found:
-                for row in platzierte_rows:
-                    cur.execute("""
-                        UPDATE currentTools
-                        SET platz = ?
-                        WHERE idCode = ?
-                    """, (row[19], row[0]))
-                # Commit the changes after all updates are done
-                conn.commit()
-                # Ensure the connection is closed properly
-                conn.close()
-
-
-
-                for i in platzierte_rows:
-                    if i[1] is not None:  # Check if the row has a non-None value
-                        try:
-                            # Connect to the SQLite database
-                            conn = sqlite3.connect(paths["MTMDB"])
-                            cursor = conn.cursor()
-
-                            # Query the database for the matching PLC data
-                            cursor.execute("SELECT * FROM tnc640Data WHERE CODE = ?", (i[0],))
-                            PlcDataRow = cursor.fetchone()
-
-                            if PlcDataRow:
-                                # Pass the current row and fetched PLC data to the addToolRowInToolTableBackup method
-                                success = self.addToolRowInToolTableBackup(i, PlcDataRow)
-                                if success:
-                                    print(
-                                        "ERFOLG",
-                                        f"Das Werkzeug ist erfolgreich platziert \u2713\nUND\nsie wurde in toolTableBackup eingetragen \u2713"
-                                    )
-                                    return True
-                                else:
-                                    print(
-                                        "FEHLER",
-                                        f"Das Werkzeug konnte nicht platziert werden!!\nMÖGLICHE FEHLER\n-falsche Daten\nOder\nfehlende PLC-Daten."
-                                    )
-                                    return False
-                            else:
-                                # No matching PLC data found for the CODE
-                                print(f"Keine passenden PLC-Daten für CODE {i[0]} gefunden.")
-                                return False
-                        except sqlite3.OperationalError as e:
-                            print("Fehler", f"Fehler beim Zugriff auf die Datenbank: {e}")
-                            return False
-                        except Exception as e:
-                            print("Fehler", f"Fehler: {str(e)}")
-                            return False
-                        finally:
-                            # Close the database connection
-                            conn.close()
-                    else:
-                        continue
-
-            else:
-                print("Erro3", "Die Aufnahme ist nicht registriert")
-                return False
         
-        except Exception as e:
-           print("Erro4", f"An error occurred: {e}")
-        return False
-
-
     def machineStatus(self, toolPlace):
         # Function to check if IP is reachable using Tnccmd
         def ping_ip(ip):
@@ -394,8 +392,6 @@ class main:
 
         # Check the ping status and return the result
         return connectionTest
-
-
 
     def addToolRowInToolTableBackup(self, toolDataEntriesRow,plcDataRow):
             def format_column(value, length):
@@ -628,7 +624,8 @@ if __name__ == "__main__":
     #                             WHERE idCode = ?
     #                         """, (row[19], row[0]))
     #                     # Commit the changes after all updates are done
-    #                     conn.commit()
+    #                     conn.commit()  # Commit the transaction first
+                        # cur.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
     #                     # Ensure the connection is closed properly
     #                     conn.close()
     #                     # messagebox.showinfo("Success", f"Das Werkzeug ist erfolgreich platziert")
@@ -768,7 +765,8 @@ if __name__ == "__main__":
     #                         WHERE idCode = ?
     #                     """, (row[19], row[0]))
     #                 # Commit the changes after all updates are done
-    #                 conn.commit()
+    #                 conn.commit()  # Commit the transaction first
+                    # cur.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
     #                 # Ensure the connection is closed properly
     #                 conn.close()
 

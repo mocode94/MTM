@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DNC_CSharp_Demo.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="requiredDncVersion" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">1.6.1.0</Value>
+    </Setting>
+    <Setting Name="lastConnected" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="TableAccessor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">TOOL</Value>
+    </Setting>
+    <Setting Name="PrimaryKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">T</Value>
+    </Setting>
+    <Setting Name="ColumnNames" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

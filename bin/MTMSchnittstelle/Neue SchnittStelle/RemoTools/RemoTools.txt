@@ -1,0 +1,61 @@
+Version documentation RemoTools SDK
+-----------------------------------
+
+04.05.2023 RemoTools SDK v3.3.34 Release
+========================================
+- Installation as 64bit setup in \Program files\HEIDENHAIN\SDK 
+  instead of \Program files (x86)\HEIDENHAIN\SDK
+- Release version v1.7.3 of the HEIDENHAIN DNC component
+- Release version v5.2 of the JHIOsim DLL
+- LSV2 ActiveX-Control removed
+- Advanced Installer based setup
+
+
+11.09.2019 RemoTools SDK v3.2.26 Release
+========================================
+- Release of HEIDENHAIN DNC component v1.7.1
+- Release of LSV2 ActiveX-Control v3.9.200 for legacy applications
+- New C# application "Log Extender"
+
+
+21.07.2017 RemoTools SDK v3.1.23 Release
+========================================
+- Release of HEIDENHAIN DNC component v1.6.1
+  Release of LSV2 ActiveX-Control v3.8.185 for legacy applications
+- Release of JHIOsim v5.0
+- Extended CSharp Demo Projects
+
+
+21.07.2015 RemoTools SDK v3.0.21 Release
+========================================
+- Release of HEIDENHAIN DNC component v1.5.1
+  (Distribution of merge modules for 32 and 64 bit applications)
+  and LSV2 ActiveX-Control v3.5.174
+- First official release of JHIOsim v4.0
+- CSharp Demo Projects included
+
+
+21.05.2008 RemoTools SDK v2.0
+=============================
+- Release of HEIDENHAIN DNC component 1.2.2
+  and LSV2 ActiveX-Control 2.2.120 / 3.2.120
+
+
+12.04.2006 RemoTools SDK v1.2
+=============================
+- Release of the HeidenhainDNC Component 1.2.1 
+  and LSV2 ActiveX-Control 2.1.110 / 3.0.110
+
+
+19.12.2003 RemoTools SDK v1.1
+=============================
+- Release of the HeidenhainDNC Component 1.1.4 
+  together with LSV2 ActiveX-Control 2.0.90
+
+
+12.06.2003 RemoTools SDK v1.0
+=============================
+- First official of the HeidenhainDNC Komponente 1.0.1 together with
+  LSV2 ActiveX-Control 2.0.75
+  Documentation: German (HeidenhainDNC documentation: English)
+

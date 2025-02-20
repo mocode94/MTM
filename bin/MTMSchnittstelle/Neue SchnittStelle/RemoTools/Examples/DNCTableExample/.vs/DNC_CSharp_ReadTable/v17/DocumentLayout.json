@@ -1,0 +1,81 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|c:\\program files\\heidenhain\\sdk\\remotools\\examples\\dnctableexample\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|C:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\addoreditform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:addoreditform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 274,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e5c86464-96be-4d7c-9a8b-abcb3bbf5f92}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainForm.cs [Entwurf]",
+              "DocumentMoniker": "C:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\MainForm.cs",
+              "RelativeDocumentMoniker": "MainForm.cs",
+              "ToolTip": "C:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\MainForm.cs [Entwurf]",
+              "RelativeToolTip": "MainForm.cs [Entwurf]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T22:00:32.62Z",
+              "EditorCaption": " [Entwurf]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AddOrEditForm.cs [Entwurf]",
+              "DocumentMoniker": "C:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\AddOrEditForm.cs",
+              "RelativeDocumentMoniker": "AddOrEditForm.cs",
+              "ToolTip": "C:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\AddOrEditForm.cs [Entwurf]",
+              "RelativeToolTip": "AddOrEditForm.cs [Entwurf]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T22:00:29.746Z"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 126,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+#type
+
+*-----------------------------------------------------------------------------
+*  Spindel
+*-----------------------------------------------------------------------------
+
+   NP_M4000_S_in_Position                   M4000
+   NP_M4001_S_Sollwert_nicht_in_Rampe       M4001
+   NP_M4002_S_Sollwert_0                    M4002
+   NP_M4003_S_Sollwert_analog_oder_digital  M4003
+   NP_M4004_S_Drehzahl_nicht_erlaubt        M4004
+
+   PN_M4005_S_M03_Sollwert_und_Status       M4005
+   PN_M4006_S_M04_Sollwert_und_Status       M4006
+   PN_M4007_S_M05_Sollwert_0_und_Status     M4007
+   PN_M4008_S_Sollwert_aus_Status_invers    M4008
+
+*-----------------------------------------------------------------------------
+*  Strobe-Signale von der NC an die PLC
+*-----------------------------------------------------------------------------
+
+   NP_M4070_Strobe_G_Code                   M4070
+   NP_M4071_Strobe_S_Code                   M4071
+   NP_M4072_Strobe_M_Funktion               M4072
+   NP_M4073_Strobe_TOOL_CALL                M4073
+   NP_M4074_Strobe_TOOL_DEF                 M4074
+   NP_M4075_Strobe_FN19                     M4075
+
+*-----------------------------------------------------------------------------
+*  Rückmeldung der NC Strobe-Signale
+*-----------------------------------------------------------------------------
+
+   PN_M4090_Quit_G_Code                     M4090
+   PN_M4091_Quit_S_Code                     M4091
+   PN_M4092_Quit_M_Funktion                 M4092
+   PN_M4093_Quit_TOOL_CALL                  M4093
+   PN_M4094_Quit_TOOL_DEF                   M4094
+   PN_M4095_Quit_FN19                       M4095
+
+*-----------------------------------------------------------------------------
+*  Zusätzliche Tasten
+*-----------------------------------------------------------------------------
+
+   PN_M4560_NC_STOP_0_aktiv                 M4560
+   PN_M4561_Eilgang                         M4561
+   PN_M4562_Achs_Tasten_speichern           M4562
+   PN_M4563_Vorschub_Freigabe               M4563
+   PN_M4564_NC_Start                        M4564
+
+#type
+
+*-----------------------------------------------------------------------------
+*  Daten Strobe-Signale
+*-----------------------------------------------------------------------------
+
+   NP_W256_G_Code_Spindel                   W256
+   NP_W258_S_Code                           W258
+   NP_W260_M_Code                           W260
+   NP_W262_Werkzeug_Platz_Nummer            W262
+   NP_W264_Werkzeug_Nummer                  W264
+   NP_W266_Werkzeug_Index                   W266
+   NP_W268_Werkzeug_Magazin_Nummer          W268
+
+   NP_W274_Tasten_Code_betätigte_Taste      W274
+
+   PN_W766_Faktor_Vorschub_Override_PLC     W766
+   PN_W764_S_Override_PLC                   W764
+
+#type
+
+   NP_D280_FN19_Zahlenwert_1                D280
+   NP_D284_FN19_Zahlenwert_2                D284
+
+
+*-----------------------------------------------------------------------------
+*  Definitions for DNC_Communication
+*-----------------------------------------------------------------------------
+
+
+#type M
+   MG_Eins_Merker
+   MG_Null_Merker
+
+#type
+   NP_M4172_1_PLC_Durchlauf_nach_Netz_Ein   M4172
+   NP_M4173_1_PLC_Durchlauf_nach_Compile    M4173
+   NP_M4174_1_PLC_Durchlauf_nach_MP_Edit    M4174
+
+   NP_M4203_Fehler_Modul_9xxx               M4203
+
+#type K
+
+   KG_Fehler_Modul_9082                     282
+   KG_Fehler_Modul_9110                     310
+   KG_Fehler_Modul_9111                     311
+
+
+#type
+   NP_W1022_Modul_Fehlerstatus              W1022
+
+#type W
+   WG_Fehlerstatus

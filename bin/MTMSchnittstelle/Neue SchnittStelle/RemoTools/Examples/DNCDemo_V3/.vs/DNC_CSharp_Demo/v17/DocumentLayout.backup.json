@@ -1,0 +1,91 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V3\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|x:\\projekt\\mtmgithub\\mtm\\bin\\mtmschnittstelle\\neue schnittstelle\\remotools\\examples\\dncdemo_v3\\usercontrols\\dataaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\dataaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V3\\usercontrols\\dataaccess2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\dataaccess2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V3\\usercontrols\\remoteerror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\remoteerror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 274,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DataAccess2.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V3\\UserControls\\DataAccess2.cs",
+              "RelativeDocumentMoniker": "UserControls\\DataAccess2.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V3\\UserControls\\DataAccess2.cs",
+              "RelativeToolTip": "UserControls\\DataAccess2.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAALQDAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-16T22:58:20.016Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "RemoteError.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V3\\UserControls\\RemoteError.cs",
+              "RelativeDocumentMoniker": "UserControls\\RemoteError.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V3\\UserControls\\RemoteError.cs",
+              "RelativeToolTip": "UserControls\\RemoteError.cs",
+              "ViewState": "AgIAAIMAAAAAAAAAAAAgwFkAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-16T19:11:29.648Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DataAccess.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V3\\UserControls\\DataAccess.cs",
+              "RelativeDocumentMoniker": "UserControls\\DataAccess.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V3\\UserControls\\DataAccess.cs",
+              "RelativeToolTip": "UserControls\\DataAccess.cs",
+              "ViewState": "AgIAANMAAAAAAAAAAAAuwPAAAABhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-16T19:03:48.164Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 126,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

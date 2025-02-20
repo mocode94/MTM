@@ -1,0 +1,210 @@
+*------------------------------------------------------------------------------
+*  HeidenhainDNC communication module (only for iTNC 530 controls)
+*
+*  This PLC module implements an echo mode, that can be used to verify
+*  the IJHPlc interface implementation of your RemoTools SDK based communication
+*  application.
+*------------------------------------------------------------------------------
+*
+*
+* IMPORTANT INFO:
+*----------------
+* If you are using a standard Heidenhain programming station you can follow
+* the steps below. If you are using a machine builder specific programing
+* station, then contact the machine builder for installation support.
+*
+* Installation:
+*
+* 1. Find the source file of the active mainPgm PLC program:
+*-----------------------------------------------------------
+* Open the PLC:\OEM.SYS file and find PlcMainPgm Entry (there you can find the path
+* to the PLC main program)
+* On a standard programing station the path is set to PLC:\plc\program\MainPgm.src
+* 
+* 2. Copy this PLC module to the programing station:
+*---------------------------------------------------
+* Copy this file into the same folder, where you found the PLC main program file.
+* To find the correct path, see description above.
+* 
+* 3. Add the PLC module to the mainPgm source:
+*---------------------------------------------
+* Add these two lines after the last USES & EXTERN block
+* (without *) to the main program file:
+*
+*   USES communication.src
+*   EXTERN Communication
+*
+* Add the following line after the last CALL MODULE line "CM", but above the
+* END MODULE line "EM" (without *):
+*
+*   CM     Communication
+*------------------------------------------------------------------------------
+
+
+GLOBAL Communication
+
+#define /s    BS_LSV2Function                          B
+#define /s    BS_Error                                 B
+#define /s    BS_ReceivedCount                         B
+#define /s    DS_Out                                   D
+#define /s    DS_In                                    D
+
+#define /s    SS_In                                    S
+
+#define       KL_MAXFUNCTION                           2
+#define       KL_RECEIVE_FUNCTION                      0
+
+#define       KL_DWORDTRANSFER                         0
+#define       KL_STRINGTRANSFER                        1
+
+
+
+LBL CommunicationInit
+  L      K0
+  =      BS_LSV2Function
+  =      BS_ReceivedCount
+  =      BS_Error
+
+  L      S"Hello world"
+  =      SS_In
+EM
+
+
+LBL Communication
+
+  L      M4172    ; NP_M4172_1_PLC_Durchlauf_nach_Netz_Ein
+  O      M4173    ; NP_M4173_1_PLC_Durchlauf_nach_Compile
+  O      M4174    ; NP_M4174_1_PLC_Durchlauf_nach_MP_Edit
+  CMT    CommunicationInit
+
+  CASE   BS_LSV2Function
+    CM     Receive                     ; 0: Default: Warten auf Anfrage
+    CM     SendDWord                   ; 1: Echo received DWord
+    CM     SendString                  ; 2: See KL_MAXFUNCTION!
+  ENDC
+EM
+
+
+LBL Receive
+;    PS B/W/D/K <Datentyp>
+;    0: Binärdaten Doppelwort
+;    1: String
+;    PS B/W/D/K <Zieladresse>
+;    Bei Binär: Nummer des Doppelwortes
+;    Bei String: Nummer des Strings
+;    CM 9111
+;    PL B/W/D <Fehlercode>
+
+  PS     KL_DWORDTRANSFER
+  PS     K &DS_In                      ; Target address
+  CM     9111
+  PL     BS_Error
+
+  CASE   BS_Error
+    CM     READOK                      ; 0: Nachricht wurde gelesen
+    CM     READERR                     ; 1: Keine Verbindung mit Host-Rechner
+    CM     READERR                     ; 2: Keine Nachricht dieses Typs im Empfangspuffer
+    CM     READEMPTY                   ; 3: Falscher Datentyp (nicht 0 oder 1)
+    CM     READERR                     ; 4: Falsche Zieladresse
+    CM     READERR
+  ENDC
+
+  PS     KL_STRINGTRANSFER
+  PS     K &SS_In                      ; Target address
+  CM     9111
+  PL     BS_Error
+
+  CASE   BS_Error
+    CM     READOK
+    CM     READERR
+    CM     READERR
+    CM     READEMPTY
+    CM     READERR
+    CM     READERR
+  ENDC
+
+
+EM
+
+
+LBL READOK
+  L      BS_LSV2Function
+  +      K1
+  =      BS_LSV2Function
+
+  L      BS_ReceivedCount
+  +      K1
+  =      BS_ReceivedCount
+EM
+
+LBL READERR
+EM
+
+LBL READEMPTY
+  L      K0
+  =      BS_Error
+EM
+
+
+
+LBL SendDWord
+  L      DS_In
+  =      DS_Out
+  PS     KL_DWORDTRANSFER
+  PS     K&DS_Out
+  CM     9110
+  PL     BS_Error
+  CASE   BS_Error
+    CM     SENDOK                      ;0: Nachricht wird übertragen
+    CM     SENDERR                     ;1: keine Verbindung mit Host-Rechner
+    CM     SENDWAIT                    ;2: Sendepuffer ist voll
+    CM     SENDERR                     ;3: falscher Datentyp (0..1)
+    CM     SENDERR                     ;4: falsche Quelladresse
+  ENDC
+EM
+
+
+LBL SendString
+  L      S"Hello world"
+  =      S0
+  PS     K+1                           ; String senden                       ;
+  PS     K&SS_In
+  CM     9110
+  PL     BS_Error
+
+;0: Nachricht wird übertragen
+;1: keine Verbindung mit Host-Rechner
+;2: Sendepuffer ist voll
+;3: falscher Datentyp (0..1)
+;4: falsche Quelladresse
+  CASE   BS_Error
+    CM     SENDOK
+    CM     SENDERR
+    CM     SENDWAIT
+    CM     SENDERR
+    CM     SENDERR
+  ENDC
+EM
+
+EM
+
+LBL SENDOK
+  L      BS_LSV2Function
+  +      K1                            ; Next step
+  =      BS_LSV2Function
+
+  L      BS_LSV2Function
+  >      KL_MAXFUNCTION
+  IFT
+    L      K0
+    =      BS_LSV2Function
+  ENDI
+EM
+
+LBL SENDERR
+  L      KL_RECEIVE_FUNCTION
+  =      BS_LSV2Function
+EM
+
+LBL SENDWAIT
+EM

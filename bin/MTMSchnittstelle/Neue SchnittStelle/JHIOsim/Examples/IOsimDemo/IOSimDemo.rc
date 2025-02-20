@@ -1,0 +1,266 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// German (Germany) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+#pragma code_page(1252)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 7, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\IOSimDemo.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.deu\\afxres.rc""          // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\IOSimDemo.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG 0, 0, 235, 55
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Info über JHIOSim Demo"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,7,7,20,20
+    LTEXT           "JHIOSim Demo v5.0",IDC_STATIC,40,12,119,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2006 - 2017",IDC_STATIC,40,28,188,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,14,WS_GROUP
+    LTEXT           "DR. JOHANNES HEIDENHAIN GmbH",IDC_STATIC,40,40,188,8
+END
+
+IDD_IOSIMDEMO_DIALOG DIALOGEX 0, 0, 344, 263
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "JHIOsim Demo"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LTEXT           "&Instance name:",IDC_STATIC,18,19,70,9
+    EDITTEXT        IDC_INSTANCE_NAME,97,16,131,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "&Select instance",IDC_SELECT_INSTANCE,242,15,84,14
+    LTEXT           "Si&mulation Id:",IDC_STATIC,17,34,70,9
+    EDITTEXT        IDC_SIM_ID,97,32,75,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Set Simulation I&d",IDC_SIGNALSIMULATION,242,31,84,14
+    CONTROL         "Access &to SPLC I/Os",IDC_SPLC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,66,83,8
+    LTEXT           "Symbolic/Logic &name:",IDC_STATIC,15,78,74,9
+    EDITTEXT        IDC_NAME,95,76,131,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "&Get address by name",IDC_GET_ADDRESS_NAME,242,68,84,14,WS_DISABLED
+    LTEXT           "&Hardware:",IDC_STATIC,15,99,35,8
+    COMBOBOX        IDC_HW,95,97,75,103,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "&Connector:",IDC_STATIC,15,117,36,8
+    COMBOBOX        IDC_CONNECTOR,95,114,76,103,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "C&lamp:",IDC_STATIC,178,108,26,8
+    EDITTEXT        IDC_CLAMP,208,106,27,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Get &address by clamp",IDC_GET_ADDRESS_CLAMP,242,105,84,14
+    LTEXT           "Type:",IDC_STATIC,13,150,46,8
+    LTEXT           "",IDC_TYPE,13,160,73,11,SS_SUNKEN
+    LTEXT           "Access address:",IDC_STATIC,94,151,83,8
+    LTEXT           "",IDC_ADDRESS,92,160,84,11,SS_SUNKEN
+    LTEXT           "&Value:",IDC_STATIC,13,177,28,9
+    EDITTEXT        IDC_VALUE,13,190,73,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "G&et value",IDC_GET_VALUE,92,189,84,14,WS_DISABLED
+    PUSHBUTTON      "Set val&ue",IDC_SET_VALUE,92,205,84,14,WS_DISABLED
+    PUSHBUTTON      "&Toggle value",IDC_TOGGLE_VALUE,92,221,84,14,WS_DISABLED
+    LTEXT           "Si&gnal:",IDC_STATIC,14,240,21,9
+    COMBOBOX        IDC_SIGNAL_ID,40,237,46,103,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Set value + HSC&I signal",IDC_SET_HSCI_VALUE,92,237,84,14,WS_DISABLED
+    GROUPBOX        "Status",IDC_STATIC,192,138,145,99
+    LTEXT           "IsHSCIConfiguration",IDC_STATIC,200,153,95,8
+    CONTROL         "",IDC_HSCICONFIGURATION,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,305,153,8,9
+    LTEXT           "IsVirtualTNC",IDC_STATIC,200,168,95,8
+    CONTROL         "",IDC_VIRTUALTNC,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,305,170,8,9
+    LTEXT           "IsPlcRunning",IDC_STATIC,200,183,95,8
+    CONTROL         "",IDC_PLCRUNNING,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,305,184,8,9
+    LTEXT           "Control Voltage On",IDC_STATIC,200,198,95,8
+    CONTROL         "",IDC_CONTROLREADY,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,305,198,8,9
+    PUSHBUTTON      "&Refresh status",IDC_STATUS,242,217,84,14
+    PUSHBUTTON      "E&xit",IDCANCEL,242,242,84,14
+    GROUPBOX        "Data",IDC_STATIC,7,138,177,119
+    GROUPBOX        "Address",IDC_STATIC,7,52,330,81
+    GROUPBOX        "Settings",IDC_STATIC,7,7,330,42
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 5,2,0,33
+ PRODUCTVERSION 5,2,0,33
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040704b0"
+        BEGIN
+            VALUE "CompanyName", "DR. JOHANNES HEIDENHAIN GmbH"
+            VALUE "FileDescription", "MFC-Testapplication IOSimDemo"
+            VALUE "FileVersion", "5.2.0.33"
+            VALUE "InternalName", "IOSimDemo"
+            VALUE "LegalCopyright", "Copyright (C) HEIDENHAIN 2004-2023"
+            VALUE "OriginalFilename", "IOSimDemo.EXE"
+            VALUE "ProductName", "Anwendung IOSimDemo"
+            VALUE "ProductVersion", "5.2.0.33"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x407, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_IOSIMDEMO_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 337
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 256
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_IOSIMDEMO_DIALOG DLGINIT
+BEGIN
+    IDC_HW, 0x403, 3, 0
+0x454c, "\000" 
+    IDC_HW, 0x403, 5, 0
+0x4c50, 0x3120, "\000" 
+    IDC_HW, 0x403, 5, 0
+0x4c50, 0x3220, "\000" 
+    IDC_HW, 0x403, 5, 0
+0x4c50, 0x3320, "\000" 
+    IDC_HW, 0x403, 5, 0
+0x4c50, 0x3420, "\000" 
+    IDC_HW, 0x403, 14, 0
+0x6148, 0x646e, 0x6877, 0x6565, 0x206c, 0x3134, 0x0030, 
+    IDC_HW, 0x403, 14, 0
+0x6e41, 0x6c61, 0x676f, 0x5620, 0x6c61, 0x6575, 0x0073, 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_ABOUTBOX            "Inf&o über IOSimDemo..."
+END
+
+#endif    // German (Germany) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE 7, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\IOSimDemo.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.deu\afxres.rc"          // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

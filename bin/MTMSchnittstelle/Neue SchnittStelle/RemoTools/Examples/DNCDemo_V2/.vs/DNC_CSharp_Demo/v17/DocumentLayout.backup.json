@@ -1,0 +1,123 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|x:\\projekt\\mtmgithub\\mtm\\bin\\mtmschnittstelle\\neue schnittstelle\\remotools\\examples\\dncdemo_v2\\usercontrols\\dataaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\dataaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\usercontrols\\remoteerror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\remoteerror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\usercontrols\\remoteerrorentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\remoteerrorentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\usercontrols\\dataaccess2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:usercontrols\\dataaccess2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{124BB454-EC81-4B49-94C7-278FBC4746ED}|DNC_CSharp_Demo.csproj|solutionrelative:mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 274,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MainForm.cs [Entwurf]",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\MainForm.cs",
+              "RelativeDocumentMoniker": "MainForm.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\MainForm.cs [Entwurf]",
+              "RelativeToolTip": "MainForm.cs [Entwurf]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-30T12:29:56.384Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DataAccess2.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\UserControls\\DataAccess2.cs",
+              "RelativeDocumentMoniker": "UserControls\\DataAccess2.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\UserControls\\DataAccess2.cs",
+              "RelativeToolTip": "UserControls\\DataAccess2.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAUwNkAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-13T23:04:07.021Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RemoteError.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\UserControls\\RemoteError.cs",
+              "RelativeDocumentMoniker": "UserControls\\RemoteError.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\UserControls\\RemoteError.cs",
+              "RelativeToolTip": "UserControls\\RemoteError.cs",
+              "ViewState": "AgIAAPwAAAAAAAAAAAAqwBkBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-10T21:41:15.432Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DataAccess.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\UserControls\\DataAccess.cs",
+              "RelativeDocumentMoniker": "UserControls\\DataAccess.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\UserControls\\DataAccess.cs",
+              "RelativeToolTip": "UserControls\\DataAccess.cs",
+              "ViewState": "AgIAAKsAAAAAAAAAAAAwwNIBAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-03T22:46:31.22Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "RemoteErrorEntry.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\UserControls\\RemoteErrorEntry.cs",
+              "RelativeDocumentMoniker": "UserControls\\RemoteErrorEntry.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\Neue SchnittStelle\\RemoTools\\Examples\\DNCDemo_V2\\UserControls\\RemoteErrorEntry.cs",
+              "RelativeToolTip": "UserControls\\RemoteErrorEntry.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAADgvzcAAABQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-13T21:18:50.379Z"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 126,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+*------------------------------------------------------------------------------
+*  HeidenhainDNC communication (only for NCK based controls like TNC640)
+*  --> This PLC module implements an "echo" mode, that can be used to verify
+*      the IJHPlc interface implementation of your HeidenhainDNC PC application.
+*------------------------------------------------------------------------------
+* Modul-description:
+*------------------------------------------------------------------------------
+*  In a first step the PLC module 9330 fetches the OEM application status,
+*  and stores it to the byte variable BL_App_State.
+*  If a HeidenhainDNC PC application using the PLC interface (IJHPlc)
+*  is connected to this TNC control, then bit #0 of BL_App_State is active.
+*  If there are also data available from the PC application,
+*  then the bit #1 of BL_App_State is active too.
+*  In this case the PLC source code below fetches the application data
+*  using the PLC module 9331 and stores it in the
+*  local variables ML_Data_Daten, DL_Data and SL_Data.
+*  Thereafter the PLC module 9332 returns the data to the PC application.
+*------------------------------------------------------------------------------
+* Installation:
+*------------------------------------------------------------------------------
+* IMPORTANT INFO:
+*----------------
+* If you are using a standard Heidenhain programming station you can follow
+* the steps below. If you are using a machine builder specific programing
+* station, then contact the machine builder for installation support.
+*
+* 1. Find the source file of the active mainPgm PLC program:
+*-----------------------------------------------------------
+* Open the config editor (softkey config-data) and find following section
+* System\Path\CfgPlcPath\mainPgm (there you can find the path to the mainPgm)
+* On a standard programing station the path is set to PLC:\plc\program\MainPgm.src
+* 
+* 2. Copy this PLC module to the programing station:
+*---------------------------------------------------
+* Copy this file into the same folder, where you found the PLC mainPgm source.
+* To find the correct path, see description above.
+* 
+* 3. Add this PLC module to the mainPgm source:
+*----------------------------------------------
+* Add these two lines after the last USES & EXTERN block
+* to the mainPgm source file:
+*   USES IJHPlc_NCK.src
+*   EXTERN iJhPlcCommunication
+*
+* Add the following line after the last CALL MODULE line "CM", but above the
+* END MODULE line "EM":
+*   CM     iJhPlcCommunication
+*------------------------------------------------------------------------------
+
+#include MacroDefinitions.inc
+
+#define       KL_App_connected                         0
+#define       KL_App_newData                           1
+
+#define /s    BL_App_State                             B
+#define /s    BL_App_LoginNumber                       B
+#define /s    BL_App_SendCounter                       B
+
+#define /s    DL_Data                                  D[32]
+#define /s    ML_Data                                  M[64]
+#define /s    SL_Data                                  S
+
+#define /s    BL_ML_Data_Count                         B
+#define /s    BL_DL_Data_Count                         B
+
+GLOBAL iJhPlcCommunication
+
+;----------------------------
+LBL iJhPlcCommunication
+;----------------------------
+  CM     CheckState
+
+  L      BL_App_State
+  BT     KL_App_connected
+  IFT
+    L      BL_App_State
+    BT     KL_App_newData
+    IFT
+      CM     ReceiveData
+      ; Echo mode --> just send received data back
+      CM     SendData
+    ENDI
+  ENDI
+EM
+
+;----------------------------
+LBL CheckState
+  CM     9330                          ;Read the status of an OEM application
+  PL     BL_App_State                  ;B/W/D  <Status of the OEM application>
+  PL     BL_App_LoginNumber            ;B/W/D  <Log-in number of the application>
+  PL     BL_App_SendCounter            ;B/W/D  <Status of the queue>
+EM
+
+;----------------------------
+LBL SendData
+  PS     K &DL_Data                    ;K&        <Address of the DWORD data>
+  PS     BL_DL_Data_Count              ;K/B/W/D   <Length of the DWORD range - max. 32 double words>
+  PS     K &ML_Data                    ;K&        <Address of the MARKER data>
+  PS     BL_ML_Data_Count              ;K/B/W/D   <Length of the MARKER range - max. 64 markers>
+  PS     K &SL_Data                    ;K/B/W/D/S <String register/String data>
+  CM     9331                          ;Send data to the OEM application
+  M_Display_module_error
+EM
+
+;----------------------------
+LBL ReceiveData
+  PS     K &DL_Data                    ;K&      <Address of the DWORD data>
+  PS     K &ML_Data                    ;K&      <Address of the MARKER data>
+  PS     K &SL_Data                    ;B/W/D/S <String register>
+  CM     9332                          ;Receive data from the OEM application
+  PL     BL_DL_Data_Count              ;B/W/D   <Number of delivered markers (maximum 64)>
+  PL     BL_ML_Data_Count              ;B/W/D   <Number of delivered double words (maximum 32)>
+  M_Display_module_error
+EM

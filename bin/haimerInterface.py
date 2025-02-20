@@ -173,19 +173,30 @@ class HaimerInterface:
         # self.haimerInterfaceWindow.protocol("WM_DELETE_WINDOW", on_closing)
         iDLabel=tk.Label(self.haimerInterfaceWindow,text=f"iD: {self.search_value}\nName: {self.editedTool[2]}\nRadius: {float(row[4])}\nLenght: {float(row[11])}",font=iDLabelFont,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
         iDLabel.grid(row=0,column=0,padx=20,pady=60)
+        try:
+            # Load and display image next to the iDLabel
+            image_path = paths["toolCapturedimages"]+self.search_value+".png"  # Replace with the correct path to your image
+            image = Image.open(image_path)
+            image = image.resize((400, 350))  # Resize image if necessary
+            photo = ImageTk.PhotoImage(image)
 
-        # Load and display image next to the iDLabel
-        image_path = paths["toolCapturedimages"]+self.search_value+".png"  # Replace with the correct path to your image
-        image = Image.open(image_path)
-        image = image.resize((400, 350))  # Resize image if necessary
-        photo = ImageTk.PhotoImage(image)
+            image_label = tk.Label(self.haimerInterfaceWindow, image=photo, bg=winconfig["bgcolor"])
+            image_label.grid(row=0, column=1, padx=10, pady=60)
 
-        image_label = tk.Label(self.haimerInterfaceWindow, image=photo, bg=winconfig["bgcolor"])
-        image_label.grid(row=0, column=1, padx=10, pady=60)
+            # Store a reference to the image to prevent garbage collection
+            image_label.image = photo
+        except FileNotFoundError:
+                        # Load and display image next to the iDLabel
+            image_path = paths["imgpaths"]+"NOTFOUND.png"  # Replace with the correct path to your image
+            image = Image.open(image_path)
+            image = image.resize((400, 350))  # Resize image if necessary
+            photo = ImageTk.PhotoImage(image)
 
-        # Store a reference to the image to prevent garbage collection
-        image_label.image = photo
+            image_label = tk.Label(self.haimerInterfaceWindow, image=photo, bg=winconfig["bgcolor"])
+            image_label.grid(row=0, column=1, padx=10, pady=60)
 
+            # Store a reference to the image to prevent garbage collection
+            image_label.image = photo
 
         # Display old values
         label_old_values = tk.Button(self.haimerInterfaceWindow, text=f"aktuelle Werte von Haimer:\nX: {old_x}\nZ: {old_z}\nMeasured At: {old_measured_at}",command=lambda: self.currentMeasurmentClick(old_x,old_z),font=label_font,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
@@ -212,22 +223,24 @@ class HaimerInterface:
         process.title("Process")
         processCLick=False
 
-        button1=tk.Button(process,text="übernehmen u.\nschicken",command=lambda: print("1"),width=20,height=5,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg="lightgreen")
+        button1=tk.Button(process,text="übernehmen u.\nschicken",command=lambda: printO("1"),width=20,height=5,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg="lightgreen")
         button1.grid(row=0,column=0,padx=5,pady=5)
 
-        button2=tk.Button(process,text="NUR übernehmen",command=lambda: print("2"),width=20,height=5,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg="yellow")
+        button2=tk.Button(process,text="NUR übernehmen",command=lambda: printO("2"),width=20,height=5,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg="yellow")
         button2.grid(row=0,column=1,padx=5,pady=5)
 
-        button3=tk.Button(process,text="abbrechen",command=lambda: print("3"),width=20,height=5,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg="tomato")
+        button3=tk.Button(process,text="abbrechen",command=lambda: printO("3"),width=20,height=5,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg="tomato")
         button3.grid(row=0,column=2,padx=5,pady=5)
 
         found = None
         updated_rows = []
 
-        def print(processNumber):
-            lengthOnly = ["1", "2", "3"]
+        def printO(processNumber):
+            lengthOnly = [1, 2, 3]
 
             if processNumber == "1":
+                print("we are here in prosses 1")
+
                 # Connect to the MTMDB.db SQLite database
                 conn = sqlite3.connect(paths["MTMDB"])
                 cur = conn.cursor()
@@ -241,6 +254,8 @@ class HaimerInterface:
                 for row in currentToolsData:
                     if row[0] == self.search_value:
                         if row[3] in lengthOnly:
+                            print(f"here is {row[3]} with type {type(row[3])}")
+                            print(f"her is lengthOnly {lengthOnly} with type {type(lengthOnly[0])}")
                             # Update the Z value in column 11
                             z_value = float(z)
                             cur.execute(
@@ -252,6 +267,9 @@ class HaimerInterface:
                             found = True
 
                         elif row[3] not in lengthOnly:
+                            print("prozess 1 row[3]  not in lengthOnly")
+                            print(f"here is {row[3]} with type {type(row[3])}")
+                            print(f"her is lengthOnly {lengthOnly} with type {type(lengthOnly[0])}")
                             # Update both X (column 4) and Z (column 11)
                             x_value = float(x)
                             z_value = float(z)
@@ -264,7 +282,8 @@ class HaimerInterface:
                             found = True
 
                 # Commit changes and close the connection
-                conn.commit()
+                conn.commit()  # Commit the transaction first
+                cur.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
                 conn.close()
 
 
@@ -285,7 +304,7 @@ class HaimerInterface:
                 # Connect to the MTMDB.db SQLite database
                 conn = sqlite3.connect(paths["MTMDB"])
                 cur = conn.cursor()
-                
+                print("we are here in prosses 2")
                 # Fetch all data from the currentTools table
                 cur.execute("SELECT * FROM currentTools")
                 currentToolsData = cur.fetchall()
@@ -295,10 +314,13 @@ class HaimerInterface:
                 for row in currentToolsData:
                     if row[0] == self.search_value:
                         if row[3] in lengthOnly:
+                            print("row[3] in lengthOnly")
+                            print(f"here is {row[3]} with type {type(row[3])}")
+                            print(f"her is lengthOnly {lengthOnly} with type {type(lengthOnly[0])}")
                             # Update the Z value in column 11
                             z_value = float(z)
                             cur.execute(
-                                "UPDATE currentTools SET column12 = ? WHERE id = ?",
+                                "UPDATE currentTools SET toolIstLaenge = ? WHERE idCode = ?",
                                 (z_value, row[0])
                             )
                             rowID = row[0]
@@ -306,6 +328,9 @@ class HaimerInterface:
                             found = True
 
                         elif row[3] not in lengthOnly:
+                            print("row[3] not in lengthOnly")
+                            print(f"here is {row[3]} with type {type(row[3])}")
+                            print(f"her is lengthOnly {lengthOnly} with type {type(lengthOnly[0])}")
                             # Update both X (column 4) and Z (column 11)
                             x_value = float(x)
                             z_value = float(z)
@@ -318,7 +343,8 @@ class HaimerInterface:
                             found = True
 
                 # Commit changes and close the connection
-                conn.commit()
+                conn.commit()  # Commit the transaction first
+                cur.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
                 conn.close()
 
                 if found:

@@ -1,0 +1,4 @@
+<Files "favicon.ico">
+	Order Allow,Deny
+	Allow from all
+</Files>

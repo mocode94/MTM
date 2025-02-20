@@ -1,0 +1,267 @@
+    0 ; MINIMUM PLC PROGRAM FOR ITNC PROGRAMMING STATION
+    1 ; MUEHLBAUER GERHARD
+    2 ; HADASCH JOHANNES
+    3 ;THE FOLLOWING FUNCTIONS ARE INCLUDED:
+    4 ;- ACKNOLEDGE ALL M- S- AND T-CODES FROM THE NC PROGRAM.
+    5 ;- MAINTAIN M3/M4/M5 STATUS
+    6 ;- EMULATE NC-START BUTTON WITH <ALT>+<S> KEY COMBINATION
+    7 ;- EMULATE NC-STOP BUTTON WITH <ALT>+<H> KEY COMBINATION
+    8 ;- FIX FEED- RAPIDFEED- AND SPINDLE OVERRIDE NOMINAL VALUE TO 100 PERCENT.
+    9 ;
+   10 ;- COMMUNICATION WITH 9110 AND 9111 LIBRARY FUNCTIONS
+   11 ;ADDITIONAL REQUIRED FILES:
+   12 ;- COMMUNICATION.SRC
+   13 ;- GLB_NC.DEF
+   14 ;HERE IS HOW YOU CAN ACTIVATE THE PLC PROGRAM:
+   15 ;IN PLCDESIGNNT:
+   16 ;1.) RECOMPILE THE PROJECT WITH "MAKE / COMPILE"
+   17 ;2.) TRANSFER THE PROJECT FILES WITH "TRANSMIT / TRANSMIT ALL"
+   18 ;ON THE ITNC PROGRAMMING STATION:
+   19 ;3.) IN "MOD" MODE (KEY "MOD" IN "EDIT" OPERATION MODE) YOU CAN ENTER THE 
+   20 ;4.) PRESS THE SOFT KEY "SELECT+COMPILE", AND THEN SELECT THE PLC-MAIN PRO
+   21 ;    PLC:\MINIMUM SUBDIRECTORY ).
+   22 ;5.) IF YOU PREVIOUSLY HAD PROCEEDED TO OPERATION MODE "MANUAL", THE PLC P
+   23 ;    AND ACTIVATED AT ONCE.
+   24 ;    IF NOT, YOU WILL GET AN ERROR MESSAGE AND THE PLC PROGRAM WILL ONLY B
+   25 ;    IT WILL BE ACTIVATED AS SOON AS YOU ACKNOLEDGE THE ERROR MESSAGE "POW
+   26 ;    MODE.
+   27   L     M4172          ;NP_M4172_1_PLC_DURCHLAUF_NACH_NETZ_EIN
+   28   O     M4173          ;NP_M4173_1_PLC_DURCHLAUF_NACH_COMPILE
+   29   O     M4174          ;NP_M4174_1_PLC_DURCHLAUF_NACH_MP_EDIT
+   30   IFT  
+   31 
+   32     LN  M9999          ;MG_EINS_MERKER
+   33     S   M9999          ;MG_EINS_MERKER
+   34 
+   35     L   M9998          ;MG_NULL_MERKER
+   36     R   M9998          ;MG_NULL_MERKER
+   37 
+   38     CM  0              ;COMMUNICATIONINI
+   39   ENDI 
+   40 
+   41 ;----------------------------
+   42 
+   43 
+   44   L     M4072          ;NP_M4072_STROBE_M_FUNKTION
+   45   =     M4092          ;PN_M4092_QUIT_M_FUNKTION
+   46   IFT  
+   47     L   W260           ;NP_W260_M_CODE
+   48     ==  K3
+   49     S   M4005          ;PN_M4005_S_M03_SOLLWERT_UND_STATUS
+   50     R   M4006          ;PN_M4006_S_M04_SOLLWERT_UND_STATUS
+   51     R   M4007          ;PN_M4007_S_M05_SOLLWERT_0_UND_STATUS
+   52 
+   53     L   W260           ;NP_W260_M_CODE
+   54     ==  K4
+   55     R   M4005          ;PN_M4005_S_M03_SOLLWERT_UND_STATUS
+   56     S   M4006          ;PN_M4006_S_M04_SOLLWERT_UND_STATUS
+   57     R   M4007          ;PN_M4007_S_M05_SOLLWERT_0_UND_STATUS
+   58 
+   59     L   W260           ;M CODE
+   60     ==  K5
+   61     R   M4005          ;PN_M4005_S_M03_SOLLWERT_UND_STATUS
+   62     R   M4006          ;PN_M4006_S_M04_SOLLWERT_UND_STATUS
+   63     S   M4007          ;PN_M4007_S_M05_SOLLWERT_0_UND_STATUS
+   64   ENDI 
+   65 
+   66 ; ACKNOLEDGE T- AND S-CODES
+   67   L     M4073          ;NP_M4073_STROBE_TOOL_CALL
+   68   =     M4093          ;PN_M4093_QUIT_TOOL_CALL
+   69   L     M4071          ;NP_M4071_STROBE_S_CODE
+   70   =     M4091          ;PN_M4091_QUIT_S_CODE
+   71 
+   72 
+   73 ;ALWAYS SET FEED ENABLE
+   74   L     M4563          ;VORSCHUB FREIGABE
+   75   SN    M4563          ;VORSCHUB FREIGABE
+   76 
+   77 ;EMULATE NC-START WITH "ALT-S"
+   78   L     W274           ;TASTEN CODE DER BET*TIGTEN TASTE
+   79   ==    K$2073
+   80   =     M4564          ;NC START (FLANKENAUSWERTUNG)
+   81 
+   82 ;EMULATE NC-STOP WITH "ALT-H"
+   83   L     W274           ;TASTEN CODE DER BET*TIGTEN TASTE
+   84   <>    K$2068
+   85   =     M4560          ;NC STOPP (0 ENTSPRICHT STOPP)
+   86   LN    M4560          ;PN_M4560_NC_STOP_0_AKTIV
+   87   S     I3
+   88 
+   89 ;PROCESS FN19: STORE VALUES TO D0 AND D4
+   90   L     M4075          ;NP_M4075_STROBE_FN19
+   91   IFT  
+   92     S   M4095          ;PN_M4095_QUIT_FN19
+   93     L   D280           ;NP_D280_FN19_ZAHLENWERT_1
+   94     =   D0
+   95     L   D284           ;NP_D284_FN19_ZAHLENWERT_2
+   96     =   D4
+   97   ENDI 
+   98 
+   99   CM    1              ;COMMUNICATION
+  100 
+  101 EM     
+  102 
+  103 
+  104 
+  105 ; COMMUNICATION SAMPLE (ECHO) VIA 9110/9111
+  106 ;
+  107 ; HADASCH JOHANNES
+  108 ;
+  109 ;THE FOLLOWING FUNCTIONS ARE INCLUDED:
+  110 ;- RECEIVE DWORD DATA
+  111 ;- ECHO THE RECEIVED DWORD
+  112 ;- SEND AS ADDITIONAL ECHO THE STRING "HELLO WORLD"
+  113 LBL     0              ;COMMUNICATIONINI
+  114   L     K0             ;KL_RECEIVE_FUNCTION
+  115   =     B9995          ;BS_LSV2FUNCTION
+  116   =     B9993          ;BS_RECEIVEDCOUNT
+  117   =     B9994          ;BS_ERROR
+  118 EM     
+  119 
+  120 
+  121 LBL     1              ;COMMUNICATION
+  122   CASE  B9995          ;BS_LSV2FUNCTION
+  123     CM  2              ; 0: DEFAULT
+  124     CM  3              ; 1: ECHO RECEIVED DWORD
+  125 ;   CM     SENDD2                      ; 2: ECHO RECEIVED DWORD+1
+  126     CM  4              ; 2: SEE KL_MAXFUNCTION!
+  127   ENDC 
+  128 EM     
+  129 
+  130 
+  131 LBL     2              ;RECEIVE
+  132 ;    PS B/W/D/K <DATENTYP>
+  133 ;    0: BIN*RDATEN DOPPELWORT
+  134 ;    1: STRING
+  135 ;    PS B/W/D/K <ZIELADRESSE>
+  136 ;    BEI BIN*R: NUMMER DES DOPPELWORTES
+  137 ;    BEI STRING: NUMMER DES STRINGS
+  138 ;    CM 9111
+  139 ;    PL B/W/D <FEHLERCODE>
+  140 ;    0: NACHRICHT WURDE GELESEN
+  141 ;    1: KEINE VERBINDUNG MIT HOST-RECHNER
+  142 ;    2: KEINE NACHRICHT DIESES TYPS IM EMPFANGSPUFFER
+  143 ;    3: FALSCHER DATENTYP (NICHT 0 ODER 1)
+  144 ;    4: FALSCHE ZIELADRESSE
+  145 
+  146   PS    K0             ; DOPPELWORT LESEN
+  147   PS    K9984          ; ZIELADRESSE
+  148   CM    9111           ;EMPFANGEN EINER NACHRICHT VIA LSV2
+  149   PL    B9994          ;BS_ERROR
+  150 
+  151   CASE  B9994          ;BS_ERROR
+  152     CM  5              ;READOK
+  153     CM  6              ;READERR
+  154     CM  6              ;READERR
+  155     CM  7              ;READEMPTY
+  156     CM  6              ;READERR
+  157     CM  6              ;READERR
+  158   ENDC 
+  159 EM     
+  160 
+  161 
+  162 LBL     5              ;READOK
+  163   L     B9995          ;BS_LSV2FUNCTION
+  164   +     K1
+  165   =     B9995          ;BS_LSV2FUNCTION
+  166   L     B9993          ;BS_RECEIVEDCOUNT
+  167   +     K1
+  168   =     B9993          ;BS_RECEIVEDCOUNT
+  169 EM     
+  170 
+  171 LBL     6              ;READERR
+  172 EM     
+  173 
+  174 LBL     7              ;READEMPTY
+  175   L     K0             ;KL_RECEIVE_FUNCTION
+  176   =     B9994          ;BS_ERROR
+  177 EM     
+  178 
+  179 LBL     3              ;SENDD1
+  180   L     D9984          ;DS_IN
+  181   =     D9988          ;DS_OUT
+  182   PS    K0             ;DATENTYP: D
+  183   PS    K9988
+  184   CM    9110           ;SENDEN EINER NACHRICHT VIA LSV2
+  185   PL    B9994          ;BS_ERROR
+  186 ;0: NACHRICHT WIRD *BERTRAGEN
+  187 ;1: KEINE VERBINDUNG MIT HOST-RECHNER
+  188 ;2: SENDEPUFFER IST VOLL
+  189 ;3: FALSCHER DATENTYP (0..1)
+  190 ;4: FALSCHE QUELLADRESSE
+  191   CASE  B9994          ;BS_ERROR
+  192     CM  8              ;SENDOK
+  193     CM  9              ;SENDERR
+  194     CM  10             ;SENDWAIT
+  195     CM  9              ;SENDERR
+  196     CM  9              ;SENDERR
+  197   ENDC 
+  198 EM     
+  199 
+  200 
+  201 ;LBL SENDD2
+  202 ;  L      DS_IN
+  203 ;  +      K1
+  204 ;  =      DS_OUT
+  205 ;  PS     K+0                           ;DATENTYP D
+  206 ;  PS     K&DS_OUT
+  207 ;  CM     9110
+  208 ;  PL     BS_ERROR
+  209 ;;0: NACHRICHT WIRD *BERTRAGEN
+  210 ;;1: KEINE VERBINDUNG MIT HOST-RECHNER
+  211 ;;2: SENDEPUFFER IST VOLL
+  212 ;;3: FALSCHER DATENTYP (0..1)
+  213 ;;4: FALSCHE QUELLADRESSE
+  214 ;  CASE   BS_ERROR
+  215 ;    CM     SENDOK
+  216 ;    CM     SENDERR
+  217 ;    CM     SENDWAIT
+  218 ;    CM     SENDERR
+  219 ;    CM     SENDERR
+  220 ;  ENDC
+  221 ;EM
+  222 
+  223 LBL     4              ;SENDSTRING
+  224   L     S"Hello world"
+  225   =     S0
+  226   PS    K1             ;
+  227   PS    K0             ; STRING 0
+  228   CM    9110           ;SENDEN EINER NACHRICHT VIA LSV2
+  229   PL    B9994          ;BS_ERROR
+  230 
+  231 ;0: NACHRICHT WIRD *BERTRAGEN
+  232 ;1: KEINE VERBINDUNG MIT HOST-RECHNER
+  233 ;2: SENDEPUFFER IST VOLL
+  234 ;3: FALSCHER DATENTYP (0..1)
+  235 ;4: FALSCHE QUELLADRESSE
+  236   CASE  B9994          ;BS_ERROR
+  237     CM  8              ;SENDOK
+  238     CM  9              ;SENDERR
+  239     CM  10             ;SENDWAIT
+  240     CM  9              ;SENDERR
+  241     CM  9              ;SENDERR
+  242   ENDC 
+  243 EM     
+  244 
+  245 EM     
+  246 
+  247 LBL     8              ;SENDOK
+  248   L     B9995          ;BS_LSV2FUNCTION
+  249   +     K1             ; NEXT STEP
+  250   =     B9995          ;BS_LSV2FUNCTION
+  251 
+  252   L     B9995          ;BS_LSV2FUNCTION
+  253   >     K2             ;KL_MAXFUNCTION
+  254   IFT  
+  255     L   K0             ;KL_RECEIVE_FUNCTION
+  256     =   B9995          ;BS_LSV2FUNCTION
+  257   ENDI 
+  258 EM     
+  259 
+  260 LBL     9              ;SENDERR
+  261   L     K0             ;KL_RECEIVE_FUNCTION
+  262   =     B9995          ;BS_LSV2FUNCTION
+  263 EM     
+  264 
+  265 LBL     10             ;SENDWAIT
+  266 EM     

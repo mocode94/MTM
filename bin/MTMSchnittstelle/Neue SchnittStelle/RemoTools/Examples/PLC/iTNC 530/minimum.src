@@ -1,0 +1,118 @@
+; Minimum PLC program for iTNC programming station
+
+; Muehlbauer Gerhard
+; Hadasch Johannes
+
+;The following functions are included:
+;- Acknoledge all M- S- and T-Codes from the NC program.
+;- Maintain M3/M4/M5 status
+;- Emulate NC-Start button with <Alt>+<s> key combination
+;- Emulate NC-Stop button with <Alt>+<h> key combination
+;- Fix Feed- Rapidfeed- and Spindle override nominal value to 100 percent.
+;
+;- Communication with 9110 and 9111 library functions
+
+;Additional required files:
+;- communication.src
+;- glb_nc.def
+
+;Here is how you can activate the PLC program:
+
+;In PLCdesignNT:
+
+;1.) Recompile the project with "Make / Compile"
+;2.) Transfer the project files with "Transmit / Transmit All"
+
+;On the iTNC programming station:
+
+;3.) In "Mod" mode (key "MOD" in "Edit" operation mode) you can enter the PLC programming mode with key number 807667.
+;4.) Press the soft key "Select+Compile", and then select the PLC-Main program (you will find it in the
+;    PLC:\minimum subdirectory ).
+;5.) If you previously had proceeded to operation mode "Manual", the PLC program will be compiled
+;    and activated at once.
+;    If not, you will get an error message and the PLC program will only be marked as the actual one.
+;    It will be activated as soon as you acknoledge the error message "Power interrupted" in "Manual"
+;    mode.
+
+
+#define /mn   9000 9999
+#define /bn   9000 9999
+
+
+#define /g    glb_nc.def
+
+USES communication.src
+EXTERN Communication
+
+
+;----------------------------
+
+
+  L      NP_M4072_Strobe_M_Funktion
+  =      PN_M4092_Quit_M_Funktion
+  IFT
+    L      NP_W260_M_Code
+    ==     K3
+    S      PN_M4005_S_M03_Sollwert_und_Status
+    R      PN_M4006_S_M04_Sollwert_und_Status
+    R      PN_M4007_S_M05_Sollwert_0_und_Status
+
+    L      NP_W260_M_Code
+    ==     K4
+    R      PN_M4005_S_M03_Sollwert_und_Status
+    S      PN_M4006_S_M04_Sollwert_und_Status
+    R      PN_M4007_S_M05_Sollwert_0_und_Status
+
+    L      NP_W260_M_Code              ;M CODE
+    ==     K5
+    R      PN_M4005_S_M03_Sollwert_und_Status
+    R      PN_M4006_S_M04_Sollwert_und_Status
+    S      PN_M4007_S_M05_Sollwert_0_und_Status
+  ENDI
+
+; ACKNOLEDGE T- AND S-CODES
+  L      NP_M4073_Strobe_TOOL_CALL
+  =      PN_M4093_Quit_TOOL_CALL
+  L      NP_M4071_Strobe_S_Code
+  =      PN_M4091_Quit_S_Code
+
+#ifdef fixed_overrides
+; FIX ALL OVERRIDES TO 100%
+  L      K10000
+  =      PN_W766_Faktor_Vorschub_Override_PLC ;% FAKTOR VORSCHUB OVERRIDE PLC NC
+  =      PN_W764_S_Override_PLC        ;% FAKTOR SPINDEL OVERRIDE PLC NC
+  =      W752
+#endif
+
+;ALWAYS SET FEED ENABLE
+  L      PN_M4563_Vorschub_Freigabe    ;VORSCHUB FREIGABE
+  SN     PN_M4563_Vorschub_Freigabe    ;VORSCHUB FREIGABE
+
+;EMULATE NC-START WITH "ALT-S"
+  L      NP_W274_Tasten_Code_betätigte_Taste ;TASTEN CODE DER BET*TIGTEN TASTE
+  ==     K$2073
+  =      PN_M4564_NC_Start             ;NC START (FLANKENAUSWERTUNG)
+
+;EMULATE NC-STOP WITH "ALT-H"
+  L      NP_W274_Tasten_Code_betätigte_Taste ;TASTEN CODE DER BET*TIGTEN TASTE
+  <>     K$2068
+  =      PN_M4560_NC_STOP_0_aktiv      ;NC STOPP (0 ENTSPRICHT STOPP)
+  LN     PN_M4560_NC_STOP_0_aktiv
+  S      I3
+
+;PROCESS FN19: STORE VALUES TO D0 AND D4
+  L      NP_M4075_Strobe_FN19
+  IFT
+    S      PN_M4095_Quit_FN19
+    L      NP_D280_FN19_Zahlenwert_1
+    =      D0
+    L      NP_D284_FN19_Zahlenwert_2
+    =      D4
+  ENDI
+
+  CM     Communication
+
+EM
+
+
+

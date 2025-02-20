@@ -161,13 +161,14 @@ class startOrder():
 
                 self.listbox_spannmittel.bind("<<ListboxSelect>>", self.on_spannmittel_select)
 
-                with open(r"D:\Projekt\Mo Tool Manager\motoolmanager\lageort.json", 'r') as json_file:
-                    lageort_data = places
-                    maschine = []
+                # with open(r"D:\Projekt\Mo Tool Manager\motoolmanager\lageort.json", 'r') as json_file:
+                #     lageort_data = places
 
-                    for dictionary in lageort_data :
-                        if dictionary["status"] == "machine":
-                            maschine.append(dictionary["placename"])
+                maschine = []
+
+                for dictionary in places :
+                    if dictionary["status"] == "machine":
+                        maschine.append(dictionary["placename"])
 
                 self.maschine_combobox = ttk.Combobox(self.mainFrame, values=maschine,font=labelFontConfiguration)
                 self.maschine_combobox.set("Maschine auswählen")
@@ -617,7 +618,7 @@ class startOrder():
             for row in currentToolsData:
                 if len(row) > 19:  # Check if the row has enough columns
                     for search_item in search_items:
-                        if row[2].strip() == search_item.strip():
+                        if row[2] == search_item.strip():
                             item = row[2]
                             value = row[19]
                             if item not in found_items:

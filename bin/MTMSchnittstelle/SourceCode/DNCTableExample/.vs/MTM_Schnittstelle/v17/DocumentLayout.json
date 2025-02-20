@@ -1,57 +1,57 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\",
+  "WorkspaceRootPath": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|e:\\program files\\heidenhain\\sdk\\remotools\\examples\\dnctableexample\\addoreditform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\addoreditform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:addoreditform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\addoreditform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\addoreditform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:addoreditform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\addoreditform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:addoreditform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\usercontrols\\dncinterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:usercontrols\\dncinterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\properties\\resources.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:properties\\resources.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\usercontrols\\dncinterface.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:usercontrols\\dncinterface.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\mainform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\mainform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:mainform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\addoreditform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:addoreditform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|x:\\projekt\\mtmgithub\\mtm\\bin\\mtmschnittstelle\\sourcecode\\dnctableexample\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\usercontrols\\dncinterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:usercontrols\\dncinterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\properties\\resources.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:properties\\resources.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\usercontrols\\dncinterface.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:usercontrols\\dncinterface.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\usercontrols\\tabledatausercontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\usercontrols\\tabledatausercontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:usercontrols\\tabledatausercontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\usercontrols\\infopanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\usercontrols\\infopanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:usercontrols\\infopanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\usercontrols\\infopanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\usercontrols\\infopanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AB0CD2FD-9FF2-4172-AEE9-027BC0FEFF96}|DNC_CSharp_ReadTable.csproj|solutionrelative:usercontrols\\infopanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -62,7 +62,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 274,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -71,46 +71,36 @@
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "DncInterface.cs [Entwurf]",
-              "DocumentMoniker": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\UserControls\\DncInterface.cs",
-              "RelativeDocumentMoniker": "UserControls\\DncInterface.cs",
-              "ToolTip": "C:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\UserControls\\DncInterface.cs [Entwurf]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-05T18:59:12.046Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "MainForm.cs [Entwurf]",
-              "DocumentMoniker": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\MainForm.cs",
+              "Title": "MainForm.cs [Design]",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\MainForm.cs",
               "RelativeDocumentMoniker": "MainForm.cs",
-              "ToolTip": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\MainForm.cs [Entwurf]",
-              "RelativeToolTip": "MainForm.cs [Entwurf]",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\MainForm.cs [Design]",
+              "RelativeToolTip": "MainForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-05T19:12:23.166Z",
-              "EditorCaption": " [Entwurf]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "AddOrEditForm.cs [Design]",
-              "DocumentMoniker": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\AddOrEditForm.cs",
-              "RelativeDocumentMoniker": "AddOrEditForm.cs",
-              "ToolTip": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\AddOrEditForm.cs [Design]",
-              "RelativeToolTip": "AddOrEditForm.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-05T18:59:06.736Z",
               "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
+              "Title": "AddOrEditForm.cs [Entwurf]",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\AddOrEditForm.cs",
+              "RelativeDocumentMoniker": "AddOrEditForm.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\AddOrEditForm.cs [Entwurf]",
+              "RelativeToolTip": "AddOrEditForm.cs [Entwurf]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-05T18:59:06.736Z",
+              "EditorCaption": " [Entwurf]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "MainForm.cs",
-              "DocumentMoniker": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\MainForm.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\MainForm.cs",
               "RelativeDocumentMoniker": "MainForm.cs",
-              "ToolTip": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\MainForm.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\MainForm.cs",
               "RelativeToolTip": "MainForm.cs",
-              "ViewState": "AgIAADMCAAAAAAAAAAAwwEgCAAAPAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAIwNMBAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-05T19:12:25.922Z",
               "EditorCaption": ""
@@ -119,9 +109,9 @@
               "$type": "Document",
               "DocumentIndex": 9,
               "Title": "AssemblyInfo.cs",
-              "DocumentMoniker": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\Properties\\AssemblyInfo.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\Properties\\AssemblyInfo.cs",
               "RelativeDocumentMoniker": "Properties\\AssemblyInfo.cs",
-              "ToolTip": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\Properties\\AssemblyInfo.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\Properties\\AssemblyInfo.cs",
               "RelativeToolTip": "Properties\\AssemblyInfo.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAAAsAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -131,7 +121,7 @@
               "$type": "Document",
               "DocumentIndex": 11,
               "Title": "InfoPanel.cs [Entwurf]",
-              "DocumentMoniker": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\UserControls\\InfoPanel.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\UserControls\\InfoPanel.cs",
               "RelativeDocumentMoniker": "UserControls\\InfoPanel.cs",
               "ToolTip": "C:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\UserControls\\InfoPanel.cs [Entwurf]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -139,36 +129,60 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "AddOrEditForm.Designer.cs",
-              "DocumentMoniker": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\AddOrEditForm.Designer.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\AddOrEditForm.Designer.cs",
               "RelativeDocumentMoniker": "AddOrEditForm.Designer.cs",
-              "ToolTip": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\AddOrEditForm.Designer.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\AddOrEditForm.Designer.cs",
               "RelativeToolTip": "AddOrEditForm.Designer.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAAwHMAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABYAAAAAAAAAAAAAABYAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-09T14:20:53.385Z"
+              "WhenOpened": "2024-09-09T14:20:53.385Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "AddOrEditForm.cs",
-              "DocumentMoniker": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\AddOrEditForm.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\AddOrEditForm.cs",
               "RelativeDocumentMoniker": "AddOrEditForm.cs",
-              "ToolTip": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\AddOrEditForm.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\AddOrEditForm.cs",
               "RelativeToolTip": "AddOrEditForm.cs",
-              "ViewState": "AgIAAAIDAAAAAAAAAADwvxcDAABFAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAiwPUAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-06T19:16:05.605Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainForm.Designer.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\MainForm.Designer.cs",
+              "RelativeDocumentMoniker": "MainForm.Designer.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\MainForm.Designer.cs",
+              "RelativeToolTip": "MainForm.Designer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAN8AAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-09T14:21:44.859Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 6,
+              "Title": "DncInterface.cs [Entwurf]",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\UserControls\\DncInterface.cs",
+              "RelativeDocumentMoniker": "UserControls\\DncInterface.cs",
+              "ToolTip": "C:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\UserControls\\DncInterface.cs [Entwurf]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-05T18:59:12.046Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Resources.Designer.cs",
-              "DocumentMoniker": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\Properties\\Resources.Designer.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\Properties\\Resources.Designer.cs",
               "RelativeDocumentMoniker": "Properties\\Resources.Designer.cs",
-              "ToolTip": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\Properties\\Resources.Designer.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\Properties\\Resources.Designer.cs",
               "RelativeToolTip": "Properties\\Resources.Designer.cs",
               "ViewState": "AgIAACcAAAAAAAAAAAAowEkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -176,22 +190,9 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "MainForm.Designer.cs",
-              "DocumentMoniker": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\MainForm.Designer.cs",
-              "RelativeDocumentMoniker": "MainForm.Designer.cs",
-              "ToolTip": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\MainForm.Designer.cs",
-              "RelativeToolTip": "MainForm.Designer.cs",
-              "ViewState": "AgIAAN8AAAAAAAAAAAAAAN8AAAAuAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-09T14:21:44.859Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 10,
               "Title": "TableDataUserControl.cs [Entwurf]",
-              "DocumentMoniker": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\UserControls\\TableDataUserControl.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\UserControls\\TableDataUserControl.cs",
               "RelativeDocumentMoniker": "UserControls\\TableDataUserControl.cs",
               "ToolTip": "C:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\UserControls\\TableDataUserControl.cs [Entwurf]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -199,11 +200,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "DncInterface.Designer.cs",
-              "DocumentMoniker": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\UserControls\\DncInterface.Designer.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\UserControls\\DncInterface.Designer.cs",
               "RelativeDocumentMoniker": "UserControls\\DncInterface.Designer.cs",
-              "ToolTip": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\UserControls\\DncInterface.Designer.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\UserControls\\DncInterface.Designer.cs",
               "RelativeToolTip": "UserControls\\DncInterface.Designer.cs",
               "ViewState": "AgIAAJEBAAAAAAAAAAAnwKEBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -213,9 +214,9 @@
               "$type": "Document",
               "DocumentIndex": 12,
               "Title": "InfoPanel.cs",
-              "DocumentMoniker": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\UserControls\\InfoPanel.cs",
+              "DocumentMoniker": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\UserControls\\InfoPanel.cs",
               "RelativeDocumentMoniker": "UserControls\\InfoPanel.cs",
-              "ToolTip": "E:\\Program Files\\HEIDENHAIN\\SDK\\RemoTools\\Examples\\DNCTableExample\\UserControls\\InfoPanel.cs",
+              "ToolTip": "X:\\Projekt\\mtmgithub\\MTM\\bin\\MTMSchnittstelle\\SourceCode\\DNCTableExample\\UserControls\\InfoPanel.cs",
               "RelativeToolTip": "UserControls\\InfoPanel.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -227,10 +228,6 @@
           "DockedHeight": 126,
           "SelectedChildIndex": -1,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"

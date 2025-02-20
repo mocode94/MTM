@@ -1,0 +1,167 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
+	x:Class="DNC_CSharp_OnStateChanged.OnStateChangedUserControl"
+	x:Name="OnStateChanged">
+	
+	<UserControl.Resources>
+		<Style x:Key="myPoint" TargetType="{x:Type Ellipse}">
+			<Setter Property="Fill" Value="Gray" />
+			<Setter Property="Stroke" Value="Gray"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="Width" Value="30"/>
+		</Style>
+		<Style x:Key="myBorder" TargetType="{x:Type Border}">
+			<Setter Property="BorderBrush" Value="Black"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="HorizontalAlignment" Value="Left"/>
+			<Setter Property="VerticalAlignment" Value="Top"/>
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="CornerRadius" Value="10"/>
+			<Setter Property="Background" Value="AliceBlue"/>
+		</Style>
+		<Style x:Key="myTextBlockState" TargetType="{x:Type TextBlock}">
+			<Setter Property="FontFamily" Value="Courier New"/>
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="TextWrapping" Value="NoWrap"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+		<Style x:Key="myTextBlockEvent" BasedOn="{StaticResource myTextBlockState}" TargetType="{x:Type TextBlock}">
+			<Setter Property="Foreground" Value="Blue"/>
+			<Setter Property="HorizontalAlignment" Value="Left"/>
+			<Setter Property="VerticalAlignment" Value="Top"/>
+		</Style>
+		<Style x:Key="arrowStyle" TargetType="{x:Type ed:BlockArrow}">
+			<Setter Property="Fill" Value="Gray"/>
+			<Setter Property="Stroke" Value="Gray"/>
+			<Setter Property="ArrowheadAngle" Value="70"/>
+			<Setter Property="ArrowBodySize" Value="0.2"/>
+			<Setter Property="HorizontalAlignment" Value="Left"/>
+			<Setter Property="VerticalAlignment" Value="Top"/>
+		</Style>
+	</UserControl.Resources>
+
+	<Grid Background="White" FlowDirection="LeftToRight">
+        <ed:BlockArrow Height="35" Margin="30,100,0,0" Orientation="Up" Style="{StaticResource arrowStyle}" Width="20" />
+        <ed:BlockArrow Style="{StaticResource arrowStyle}" Height="20" Width="48" Orientation="Left" Margin="85,488,0,0" />
+        <ed:BlockArrow Style="{StaticResource arrowStyle}" Height="20" Width="46" Orientation="Left" Margin="85,293,0,0" />
+        <ed:BlockArrow Style="{StaticResource arrowStyle}" Height="20" Width="48" Orientation="Left" Margin="85,358,0,0" />
+        <ed:BlockArrow Style="{StaticResource arrowStyle}" Height="20" Width="48" Orientation="Left" Margin="85,423,0,0" />
+        <ed:BlockArrow ArrowBodySize="1" ArrowheadAngle="180" Height="173" Margin="390,642,0,0" Orientation="Down" Style="{StaticResource arrowStyle}" Width="5" />
+        <!-- Border for machine state  -->
+		<Border x:Name="DNC_STATE_MACHINE_IS_SHUTTING_DOWN" Style="{StaticResource myBorder}" Margin="130,548,0,0" Width="410">
+			<TextBlock Text="DNC_STATE_MACHINE_IS_SHUTTING_DOWN" Style="{StaticResource myTextBlockState}"/>
+		</Border>
+		<Border x:Name="DNC_STATE_HOST_IS_NOT_AVAILABLE" Style="{StaticResource myBorder}" Margin="20,70,0,0" Width="300">
+			<TextBlock Text="DNC_STATE_HOST_IS_NOT_AVAILABLE"  Style="{StaticResource myTextBlockState}"/>
+		</Border>
+		<Border x:Name="DNC_STATE_HOST_IS_AVAILABLE" Style="{StaticResource myBorder}" Margin="20,134,0,0" Width="300">
+			<TextBlock Text="DNC_STATE_HOST_IS_AVAILABLE"  Style="{StaticResource myTextBlockState}"/>
+		</Border>
+		<Border x:Name="DNC_STATE_WAITING_PERMISSION" Style="{StaticResource myBorder}" Margin="20,198,0,0" Width="300">
+			<TextBlock Text="DNC_STATE_WAITING_PERMISSION"  Style="{StaticResource myTextBlockState}"/>
+		</Border>
+		<Border x:Name="DNC_STATE_DNC_IS_AVAILABLE" Style="{StaticResource myBorder}" Margin="129,288,0,0" Width="410">
+			<TextBlock Text="DNC_STATE_DNC_IS_AVAILABLE"  Style="{StaticResource myTextBlockState}"/>
+		</Border>
+		<Border x:Name="DNC_STATE_MACHINE_IS_BOOTED" Style="{StaticResource myBorder}" Margin="130,353,0,0" Width="360">
+			<TextBlock Text="DNC_STATE_MACHINE_IS_BOOTED"  Style="{StaticResource myTextBlockState}"/>
+		</Border>
+		<Border x:Name="DNC_STATE_MACHINE_IS_INITIALIZING" Style="{StaticResource myBorder}" Margin="130,418,0,0" Width="310">
+			<TextBlock Text="DNC_STATE_MACHINE_IS_INITIALIZING"  Style="{StaticResource myTextBlockState}"/>
+		</Border>
+		<Border x:Name="DNC_STATE_MACHINE_IS_AVAILABLE" Style="{StaticResource myBorder}" Margin="130,483,0,0" Width="260">
+			<TextBlock Text="DNC_STATE_MACHINE_IS_AVAILABLE"  Style="{StaticResource myTextBlockState}"/>
+		</Border>
+		<Border x:Name="DNC_STATE_DNC_IS_STOPPED" Style="{StaticResource myBorder}" Margin="55,612,0,0" Width="360">
+			<TextBlock Text="DNC_STATE_DNC_IS_STOPPED"  Style="{StaticResource myTextBlockState}"/>
+		</Border>
+		<Border x:Name="DNC_STATE_HOST_IS_STOPPED" Style="{StaticResource myBorder}" Margin="55,676,0,0" Width="310">
+			<TextBlock Text="DNC_STATE_HOST_IS_STOPPED"  Style="{StaticResource myTextBlockState}"/>
+		</Border>
+		<Border x:Name="DNC_STATE_NO_PERMISSION" Style="{StaticResource myBorder}" Margin="20,741,0,0" Width="210">
+			<TextBlock Text="DNC_STATE_NO_PERMISSION"  Style="{StaticResource myTextBlockState}"/>
+		</Border>
+		<Border x:Name="DNC_STATE_NOT_INITIALIZED" Style="{StaticResource myBorder}" Margin="20,10,0,0" Width="220">
+			<TextBlock Text="DNC_STATE_NOT_INITIALIZED"  Style="{StaticResource myTextBlockState}"/>
+		</Border>
+
+		<!-- Start and end points -->
+		<Grid VerticalAlignment="Top" HorizontalAlignment="Left" Height="60" Width="30" Margin="260,10,0,0">
+			<ed:BlockArrow Style="{StaticResource arrowStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Height="35" Width="20" Orientation="Down"/>
+			<Ellipse Style="{StaticResource myPoint}" VerticalAlignment="Top"/>
+		</Grid>
+		<Grid VerticalAlignment="Top" HorizontalAlignment="Left" Height="125" Width="30" Margin="260,705,0,0">
+			<ed:BlockArrow Style="{StaticResource arrowStyle}" HorizontalAlignment="Center" Height="95" Width="20" Orientation="Down"/>
+			<Ellipse Style="{StaticResource myPoint}" VerticalAlignment="Bottom"/>
+		</Grid>
+		
+		<!-- Routing arrows of the state machine -->
+        <ed:BlockArrow Style="{StaticResource arrowStyle}" Height="35" Width="20" Orientation="Down" Margin="265,100,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="35" Width="20" Orientation="Down" Margin="265,164,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="60" Width="20" Orientation="Down" Margin="265,228,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="35" Width="20" Orientation="Down" Margin="265,383,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="35" Width="20" Orientation="Down" Margin="265,448,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="35" Width="20" Orientation="Down" Margin="265,318,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="35" Width="20" Orientation="Down" Margin="265,513,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="35" Width="20" Orientation="Down" Margin="265,577,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="35" Width="20" Orientation="Down" Margin="265,642,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="512.5" Width="20" Orientation="Down" Margin="30,228,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="230" Width="20" Orientation="Down" Margin="509,318,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="165" Width="20" Orientation="Down" Margin="460,383,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="104" Width="20" Orientation="Down" Margin="66,508,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="35" Width="20" Orientation="Up" Margin="66,642,0,0"/>
+        <ed:BlockArrow Style="{StaticResource arrowStyle}" Height="20" Width="75" Orientation="Left" Margin="85,251,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="20" Width="135" Orientation="Right" Margin="125,806,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="100" Width="20" Orientation="Down" Margin="410,448,0,0"/>
+		<ed:BlockArrow Style="{StaticResource arrowStyle}" Height="47" Width="5" Orientation="Down" ArrowBodySize="1" Margin="123,771,0,0" ArrowheadAngle="180" />
+        <ed:BlockArrow Style="{StaticResource arrowStyle}" Height="35" Width="5" Orientation="Down" ArrowBodySize="1" Margin="154.995,228,0,0" ArrowheadAngle="180" />
+		<Rectangle Fill="Gray" Width="18" HorizontalAlignment="Left" Height="257" Margin="67,251,0,0" VerticalAlignment="Top"/>
+
+		<!-- Horizontal TextBlock (State Events) -->
+		<TextBlock Style="{StaticResource myTextBlockEvent}" Margin="280,38,0,0" Text="DNC_EVT_STATE_HOST_NOT_AVAILABLE" Width="259"/>
+		<TextBlock Style="{StaticResource myTextBlockEvent}" Margin="280,102,0,0" Text="DNC_EVT_STATE_HOST_AVAILABLE" Width="259" ToolTip="Ping OK" />
+		<TextBlock Style="{StaticResource myTextBlockEvent}" Margin="280,166,0,0" Text="DNC_EVT_STATE_WAIT_PERMISSION" Width="259" ToolTip="DNC available" />
+		<TextBlock Style="{StaticResource myTextBlockEvent}" Margin="280,230,0,0" Text="DNC_EVT_STATE_DNC_AVAILABLE" Width="259" ToolTip="Permission" />
+		<TextBlock Style="{StaticResource myTextBlockEvent}" Margin="280,320,0,0" Text="DNC_EVT_STATE_MACHINE_BOOTED" Width="259" ToolTip="CNC booted" />
+		<TextBlock Style="{StaticResource myTextBlockEvent}" Margin="280,385,0,0" Text="DNC_EVT_STATE_MACHINE_INITIALIZING" Width="259" ToolTip="Start initialization" />
+		<TextBlock Style="{StaticResource myTextBlockEvent}" Margin="280,449,0,0" Text="DNC_EVT_STATE_MACHINE_AVAILABLE" Width="259" ToolTip="Initialization ready" />
+		<TextBlock Style="{StaticResource myTextBlockEvent}" Margin="280,514,0,0" Text="DNC_EVT_STATE_MACHINE_SHUTTING_DOWN" Width="259" ToolTip="Schut down" />
+		<TextBlock Style="{StaticResource myTextBlockEvent}" Margin="280,580,0,0" Text="DNC_EVT_STATE_DNC_STOPPED" Width="259" ToolTip="DNC not available" />
+		<TextBlock Style="{StaticResource myTextBlockEvent}" Margin="280,644,0,0" Text="DNC_EVT_STATE_DNC_CONNECTION_LOST" Width="259" ToolTip="Ping FAILED" />
+		<TextBlock Style="{StaticResource myTextBlockEvent}" Margin="281,708,0,0" Text="/ Disconnect" Width="90"/>
+		<TextBlock Style="{StaticResource myTextBlockEvent}" Margin="134,773,0,0" Text="/ Disconnect" Width="90"/>
+		<TextBlock Style="{StaticResource myTextBlockEvent}" Margin="295,11,0,0" Text="ConnectRequest(x)" Width="120"/>
+
+		<!-- Vertical TextBlock (State Events) -->
+		<TextBlock Style="{StaticResource myTextBlockEvent}" Margin="-60,337,0,0" Text="DNC_EVT_STATE_PERMISSION_DENIED" Width="224" RenderTransformOrigin="0.5,0.5" TextAlignment="Right" ToolTip="No permission">
+			<TextBlock.RenderTransform>
+				<TransformGroup>
+					<ScaleTransform/>
+					<SkewTransform/>
+					<RotateTransform Angle="270"/>
+					<TranslateTransform/>
+				</TransformGroup>
+			</TextBlock.RenderTransform>
+		</TextBlock>
+        
+        <TextBlock Style="{StaticResource myTextBlockEvent}" Margin="24,391,0,0" Text="DNC_EVT_STATE_DNC_STOPPED" Width="180" RenderTransformOrigin="0.5,0.5" TextAlignment="Center" ToolTip="DNC not available">
+			<TextBlock.RenderTransform>
+				<TransformGroup>
+					<ScaleTransform/>
+					<SkewTransform/>
+					<RotateTransform Angle="270"/>
+					<TranslateTransform/>
+				</TransformGroup>
+			</TextBlock.RenderTransform>
+		</TextBlock>
+        <ed:BlockArrow Height="20" Margin="290,806,0,0" Orientation="Right" Style="{StaticResource arrowStyle}" Width="105" FlowDirection="RightToLeft" />
+        <TextBlock Margin="400,708,0,0" Style="{StaticResource myTextBlockEvent}" Text="/ Disconnect" Width="90" />
+        <TextBlock Margin="82,661,0,0" Style="{StaticResource myTextBlockEvent}" Text="DNC_EVT_STATE_DNC_STOPPED" Width="259" ToolTip="Ping OK" />
+        <TextBlock Margin="45,119,0,0" Style="{StaticResource myTextBlockEvent}" Text="DNC_EVT_STATE_HOST_NOT_AVAILABLE" Width="259" ToolTip="Ping FAILED" />
+    </Grid>
+</UserControl>

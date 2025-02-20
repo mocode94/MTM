@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<PLCDesignNT-ProjectFile>
+<Version>4</Version>
+<Project AutoActivate="0" AutoTransfer="0" Baudrate="Auto" BinTypes=".bin .sk .cyc .bmp .bmx .he .zip .map" Codeword="807667" Connection="0" Created="Do, Sep,  25.09.2003  15:51" CtrlType="iTNC530PROG" CtrlVariant="374150_01" Expanded="1" GenUTF8="0" GeneratedText="1122298875" Linebreak="1" Name="minimum" Pathname="minimum.pdp" Port="COM1:" TextDataFile="minimum.ptx" TextDefLang="de" TextLangPath="." URL="127.0.0.1" WarnSubst="0">
+<PLCProgram CompSwitches="264" Compiled="1135246097" Mainprogram="minimum.src" Name="Programm" XferSource="0">
+<Folder Extension="def" Name="Definitions-Dateien">
+<File Name="glb_nc.def" Pathname="glb_nc.def"/>
+</Folder>
+<Folder Extension="inc" Name="Include-Dateien"/>
+<Folder Extension="src" Name="Quellcode-Dateien">
+<File Name="COMMUNICATION.SRC" Pathname="COMMUNICATION.SRC"/>
+<File Name="minimum.src" Pathname="minimum.src"/>
+</Folder>
+</PLCProgram>
+<Folder AutoTransExt=".sys" DestSource="PLC:\" Extension=".sys" Name="System">
+<File Name="OEM.SYS" Pathname="OEM.SYS"/>
+</Folder>
+<Transfer Name="Transfer">
+<Transfer Expanded="1" Label="ProgOut" Name="Programm">
+<Transfer Expanded="1" Name="PLC:">
+<File Name="MINIMUM.plc" Pathname="MINIMUM.plc"/>
+</Transfer>
+</Transfer>
+<Transfer Label="TextOut" Name="Texte">
+<Transfer Name="PLC:">
+<File Name="minimum.pet" Pathname="minimum.pet"/>
+</Transfer>
+<Transfer Name="PLC:\LANGUAGE\GERMAN">
+<File Name="ERROR.A" Pathname="GERMAN\ERROR.A"/>
+<File Name="FIX.A" Pathname="GERMAN\FIX.A"/>
+<File Name="REASON.A" Pathname="GERMAN\REASON.A"/>
+</Transfer>
+</Transfer>
+<Transfer Label="XferFilesOut" Name="Transfer-Dateien">
+<Transfer Expanded="1" Name="PLC:\">
+<File Name="OEM.SYS" Pathname="OEM.SYS"/>
+</Transfer>
+</Transfer>
+</Transfer>
+<File Name="minimum.lst" Pathname="minimum.lst"/>
+<File Name="readme.txt" Pathname="readme.txt"/>
+</Project>
+<Configurations ActConf="0"/>
+<OpenViews>
+<Document Pathname="minimum.src">
+<View CursorPos="17 43 0 0 1 1" Placement="3 3 44 46 656 358 0 404"/>
+</Document>
+<Document Pathname="communication.src">
+<View CursorPos="3 5 0 0 0 0" Placement="2 2 66 69 589 360 160 404"/>
+</Document>
+</OpenViews>
+</PLCDesignNT-ProjectFile>

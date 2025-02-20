@@ -1,0 +1,2 @@
+PLCMAIN = PLC:\MINIMUM.plc
+PLCERRTAB = PLC:\minimum.pet
