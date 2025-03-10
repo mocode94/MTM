@@ -277,13 +277,13 @@ namespace DNC_CSharp_Demo.UserControls
                         colName = "toolCurTime";
                         float toolCurTime = float.Parse(currentSecondListinAddOrEdirForm[22], CultureInfo.InvariantCulture);
                         colName = "toolLoffs";
-                        string toolLoffs = currentSecondListinAddOrEdirForm[23];
+                        float toolLoffs = float.Parse(currentSecondListinAddOrEdirForm[23], CultureInfo.InvariantCulture);
                         colName = "toolRoffs";
-                        string toolRoffs = currentSecondListinAddOrEdirForm[24];
+                        float toolRoffs = float.Parse(currentSecondListinAddOrEdirForm[24], CultureInfo.InvariantCulture);
                         colName = "toolLtol";
-                        string toolLtol = currentSecondListinAddOrEdirForm[25];
+                        float toolLtol = float.Parse(currentSecondListinAddOrEdirForm[25], CultureInfo.InvariantCulture);
                         colName = "toolRtol";
-                        string toolRtol = currentSecondListinAddOrEdirForm[26];
+                        float toolRtol = float.Parse(currentSecondListinAddOrEdirForm[26], CultureInfo.InvariantCulture);
                         colName = "toolLbreak";
                         float toolLbreak = float.Parse(currentSecondListinAddOrEdirForm[27], CultureInfo.InvariantCulture);
                         colName = "toolRbreak";
@@ -295,7 +295,7 @@ namespace DNC_CSharp_Demo.UserControls
                         colName = "toolP8";
                         float toolP8 = float.Parse(currentSecondListinAddOrEdirForm[31], CultureInfo.InvariantCulture);
                         colName = "toolP2";
-                        string toolP2 = currentSecondListinAddOrEdirForm[32];
+                        string toolP2 = currentSecondListinAddOrEdirForm[37];
                         colName = "toolKinematic";
                         string toolKinematic = currentSecondListinAddOrEdirForm[38];
                         colName = "toolPLC";
@@ -556,7 +556,7 @@ namespace DNC_CSharp_Demo.UserControls
                                 if (value == "L-OFFS")
                                 {
                                     DataSelectionTextBox.Text = @"\TABLE\TOOL\T\" + primaryKeyValue + "\\" + value; // <-- Add this line
-                                    this.dataAccess2.SetDataEntry(toolLoffs, out errorOccurred);
+                                    this.dataAccess2.SetDataEntry(toolLoffs.ToString(), out errorOccurred);
                                     wrongEntryInput = toolLoffs.ToString();
                                     if (errorOccurred)
                                     {
@@ -567,7 +567,7 @@ namespace DNC_CSharp_Demo.UserControls
                                 if (value == "R-OFFS")
                                 {
                                     DataSelectionTextBox.Text = @"\TABLE\TOOL\T\" + primaryKeyValue + "\\" + value; // <-- Add this line
-                                    this.dataAccess2.SetDataEntry(toolRoffs, out errorOccurred);
+                                    this.dataAccess2.SetDataEntry(toolRoffs.ToString(), out errorOccurred);
                                     wrongEntryInput = toolRoffs.ToString();
                                     if (errorOccurred)
                                     {
@@ -578,7 +578,7 @@ namespace DNC_CSharp_Demo.UserControls
                                 if (value == "LTOL")
                                 {
                                     DataSelectionTextBox.Text = @"\TABLE\TOOL\T\" + primaryKeyValue + "\\" + value; // <-- Add this line
-                                    this.dataAccess2.SetDataEntry(toolLtol, out errorOccurred);
+                                    this.dataAccess2.SetDataEntry(toolLtol.ToString(), out errorOccurred);
                                     wrongEntryInput = toolLtol.ToString();
                                     if (errorOccurred)
                                     {
@@ -589,7 +589,7 @@ namespace DNC_CSharp_Demo.UserControls
                                 if (value == "RTOL")
                                 {
                                     DataSelectionTextBox.Text = @"\TABLE\TOOL\T\" + primaryKeyValue + "\\" + value; // <-- Add this line
-                                    this.dataAccess2.SetDataEntry(toolRtol, out errorOccurred);
+                                    this.dataAccess2.SetDataEntry(toolRtol.ToString(), out errorOccurred);
                                     wrongEntryInput = toolRtol.ToString();
                                     if (errorOccurred)
                                     {

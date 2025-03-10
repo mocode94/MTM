@@ -30,6 +30,7 @@ from config import winconfig,paths,places,settings
 import sqlite3
 import csv
 from queue import Queue, Empty
+from vtkmodules.tk.vtkTkRenderWindowInteractor import vtkTkRenderWindowInteractor
 
 
 
@@ -261,6 +262,7 @@ class listModule:
 
     def visualize_stl(self, file_path, width=235, height=600):
         import vtk
+        import tkinter as tk
 
         # Create a reader for the STL file
         reader = vtk.vtkSTLReader()
@@ -280,21 +282,16 @@ class listModule:
         render_window.AddRenderer(renderer)
 
         # Set the desired window size (width, height)
-        render_window.SetSize(width, height)  # Adjust as needed
+        render_window.SetSize(width, height)
 
         # Set the position of the render window to the bottom right
-        import tkinter as tk
         root = tk.Tk()
-        
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
         root.destroy()
 
-        # Calculate position for bottom right
         x_position = screen_width - width
-        y_position = screen_height -150- height
-
-        # Set the position
+        y_position = screen_height - 150 - height
         render_window.SetPosition(x_position, y_position)
 
         # Create an interactor
@@ -303,15 +300,25 @@ class listModule:
 
         # Add the actor to the scene
         renderer.AddActor(actor)
-        renderer.SetBackground(1, 1, 1)  # Background color white
+        renderer.SetBackground(1, 1, 1)  # White background
 
-        # Set up interactor style to allow rotation
+        # Set the camera to a front view
+        camera = renderer.GetActiveCamera()
+        camera.SetPosition(0, -1, 0)  # Position the camera in front
+        camera.SetFocalPoint(0, 0, 0)  # Look at the center of the model
+        camera.SetViewUp(0, 0, 1)  # Ensure the up direction is correct
+
+        # Reset camera and update view
+        renderer.ResetCamera()
+
+        # Set up interactor style
         style = vtk.vtkInteractorStyleTrackballActor()
         render_window_interactor.SetInteractorStyle(style)
 
         # Start the rendering loop
         render_window.Render()
         render_window_interactor.Start()
+
 
 
 
@@ -369,53 +376,77 @@ class listModule:
             tree.insert('', 'end', values=( f"Item {item_key} not found", "", ""))
 
 
-    def wz_info(self,master_row):
-        wz_info_win=Toplevel()
+    def wz_info(self, master_row):
+        wz_info_win = Toplevel()
         wz_info_win.title(master_row[1])
-        wz_info_win.geometry("250x250")
+        wz_info_win.geometry("450x300")  # You can adjust the size as needed
+        wz_info_win.resizable(True, True)  # Make the window resizable
 
-
-        lag_value = set()
-        name_value = set()
-        nr_value = set()
-        index_value = set()
-        name=master_row[1]
-
- 
+        lag_value =[]
+        name_value = []
+        nr_value = []
+        index_value = []
+        name = master_row[1]
 
         found = False
-        with open(paths["machinecsv"], "r") as file:
-            csv_reader = csv.reader(file, delimiter=";")
-            for row in csv_reader:
-                if name==row[2]:
-                    found = True
-                    index_value.add(row[0])
-                    nr_value.add(row[1])
-                    lag_value.add(row[19])
+
+        # Connect to the MTMDB.db SQLite database
+        conn = sqlite3.connect(paths["MTMDB"])
+        cur = conn.cursor()
+        # Fetch all data from the currentTools table
+        cur.execute("SELECT * FROM currentTools")
+        currentToolsData = cur.fetchall()
+        conn.close()
+
+        for row in currentToolsData:
+            if name == row[2]:
+                found = True
+                index_value.append(row[0])
+                nr_value.append(row[1])
+                lag_value.append(row[19])
+
         if not found:
             index_value = {"NOTFOUND"}
             nr_value = {"NOTFOUND"}
             lag_value = {"NOTFOUND"}
-                    
-
-                    
-
-
-        index_value_str = ' , '.join(map(str, index_value))
-        nr_value_str = ' , '.join(map(str, nr_value))
-        lag_value_str = ' , '.join(map(str, lag_value))
 
 
 
-
+        # Assuming wz_info_win is your Tkinter window
         label_font = font.Font(family="Helvetica", size=11, weight="bold")
-        if index_value is not None:  # Check if any matching rows were found
-            label_index = Label(wz_info_win, text="Wz QR ist : " + str(index_value_str),font=label_font)
-            label_index.grid(row=0, column=0, sticky=tk.W)
-            label_tnum = Label(wz_info_win, text="Wz Nummer ist : " + str(nr_value_str),font=label_font)
-            label_tnum.grid(row=1, column=0, sticky=tk.W)
-            label_lag = Label(wz_info_win, text="Platz: " + str(lag_value_str),font=label_font)
-            label_lag.grid(row=3, column=0, sticky=tk.W)
+
+        # Create a Treeview widget to display data in a table
+        tree = ttk.Treeview(wz_info_win, columns=("Code", "Nummer", "Platz"), show="headings", height=5)
+
+        # Define the columns and headers
+        tree.heading("Code", text="Code",anchor='center')
+        tree.heading("Nummer", text="Nummer",anchor='center')
+        tree.heading("Platz", text="Platz",anchor='center')
+
+        # Set column widths
+        tree.column("Code", width=100, anchor='center')
+        tree.column("Nummer", width=100, anchor='center')
+        tree.column("Platz", width=100, anchor='center')
+
+        # Convert sets to lists for iteration and insertion
+        index_value_list = list(index_value)
+        nr_value_list = list(nr_value)
+        lag_value_list = list(lag_value)
+
+        # Insert data into the Treeview
+        if index_value_list:  # Check if any matching rows were found
+            # Combine values into tuples and insert them into the table
+            for index, nr, lag in zip(index_value_list, nr_value_list, lag_value_list):
+                tree.insert("", "end", values=(index, nr, lag))
+
+        # Pack the Treeview widget into the window
+        tree.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+
+        # Configure grid weight to make Treeview resizable
+        wz_info_win.grid_rowconfigure(0, weight=1)
+        wz_info_win.grid_columnconfigure(0, weight=1)
+
+
 
     def showsonstiges(self):
         sonstiges_table = tk.Toplevel()
@@ -550,44 +581,19 @@ class Liste:
         self.table.heading('T_Name', text='T_Name', anchor='center')
         # self.table.heading('Typ', text='Typ', anchor='center')
         self.table.heading('T_Radius', text='T_Radius', anchor='center')
-        # self.table.heading('Eckenradius', text='Eckenradius', anchor='center')
-        # self.table.heading('Spitzenwinkel', text='Spitzenwinkel', anchor='center')
-        # self.table.heading('Eintauchwinkel', text='Eintauchwinkel', anchor='center')
-        # self.table.heading('Schneiden', text='Schneiden', anchor='center')
+ 
         self.table.heading('Schnittlaenge', text='Schnittlaenge', anchor='center')
         self.table.heading('Ausspann_Laenge', text='Ausspann_Laenge', anchor='center')
         self.table.heading('IST_Laenge', text='IST_Laenge', anchor='center')
-        # self.table.heading('SOLL_Laenge', text='SOLL_Laenge', anchor='center')
-        # self.table.heading('Steigung', text='Steigung', anchor='center')
-        # self.table.heading('Wzg_ArtNr', text='Wzg_ArtNr', anchor='center')
-        # self.table.heading('Aufn_ArtNr', text='Aufn_ArtNr', anchor='center')
-        # self.table.heading('zus_Komp', text='zus_Komp', anchor='center')
-        # self.table.heading('zus_Komp2', text='zus_Komp2', anchor='center')
-        # self.table.heading('Spann_Sys', text='Spann_Sys', anchor='center')
-        # self.table.heading('Platz', text='Platz', anchor='center')
         self.table.heading('Status', text='Status', anchor='center')
-
         self.table.column("#0", width=0, stretch=tk.NO)
         self.table.column('QR', width=50, anchor='center')
         self.table.column('T_Nummer', width=50, anchor='center')
         self.table.column('T_Name', width=170, anchor='center')
-        # self.table.column('Typ', width=50, anchor='center')
         self.table.column('T_Radius', width=40, anchor='center')
-        # self.table.column('Eckenradius', width=40, anchor='center')
-        # self.table.column('Spitzenwinkel', width=40, anchor='center')
-        # self.table.column('Eintauchwinkel', width=40, anchor='center')
-        # self.table.column('Schneiden', width=20, anchor='center')
         self.table.column('Schnittlaenge', width=20, anchor='center')
         self.table.column('Ausspann_Laenge', width=20, anchor='center')
         self.table.column('IST_Laenge', width=40, anchor='center')
-        # self.table.column('SOLL_Laenge', width=40, anchor='center')
-        # self.table.column('Steigung', width=20, anchor='center')
-        # self.table.column('Wzg_ArtNr', width=100, anchor='center')
-        # self.table.column('Aufn_ArtNr', width=100, anchor='center')
-        # self.table.column('zus_Komp', width=100, anchor='center')
-        # self.table.column('zus_Komp2', width=100, anchor='center')
-        # self.table.column('Spann_Sys', width=30, anchor='center')
-        # self.table.column('Platz', width=20, anchor='center')
         self.table.column('Status', width=40, anchor='center')
 
         self.table.tag_configure('yellowcell', background='yellow')
@@ -701,7 +707,8 @@ class Liste:
         # Fetch all data from the currentTools table
         cur.execute("SELECT * FROM currentTools")
         currentToolsData = cur.fetchall()
-        
+                # Close the database connection after finishing
+        conn.close()
         # Sort currentToolsData by the second column (assuming it's an integer field)
         currentToolsData.sort(key=lambda x: int(x[1]) if str(x[1]).isdigit() else float('inf'))
         
@@ -788,9 +795,14 @@ class Liste:
 
                     self.table.insert('', 'end', values=short_t_row, tags=('orangecell',))
 
-        # Close the database connection after finishing
-        conn.close()
-
+        for dict in places:
+            if dict["placename"] == lageort:
+                if dict["status"] =="place":
+                    return
+                
+        if lageort == "ALL":
+            return
+        
         def monitor_output(process, output_queue):
             """
             Continuously read the output of the process and add it to the queue.
@@ -803,11 +815,8 @@ class Liste:
 
         def run_long_process():
             for place in places:
-                print({place["placename"]})
-                print(self.listname)
                 if place["placename"] == self.listname :
                     if place["status"] == "machine" :
-                        print(f"here is placename {place["placename"]} and here is status {place["status"]}")
                         ip_address = place["link"]
                         place_name = place["placename"]
                         # Path to the TNCCmd executable
@@ -855,7 +864,6 @@ class Liste:
                             while time.time() - start_time < 5:  # Wait up to 5 seconds
                                 try:
                                     line = output_queue.get(timeout=0.1)
-                                    print(line)  # Print output for debugging purposes
 
                                     if "Connection established" in line:
                                         connected = True
@@ -938,6 +946,7 @@ class Liste:
                         # Fetch all data from the currentTools table
                         cur.execute("SELECT * FROM currentTools")
                         currentToolsData = cur.fetchall()
+                        conn.close()
                         currentToolDataList=[]
 
                         for tool in currentToolsData:
@@ -954,10 +963,8 @@ class Liste:
                         if tch_item:
                             tch_item[0]=int(tch_item[0])
                             tchItemIndex0Int.append(tch_item)
-                            print(f"here is tch_item modified {tch_item}")
                     for modifiedTchItem in tchItemIndex0Int:
                         if any(modifiedTchItem[0] == currentTool[0] for currentTool in currentToolDataList):
-                            print(f"here is tch_item integer {modifiedTchItem}")
                             matched_items.append(modifiedTchItem)
 
                     treeviewRows=[]
@@ -987,71 +994,12 @@ class Liste:
                                 self.table.item(row_id, values=treeviewRow)
                                 break
                 
-
-
-
-
-
-
-            # for checkingTool in matched_items:
-            #     if any(checkingTool[0] == treeviewRow[1] and checkingTool[1] == treeviewRow[2] for treeviewRow in treeviewRows):
-            #         # Convert values to a list for modification
-            #         # new_values = treeviewRow
-                    
-            #         # Update column 8 (index 7, zero-based) to "ok"
-            #         treeviewRow[7] = "Vorhanden \u2705"
-                    
-            #         # Update the row in the Treeview with new values
-            #         self.table.item(row_id, values=treeviewRow)
-
-
-
-
-
-                # elif checkingTool not in treeviewRows:
-                #     # new_values = list(values)
-
-                #     treeviewRow[7] = "Nicht Vorhanden \u274C"
-                    
-                #     # Update the row in the Treeview with new values
-                #     self.table.item(row_id, values=treeviewRow)
-
-
-            # for checkingTool in matched_items:
-            #     print(f"here is checkingTool {checkingTool}")
-            #     if checkingTool:
-
-            #             for treeviewRow in values:
-            #                 # print(f"here is treeviewRow {treeviewRow}")
-            #                 treeviewRows.append([str(treeviewRow[1]),treeviewRow[2]])
-
-            #             if checkingTool in treeviewRows:
-            #                 # Convert values to a list for modification
-            #                 new_values = list(values)
-                            
-            #                 # Update column 8 (index 7, zero-based) to "ok"
-            #                 new_values[7] = "Vorhanden \u2705"
-                            
-            #                 # Update the row in the Treeview with new values
-            #                 self.table.item(row_id, values=new_values)
-            #             elif checkingTool not in treeviewRows:
-            #                 new_values = list(values)
-
-            #                 new_values[7] = "Nicht Vorhanden \u274C"
-                            
-            #                 # Update the row in the Treeview with new values
-            #                 self.table.item(row_id, values=new_values)
-        # Start the long-running process in a separate thread
         process_thread = threading.Thread(target=run_long_process)
         process_thread.daemon = True
         process_thread.start()
 
-        # Continue with the rest of your code
-        # You can wait for the thread to finish if necessary, or handle it asynchronously
-        # process_thread.join()  # Optional, only if you need to wait for it to complete
-
-        # Close the database connection
-        conn.close()
+ 
+        
 
     def search_treeview(self):
         search_value = self.search_var.get().strip().lower()
@@ -1213,7 +1161,7 @@ class Liste:
         # Create a Toplevel window
         table_window = tk.Toplevel()
         table_window.title("Selected Row Details")
-        table_window.geometry("400x450")  # Adjust window size as needed
+        table_window.geometry("450x450")  # Adjust window size as needed
 
         # Example usage
         headers = [
@@ -1323,7 +1271,6 @@ class Liste:
                     while time.time() - start_time < 5:  # Wait up to 5 seconds
                         try:
                             line = output_queue.get(timeout=0.1)
-                            print(line)  # Print output for debugging purposes
 
                             if "Connection established" in line:
                                 connected = True
@@ -1414,8 +1361,7 @@ class Liste:
                     else:
                         pass
 
-                for i in currentToolDataList:
-                    print(i)
+   
 
 
         # Sort and align matched items

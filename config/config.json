@@ -7,19 +7,19 @@
         "mastercsv": "../data/MasterCSV.csv",
         "toolsremark": "../data/wz_bemerkungen/",
         "toolCapturedimages": "../data/toolCapturedImages/",
-        "haimerDB": "H:/MVIIIBasic.mdb",
         "TNC640_Daten": "../data/TNC640_Daten.csv",
         "DNCINPUT": "../bin/MTMSchnittstelle/",
         "DNCSchnittstelle": "../bin/MTMSchnittstelle/DNC_CSharp_Demo.exe",
         "toolTableBackup": "../data/backup/",
         "haimerBackup": "../data/backup/haimerDB/MVIIIBasic.mdb",
+        "haimerDB": "Z:/MVIIIBasic.mdb",
         "feeddata": "../data/vorschub.json",
         "temp": "../temp/",
         "TNCcmd": "E:/Program Files/HEIDENHAIN/TNCremo/TNCcmd.exe",
         "MTMDB": "../data/MTMDB.db",
         "MTMitems": "../data/MTMitems.db",
         "configJson": "../config/config.json",
-        "pcip": "192.168.74.95"
+        "pcip": "192.168.56.1"
     },
     "places": [
         {
@@ -92,22 +92,6 @@
             "belegt": 12
         },
         {
-            "image_path": "IMG_20240829_0001.jpg",
-            "placename": "TESTPlace",
-            "position_x": 2,
-            "position_y": 2,
-            "status": "place",
-            "subplace": [
-                {
-                    "subplacename": "Fach1",
-                    "capacity": 5,
-                    "busy": 0
-                }
-            ],
-            "max": 10,
-            "belegt": 0
-        },
-        {
             "image_path": "C32Schrank.png",
             "placename": "C32Schrank",
             "position_x": 2,
@@ -164,24 +148,117 @@
             "belegt": 0
         },
         {
-            "image_path": "7053258.png",
-            "placename": "PLACE",
+            "image_path": "C400Schrank.png",
+            "placename": "C400Schrank",
+            "position_x": 2,
+            "position_y": 2,
+            "status": "place",
+            "subplace": [
+                {
+                    "subplacename": "Fach_1",
+                    "capacity": 20,
+                    "busy": 0
+                },
+                {
+                    "subplacename": "Fach_2",
+                    "capacity": 20,
+                    "busy": 0
+                },
+                {
+                    "subplacename": "Fach_3",
+                    "capacity": 20,
+                    "busy": 0
+                },
+                {
+                    "subplacename": "Fach_4",
+                    "capacity": 20,
+                    "busy": 0
+                },
+                {
+                    "subplacename": "Dach",
+                    "capacity": 20,
+                    "busy": 0
+                }
+            ],
+            "max": 100,
+            "belegt": 0
+        },
+        {
+            "image_path": "C42Schrank.png",
+            "placename": "C42Schrank",
             "position_x": 3,
             "position_y": 0,
             "status": "place",
+            "subplace": [
+                {
+                    "subplacename": "Fach_1",
+                    "capacity": 20,
+                    "busy": 0
+                },
+                {
+                    "subplacename": "Fach_2",
+                    "capacity": 20,
+                    "busy": 0
+                },
+                {
+                    "subplacename": "Fach_3",
+                    "capacity": 20,
+                    "busy": 0
+                },
+                {
+                    "subplacename": "Fach_4",
+                    "capacity": 20,
+                    "busy": 0
+                },
+                {
+                    "subplacename": "Dach",
+                    "capacity": 20,
+                    "busy": 0
+                }
+            ],
+            "max": 100,
+            "belegt": 0
+        },
+        {
+            "image_path": "C32_Tool_Wagen.png",
+            "placename": "C32_Tool_Wagen",
+            "position_x": 3,
+            "position_y": 1,
+            "status": "place",
             "subplace": [],
-            "max": 2,
-            "belegt": 1
+            "max": 50,
+            "belegt": 0
+        },
+        {
+            "image_path": "C42_Arbeitsplatz.png",
+            "placename": "C42_Arbeitsplatz",
+            "position_x": 3,
+            "position_y": 2,
+            "status": "place",
+            "subplace": [],
+            "max": 20,
+            "belegt": 0
+        },
+        {
+            "image_path": "C400_Arbeitsplatz.png",
+            "placename": "C400_Arbeitsplatz",
+            "position_x": 4,
+            "position_y": 0,
+            "status": "place",
+            "subplace": [],
+            "max": 20,
+            "belegt": 0
         }
     ],
     "winconfig": {
-        "fullscreen": true,
+        "fullscreen": false,
         "fonttype": "Helvetica",
         "fontsize": 13,
         "fontcolor": "#facf0e",
         "bgcolor": "#202020"
     },
     "settings": {
-        "camindex": 0
+        "camindex": 0,
+        "autodataupdate": false
     }
 }

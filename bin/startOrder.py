@@ -389,12 +389,12 @@ class startOrder():
                         
                     print("ENDEEEE")
 
-                    print(output_directory+f'\{pgm_name}.stl')
+                    print(output_directory+f'{pgm_name}.stl')
                     
 
                     self.info_window.destroy()
 
-                    self.visualize_stl(output_directory+f'\{pgm_name}.stl')
+                    self.visualize_stl(output_directory+f'{pgm_name}.stl')
 
                 except Exception as e:
                     print(f"Error during processing: {e}")
@@ -446,6 +446,10 @@ class startOrder():
         # Start the rendering loop
         render_window.Render()
         render_window_interactor.Start()
+
+
+
+
 
 
     def auftrag_maschine(self,lageort): 

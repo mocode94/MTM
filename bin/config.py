@@ -16,14 +16,28 @@ toolsremark=config_data["paths"]["toolsremark"]
 places= config_data["places"]
 winconfig= config_data['winconfig']
 settings=config_data["settings"]
+  
 
 
 
 
 
+# # Open the .t file for reading
+# with open(r"X:\Projekt\mtmgithub\MTM\temp\192.168.56.104.t", 'r') as t_file:
+#     # Skip the first two lines
+#     next(t_file)
+#     next(t_file)
 
+#     # Process the remaining lines
+#     for line in t_file:
+#         # Extract columns based on fixed widths
+#         tCol1 = line[:8].strip()  # First column
+#         tCol2 = line[8:40].strip()  # Second column
+#         tCol3 = line[40:52].strip()  # Third column
+#         tCol4 = line[52:64].strip()  # Fourth column
+#         break
 
-
+# print(tCol1, tCol2, tCol3, tCol4)   
 
 
 

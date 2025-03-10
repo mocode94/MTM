@@ -17,7 +17,7 @@ from config import winconfig,paths
 #==========================================================================================================
 #==========================================================================================================
 class holderModule:
-        def __init__(self,mainFrame):
+        def __init__(self,mainFrame,userRigths):
 
             self.mainFrame = mainFrame
             mainFrame.config(width=2000, height=1250)
@@ -36,8 +36,13 @@ class holderModule:
             self.img_register = ImageTk.PhotoImage(img_register)
 
 
+            if userRigths == "Admin":   
+                self.status="normal"
+            else:
+                self.status="disabled"
+
             # Create buttons with the images
-            self.button_werkzeug_bauen = tk.Button(self.centerFrame, image=self.img_aufnahme_registrieren, command=self.login_seite, width=250, height=250)
+            self.button_werkzeug_bauen = tk.Button(self.centerFrame, image=self.img_aufnahme_registrieren, command=self.framehalter, width=250, height=250,state=self.status)
             self.button_werkzeug_bauen.grid(pady=10, padx=10, row=0, column=0)
 
             self.button_werkzeug_editieren = tk.Button(self.centerFrame, image=self.img_register, command=self.lagestand, width=250, height=250)
@@ -54,43 +59,43 @@ class holderModule:
             self.__init__(self.mainFrame)
 
 
-        def login_seite(self):
+        # def login_seite(self):
 
-            self.clearFrame()
-            self.center= tk.Frame(self.mainFrame, bg=winconfig["bgcolor"])
-            self.center.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        #     self.clearFrame()
+        #     self.center= tk.Frame(self.mainFrame, bg=winconfig["bgcolor"])
+        #     self.center.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
 
-            label_font = font.Font(family=winconfig["fonttype"], size=20, weight="bold")
+        #     label_font = font.Font(family=winconfig["fonttype"], size=20, weight="bold")
 
-            self.username_label = tk.Label(self.center, text="Username:",font=label_font,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
-            self.username_label.pack(pady=5)
+        #     self.username_label = tk.Label(self.center, text="Username:",font=label_font,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+        #     self.username_label.pack(pady=5)
             
-            self.username_entry = tk.Entry(self.center,font=(winconfig["bgcolor"], winconfig["fontsize"]))
-            self.username_entry.pack(pady=5)
-            self.username_entry.focus_set()
+        #     self.username_entry = tk.Entry(self.center,font=(winconfig["bgcolor"], winconfig["fontsize"]))
+        #     self.username_entry.pack(pady=5)
+        #     self.username_entry.focus_set()
         
 
-            self.password_label = tk.Label(self.center, text="Password:",font=label_font,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
-            self.password_label.pack(pady=5)
+        #     self.password_label = tk.Label(self.center, text="Password:",font=label_font,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+        #     self.password_label.pack(pady=5)
 
-            self.password_entry = tk.Entry(self.center, show="*",font=(winconfig["fonttype"], winconfig["fontsize"]))
-            self.password_entry.pack(pady=5)
+        #     self.password_entry = tk.Entry(self.center, show="*",font=(winconfig["fonttype"], winconfig["fontsize"]))
+        #     self.password_entry.pack(pady=5)
 
-            self.login_button = tk.Button(self.center, text="Login", command=self.login_pruefen,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
-            self.login_button.pack(pady=20)
-            self.password_entry.bind('<Return>', lambda event: self.login_button.invoke())
+        #     self.login_button = tk.Button(self.center, text="Login", command=self.login_pruefen,font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
+        #     self.login_button.pack(pady=20)
+        #     self.password_entry.bind('<Return>', lambda event: self.login_button.invoke())
 
-        def login_pruefen(self):
-            username = self.username_entry.get()
-            password = self.password_entry.get()
+        # def login_pruefen(self):
+        #     username = self.username_entry.get()
+        #     password = self.password_entry.get()
 
-            if username == "a" and password == "a":  # Simple check for demonstration
-                # self.center.pack_forget()
-                self.framehalter()
-            else:
-                messagebox.showerror("Login Failed", "Invalid username or password")
-            # self.center.destroy()
+        #     if username == "a" and password == "a":  # Simple check for demonstration
+        #         # self.center.pack_forget()
+        #         self.framehalter()
+        #     else:
+        #         messagebox.showerror("Login Failed", "Invalid username or password")
+        #     # self.center.destroy()
 
         def framehalter(self,event=None):
             
@@ -122,14 +127,6 @@ class holderModule:
                 print(f"Error: {e}")
             except FileNotFoundError:
                 print(f"Error: File '{txt_file}' not found.")
-
-
-            # try:
-            #     with open(self.txt_file, 'r') as file:
-            #         for line in file:
-            #             self.options.update([line.strip()])
-            # except FileNotFoundError:
-            #     print(f"Error: File '{self.txt_file}' not found.")
 
 
             self.options = list(self.options)
@@ -223,19 +220,6 @@ class holderModule:
             except FileNotFoundError:
                 print(f"Error: File '{self.txt_file}' not found.")
 
-
-
-
-            # with open(self.txt_file, "r") as file:  # Assuming werkzeugetxt is the path to the .txt file
-            #     for line in file:
-            #         line = line.strip()
-            #         if line == self.combo_halter.get():
-            #             self.aufnahme_img = line
-            #             im = paths["compimgs"] + self.aufnahme_img+'.jpg'
-            #             self.show_image(im, width=400, height=400)
-            
-
-            # file.close()
     
         def show_image(self, image_path, width, height):
             try:
@@ -353,10 +337,6 @@ class holderModule:
             
             # Close the database connection
             conn.close()
-
-
-
-
 
 
         def lagestand(self):
@@ -571,7 +551,7 @@ class holderModule:
             sender_password = "malh icho ljvy oqtq"  # Update this to your actual password or use environment variables for better security
             recipient_email = "abdelraof.mo@gmail.com"
             subject = "MTM Nachfrage"
-            body = (f"Guten Tag,\nder User Admin braucht {menga} Aufnahme\\n {artnummer}\nBemerkung: {bemerkung} \nMit freundlichen Grüßen\nMTM") 
+            body = (f"Guten Tag,\nder User braucht {menga} Aufnahme\\n {artnummer}\nBemerkung: {bemerkung} \nMit freundlichen Grüßen\nMTM") 
 
             # Create the email message
             email_message = EmailMessage()

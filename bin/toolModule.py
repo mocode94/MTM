@@ -16,16 +16,43 @@ import subprocess
 import threading
 import time
 import sqlite3
-
+import logging
 
 #                                        Werkzeug einfügen
 #==========================================================================================================
 #==========================================================================================================
 #==========================================================================================================
 class toolModule:
-    def __init__(self, mainFrame):
+    def __init__(self, mainFrame,userCode):
         self.mainFrame = mainFrame
         mainFrame.config(width=2000, height=1250)
+        # Connect to the database
+        conn = sqlite3.connect(paths["MTMDB"])
+        cursor = conn.cursor()
+        self.userCode=userCode
+        # Execute the query
+        cursor.execute("SELECT * FROM Users WHERE ID = ?", (userCode,))
+
+        # Fetch the result
+        row = cursor.fetchone()
+        self.userName = row[1]
+        # Close the connection
+        conn.close()
+
+
+        # Ensure the logs directory exists
+        log_dir = os.path.join("..", "logs")
+        os.makedirs(log_dir, exist_ok=True)  # Creates the directory if it doesn't exist
+
+        # Configure logging
+        log_file = os.path.join(log_dir, "MTMLOGS.log")
+        logging.basicConfig(
+            filename=log_file,
+            level=logging.DEBUG,  
+            format="%(asctime)s - %(levelname)s - %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S"
+        )
+        logging.getLogger("PIL").setLevel(logging.INFO)
 
         # Clear the frame before adding new widgets
         self.clearFrame()
@@ -69,7 +96,7 @@ class toolModule:
     def goHome(self):
         self.centerFrame.destroy()
         self.rightFrame.destroy()
-        self.__init__(self.mainFrame)
+        self.__init__(self.mainFrame,self.userCode)
 
     def load_items_from_db(self,db_path):
         # Connect to the SQLite database
@@ -138,11 +165,11 @@ class toolModule:
                     currentToolsData[i][10] != None or currentToolsData[i][11] != None or currentToolsData[i][12] != None or
                     currentToolsData[i][13] != None or currentToolsData[i][14] != None  or
                     currentToolsData[i][16] != None or currentToolsData[i][17] != None or currentToolsData[i][18] != None   ):
-                    
+                    logging.error("Diese Aufnahme ist schon belegt !!!")
                     messagebox.showerror("Warning", "Diese Aufnahme ist schon belegt !!!")
                     self.iDCodeEntry.delete(0, tk.END)
                     return
-
+        logging.error("Dieses Aufnahme ist nicht registriert !!!")
         # This part of the code will be reached only if none of the rows match self.qr_code
         messagebox.showerror("Warning", "Dieses Aufnahme ist nicht registriert !!!")
         self.iDCodeEntry.delete(0, tk.END)
@@ -208,12 +235,12 @@ class toolModule:
                     currentToolsData[i][10] == None and currentToolsData[i][11] == None and currentToolsData[i][12] == None and
                     currentToolsData[i][13] == None and currentToolsData[i][14] == None  and
                     currentToolsData[i][16] == None and currentToolsData[i][17] == None and currentToolsData[i][18] == None ):
-
+                    logging.error("Diese Aufnahme ist nicht belegt !!!")
                     messagebox.showerror("Warning", "Diese Aufnahme ist nicht belegt !!!")
                     self.iDCodeEntry.delete(0, tk.END)
-                    return                    
-
-
+                    return    
+                                
+        logging.error( "Dieses Aufnahme ist nicht registriert !!!")
         # This part of the code will be reached only if none of the rows match self.qr_code
         messagebox.showerror("Warning", "Dieses Aufnahme ist nicht registriert !!!")
         self.iDCodeEntry.delete(0, tk.END)
@@ -524,9 +551,9 @@ class toolModule:
         toolPlaces = list(toolPlaces)  # Convert set to list for use in Combobox
         clampingSystems=list(clampingSystems)
 
-        toolDataEntriesLabels = ['QR',
-            'Wzg_Nummer', 'Wzg_Name', 'Typ','Wzg_Radius','Eckenradius','Spitzenwinkel','EinTauchwinkel','Schneiden','Schnittlänge','Wzg_Ausspannlänge','Wzg_gesamtlänge','Steigung',
-            'Wzg_ArtNr', 'Aufn_ArtNr', 'Zusaufn_1', 'Zusaufn_2', 'Spannsys.', 'Wo?'
+        toolDataEntriesLabels = ['CODE',
+            'Nummer', 'Name', 'Typ','Radius','Eckenradius','Spitzenwinkel','EinTauchwinkel','Schneiden','Schnittlänge','Freischliff','Wzg_gesamtlänge','Steigung',
+            'Wzg_ArtNr', 'Aufn_ArtNr', 'Zusaufn_1', 'Zusaufn_2', 'Spannsys.', 'Platz'
         ]
 
         self.dataToolEntries = []
@@ -539,11 +566,11 @@ class toolModule:
             addToolEntryLabel = tk.Label(self.centerFrame, text=toolDataEntryLabel, font=labelFontConfiguration, bg=winconfig["bgcolor"], fg=winconfig["fontcolor"])
             addToolEntryLabel.grid(row=row, column=col, padx=10, pady=5, sticky='e')
             
-            if toolDataEntryLabel== 'QR':
+            if toolDataEntryLabel== 'CODE':
                 addToolDataEntry = tk.StringVar(value=data[idx])
                 iDCodeEntry = tk.Entry(self.centerFrame, textvariable=addToolDataEntry, font=("Helvetica", 11), state='disabled')
                 iDCodeEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
-            elif toolDataEntryLabel == 'Wo?':
+            elif toolDataEntryLabel == 'Platz':
                 addToolDataEntry = tk.StringVar(value=data[idx])
                 self.toolPlace=addToolDataEntry
                 toolPlaceEntry = ttk.Combobox(self.centerFrame, textvariable=addToolDataEntry, font=(winconfig["fonttype"], winconfig["fontsize"]), state='readonly') #entry1
@@ -555,7 +582,7 @@ class toolModule:
                 toolClampingSystemEntry = ttk.Combobox(self.centerFrame, textvariable=addToolDataEntry, font=(winconfig["fonttype"], winconfig["fontsize"]), state='readonly') #entry2
                 toolClampingSystemEntry['values'] = clampingSystems
                 toolClampingSystemEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
-            elif toolDataEntryLabel== 'Wzg_Name':
+            elif toolDataEntryLabel== 'Name':
                 addToolDataEntry = tk.StringVar(value=data[idx])
                 self.toolNameListBox = tk.Listbox(self.centerFrame ,bg='white', font=(winconfig["fonttype"], winconfig["fontsize"]-2))
                 self.toolNameListBox.place_forget()
@@ -568,7 +595,7 @@ class toolModule:
                 toolTypeComboBox.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
                 self.toolTypeEntry=addToolDataEntry
                 self.toolTypeEntry.trace_add('write', self.toolTypeCheck)
-            elif toolDataEntryLabel == 'Wzg_ArtNr':
+            elif toolDataEntryLabel == 'Wz_ArtNr':
                 addToolDataEntry = tk.StringVar(value=data[idx])
                 self.toolEntry = tk.Listbox(self.centerFrame ,bg='white', font=(winconfig["fonttype"], winconfig["fontsize"]))
                 self.toolEntry.place_forget()
@@ -695,6 +722,11 @@ class toolModule:
 
         self.dataToolEntriesToDelete=[]
         self.dataToolEntriesToDelete=[iDCodeEntry.get(),toolHolderEntry.get(),toolPlaceEntry.get()]
+        self.toolName=self.toolNameComboBox.get()
+        self.tplace=self.toolPlace.get()
+
+
+
 
 
         measurementsButton = tk.Button(self.buttonsFrame,width=20, text="Messwerte Übernehmen", command=lambda: self.messwerte_uebernehmen, font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
@@ -848,6 +880,7 @@ class toolModule:
     def deleteToolDataButton(self, dataToolEntriesToDelete):
         selected_place = self.toolPlaceEntryToDelete.get()  # Get the selected value from the Combobox
         if not selected_place:  # Check if no value is selected
+            logging.error("No place selected.")
             messagebox.showerror("Platz fehlt", "Bitte wählen Sie einen Platz aus.")
             return
         else:
@@ -860,6 +893,7 @@ class toolModule:
                 conn = sqlite3.connect(paths["MTMDB"])
                 cur = conn.cursor()
             except sqlite3.Error as e:
+                logging.error(f"Error connecting to the database: {str(e)}")
                 messagebox.showerror("Datenbankfehler", f"Fehler beim Verbinden zur Datenbank: {str(e)}")
                 return
 
@@ -908,15 +942,18 @@ class toolModule:
                 )
 
                 if cur.rowcount == 0:  # If no rows were updated
+                    logging.error(f"The tool {dataToolEntriesToDelete[0]} {self.toolName} data could not be deleted from {self.tplace} to {selected_place}. {self.userName}.")    
                     messagebox.showerror("Fehler", "Diese Aufnahme konnte nicht gelöscht werden.")
                     return
                 else:
+                    logging.info(f"The tool {dataToolEntriesToDelete[0]} {self.toolName} data has been deleted from {self.tplace} to {selected_place}. {self.userName}")
                     messagebox.showinfo("Löschen", "Diese Aufnahme wurde gelöscht.")
                     conn.commit()  # Commit the transaction first
                     cur.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
                     updated = True
 
             except sqlite3.Error as e:
+                logging.error(f"Error updating the database: {str(e)}")
                 messagebox.showerror("Datenbankfehler", f"Fehler beim Aktualisieren: {str(e)}")
                 return
             finally:
@@ -954,6 +991,7 @@ class toolModule:
             # Query the database for the required row
             cursor.execute("SELECT * FROM tnc640Data WHERE CODE = ?", (dataToolEntriesToDelete[0],))
             plcDataRow = cursor.fetchone()
+            conn.close()
 
             if plcDataRow:
                 found = True
@@ -963,113 +1001,91 @@ class toolModule:
                 print("PLC Daten nicht gefunden.")
 
         except sqlite3.OperationalError as e:
+            logging.error(f"Error accessing the database: {str(e)}")    
             messagebox.showerror("Fehler", f"Fehler beim Zugriff auf die Datenbank: {str(e)}")
             return
         except Exception as e:
+            logging.error(f"Error processing the database: {str(e)}")
             messagebox.showerror("Fehler", f"Fehler beim Lesen der PLC-Datendatei: {str(e)}")
             return
         finally:
-            # Close the database connection
-            conn.close()
+            if conn:# Close the database connection
+                conn.close()
 
 
 
 
-            # Create default PLC data if not found
-            if found:
-                cfgInput = dataToolEntriesToDelete[1].replace(" ", "_") + ".CFG"
-                KLValue = str(int(float(400) + 10))
-                plcDataRow = [
-                    dataToolEntriesToDelete[0], "0", "0", "0", "0", "0", "0", "0", "0",
-                    "0.5", "0.5", "-1", "35", KLValue, "0", "0", "0", "0", "0", "0",
-                    cfgInput, "0"
+        # Create default PLC data if not found
+        if found:
+            cfgInput = dataToolEntriesToDelete[1].replace(" ", "_") + ".CFG"
+            KLValue = str(int(float(400) + 10))
+            plcDataRow = [
+                dataToolEntriesToDelete[0], "0", "0", "0", "0", "0", "0", "0", "0",
+                "0.5", "0.5", "-1", "35", KLValue, "0", "0", "0", "0", "0", "0",
+                cfgInput, "0"
+            ]
+
+
+
+            try:
+                # Connect to the SQLite database
+                conn = sqlite3.connect(paths["MTMDB"])
+                cursor = conn.cursor()
+                # Check if the row exists (assuming CODE is the unique identifier)
+                cursor.execute("SELECT * FROM tnc640Data WHERE CODE = ?", (plcDataRow[0],))
+                existing_row = cursor.fetchone()
+                conn.close()
+                # Define the column names in the same order as the values in plcDataRow
+                columns = [
+                    "CODE", "NMAX", "TIME1", "TIME2", "CURTIME", "LOFFS", "ROFFS", "LTOL", "RTOL",
+                    "LBREAK", "RBREAK", "DIRECT", "Max_Durchmesser", "Max_Laenge", "P2", "BC", "IKZ", "ML", "MLR", "AM", "KINEMATIC", "PLC"
                 ]
-
-                #Frozzen
-                # try:
-                #     updated = False
-                #     # Read all rows from the CSV file
-                #     with open(paths["TNC640_Daten"], 'r', newline='') as file:
-                #         rows = list(csv.reader(file, delimiter=';'))
-
-                #     # Update the row if a match is found
-                #     for index, row in enumerate(rows):
-                #         if row[0] == plcDataRow[0]:
-                #             rows[index] = plcDataRow  # Update the matching row
-                #             updated = True
-                #             print(f"PLC-Datensatz aktualisiert für {plcDataRow[0]}")
-                #             break
-
-                #     # If no match was found, append the new row
-                #     if not updated:
-                #         rows.append(plcDataRow)
-                #         print("Kein PLC-Datensatz gefunden\nStandard-PLC erstellt.")
-
-                #     # Write all rows back to the CSV file
-                #     with open(paths["TNC640_Daten"], 'w', newline='') as file:
-                #         writer = csv.writer(file, delimiter=';')
-                #         writer.writerows(rows)
-
-                # except FileNotFoundError:
-                #     messagebox.showerror("Fehler", "PLC-Datendatei nicht gefunden.")
-                #     return
-                # except Exception as e:
-                #     messagebox.showerror("Fehler", f"Fehler beim Bearbeiten der PLC-Datendatei: {str(e)}")
-                #     return
                 
 
 
-
-
-                try:
+                if existing_row:
                     # Connect to the SQLite database
                     conn = sqlite3.connect(paths["MTMDB"])
                     cursor = conn.cursor()
-
-                    # Define the column names in the same order as the values in plcDataRow
-                    columns = [
-                        "CODE", "NMAX", "TIME1", "TIME2", "CURTIME", "LOFFS", "ROFFS", "LTOL", "RTOL",
-                        "LBREAK", "RBREAK", "DIRECT", "Max_Durchmesser", "Max_Laenge", "P2", "BC", "IKZ", "ML", "MLR", "AM", "KINEMATIC", "PLC"
-                    ]
-                    
-                    # Check if the row exists (assuming CODE is the unique identifier)
-                    cursor.execute("SELECT * FROM tnc640Data WHERE CODE = ?", (plcDataRow[0],))
-                    existing_row = cursor.fetchone()
-
-                    if existing_row:
-                        # Update the existing row
-                        update_query = f'''
-                        UPDATE tnc640Data
-                        SET {", ".join([f"{columns[i]} = ?" for i in range(1, len(columns))])}  -- Excluding CODE from the update
-                        WHERE CODE = ?
-                        '''
-                        cursor.execute(update_query, (*plcDataRow[1:], plcDataRow[0]))  # Exclude CODE from being updated
-                        print(f"PLC-Datensatz aktualisiert für {plcDataRow[0]}")
-                    else:
-                        # Insert the new row
-                        insert_query = f'''
-                        INSERT INTO tnc640Data ({", ".join(columns)})
-                        VALUES ({", ".join(['?'] * len(columns))})
-                        '''
-                        cursor.execute(insert_query, plcDataRow)
-                        print("Kein PLC-Datensatz gefunden\nStandard-PLC erstellt.")
-
+                    # Update the existing row
+                    update_query = f'''
+                    UPDATE tnc640Data
+                    SET {", ".join([f"{columns[i]} = ?" for i in range(1, len(columns))])}  -- Excluding CODE from the update
+                    WHERE CODE = ?
+                    '''
+                    cursor.execute(update_query, (*plcDataRow[1:], plcDataRow[0]))  # Exclude CODE from being updated
+                    print(f"PLC-Datensatz aktualisiert für {plcDataRow[0]}")
                     # Commit changes
                     conn.commit()  # Commit the transaction first
-                    cur.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
+                    cursor.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
                     conn.close()
-                except sqlite3.OperationalError as e:
-                    messagebox.showerror("Fehler", f"Fehler beim Zugriff auf die Datenbank: {str(e)}")
-                    return
-                except Exception as e:
-                    messagebox.showerror("Fehler", f"Fehler beim Bearbeiten der Datenbank: {str(e)}")
-                    return
-                finally:
-                    if conn:# Close the database connection
-                        conn.close()
+                else:
+                    # Insert the new row
+                    insert_query = f'''
+                    INSERT INTO tnc640Data ({", ".join(columns)})
+                    VALUES ({", ".join(['?'] * len(columns))})
+                    '''
+                    cursor.execute(insert_query, plcDataRow)
+                    print("Kein PLC-Datensatz gefunden\nStandard-PLC erstellt.")
+                    # Commit changes
+                    conn.commit()  # Commit the transaction first
+                    cursor.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
+                    conn.close()
 
-            self.askPlace.destroy()
-            self.goHome()
+            except sqlite3.OperationalError as e:
+                logging.error(f"Error accessing the database: {str(e)}")
+                messagebox.showerror("Fehler", f"Fehler beim Zugriff auf die Datenbank: {str(e)}")
+                return
+            except Exception as e:
+                logging.error(f"Error processing the database: {str(e)}")
+                messagebox.showerror("Fehler", f"Fehler beim Bearbeiten der Datenbank: {str(e)}")
+                return
+            finally:
+                if conn:# Close the database connection
+                    conn.close()
+
+        self.askPlace.destroy()
+        self.goHome()
 
 
     def toolDatasSubmitButton(self):
@@ -1396,9 +1412,9 @@ class toolModule:
             self.cameraFrameIndex = 0
             self.showCameraFrame()
         else:
+            logging.error("Camera could not be accessed. Please check the camera index.")
             messagebox.showerror("CAM_INDEX","Camera could not be accessed. Please check the camera index.")
             # Inform the user if camera cannot be accessed
-            print("Camera could not be accessed. Please check the camera index.")
             self.cameraWindow.destroy()  # Close the window if camera is not accessible
 
 
@@ -1471,7 +1487,7 @@ class toolModule:
         capturedImageName = os.path.join(paths["datapath"]+'toolCapturedImages', f"{self.iDCode}.png")
 
         img.save(capturedImageName)
-
+        logging.info(f"Image saved as '{self.iDCode}.png' in folder 'data/toolCapturedImages'. - {self.userName}")
         messagebox.showinfo("Image Saved", f"Image captured and saved in folder 'data/toolCapturedImages' as '{self.iDCode}.png'.")
         self.showCapturedImageWindow.destroy()
 
@@ -1551,6 +1567,7 @@ class toolModule:
                     return toolDataEntry
                 except ValueError:
                     if showError:
+                        logging.error(f"Please check the {toolDataEntryLabel} possible errors\t-No letters or special characters allowed\t-Input is missing")
                         messagebox.showerror(toolDataEntryLabel, f"Bitte {toolDataEntryLabel} kontrollieren \n \n \n mögliche Fehler\n-Keine Buchstaben o. Sonderzeichen erlaubt\n-Eingabe fehlt")
                     return None
             
@@ -1623,6 +1640,7 @@ class toolModule:
 
                 except ValueError:
                     # If conversion fails, it's not a number
+                    logging.error(f"Please check the pitch possible errors\t-No letters or special characters allowed\t-Input is missing")
                     messagebox.showerror("Steigung","Bitte Steigung kontrollieren \n \n \n mögliche Fehler\n-Keine Buchstaben o. Sonderzeichen erlaubt\n-Eingabe fehlt")
                     return
         else:
@@ -1656,12 +1674,13 @@ class toolModule:
                             # Check if a value is selected in the subPlace ComboBox
                             self.selected_subplace = self.subPlace_comboBox.get() # Strip to remove any accidental whitespace
                             if self.selected_subplace == "":  # If no value is selected
+                                logging.error("Please select a subplace")
                                 messagebox.showerror("Unterplatz", "Bitte Unterplatz auswählen")
                                 return False
                             else:
                                 toolPlace = toolPlace + " - " + self.selected_subplace
                         else:
-                            print("No subplaces available.")
+                            logging.info("No subplaces available.")
 
 
         toolRemarkFilePath = os.path.join(paths["toolsremark"], f"{iDCode}.txt")
@@ -1740,6 +1759,7 @@ class toolModule:
 
     # Show error if the row was not found
         if not updated:
+            logging.error("Row not found")
             messagebox.showerror("Fehler", "Diese Aufnahme konnte nicht gefunden werden.")
             return False
 
@@ -1957,6 +1977,7 @@ class toolModule:
                 tree.insert('', 'end', values=item)
 
         def move_selected_item(source_tree, target_tree):
+            search_entry.delete(0, 'end')
             selected_items = source_tree.selection()
             if selected_items:
                 for item in selected_items:
@@ -2024,7 +2045,9 @@ class toolModule:
         # search_label = tk.Label(search_frame, text="Search:")
         search_entry = tk.Entry(search_frame)
         search_button = tk.Button(search_frame, text="Search", command=lambda: search_treeview(left_treeview, search_entry.get()),font=(winconfig["fonttype"], winconfig["fontsize"]-4,"bold"),bg=winconfig["fontcolor"])
-        search_entry.bind('<Return>', lambda event: search_button.invoke())
+        search_entry.focus()
+
+        search_entry.bind('<Return>', lambda event: (search_button.invoke(), button1.invoke()))
 
 
         button_frame = tk.Frame(self.centerFrame, bg=winconfig["bgcolor"])
@@ -2159,40 +2182,28 @@ class toolModule:
 
     def moveToolSubPlaceValidate(self):
                 # Search for the selected place in the data
+
         for dictionary in places:
             if dictionary["placename"] == self.maschine_combobox.get():
-                print(f"platz :: {dictionary}")
-        for dictionary in places:
-            if dictionary["placename"] == self.maschine_combobox.get():
-                print("if dictionary[placename] == self.maschine_combobox.get()")
                 if dictionary["status"] == "place":
-                    print("if dictionary[status] == place")
                     # Extract subplace names
                     subplace_names = [subplace["subplacename"] for subplace in dictionary.get("subplace", [])]
-                    for sb in subplace_names:
-                        print(f"here is sb : {sb}")
+
                     if subplace_names:
-                        print(f"subplacenames {self.subPlace_comboBox.get()}")
                         if self.subPlace_comboBox.get() != "":
-                            print(f"Selected subplace: {self.subPlace_comboBox.get()} ")
-                            print("next call platzieren")
                             self.platzieren()
-                            print("after platzieren")
                             return
                         else:
+                            logging.error("Bitte wählen Sie einen Unter Platz aus!")
                             messagebox.showerror("Error0", "Bitte wählen Sie einen Unterplatz aus!")
                             return
                     else:
                         self.platzieren()
-                        print("No subplaces available.")
                 elif dictionary["status"] == "machine":
-                    print("MASCHINE")
                     self.platzieren()
-                    print("Selected item is a machine.")
                 break
             else:
-                print(f" self.maschine_combobox { self.maschine_combobox}")
-                print("Dieser Platz wurde nicht gefunden.")
+                logging.error("Dieser Platz wurde nicht gefunden.")
 
 
 
@@ -2210,6 +2221,7 @@ class toolModule:
             subplace=False
 
         if not combobox_value:
+            logging.error("Bitte wählen Sie einen Platz aus!")
             messagebox.showerror("Error", "bitte wählen Sie einen Platz aus!")
             return
         
@@ -2231,16 +2243,19 @@ class toolModule:
             if self.machineStatus(combobox_value):
                 print("Connection found")
             else:
+                logging.error(f"{combobox_value} is offline")
                 messagebox.showerror("No Connection",f"{combobox_value} is offline")    
                 return False
             
             if self.moveToolToMachineFunction(combobox_value):
                 print("Move to Machine Fuction success")
             else:
+                logging.error("Move to Machine Fuction failed")
                 messagebox.showerror("Error", "Move to Machine Fuction failed")
                 print("Move to Machine Fuction failed")
                 return False
         else:
+            logging.error("Platz ist kein Maschine oder Lagerplatz")
             messagebox.showerror("Error", "Platz ist kein Maschine oder Lagerplatz")
             return False
             
@@ -2259,6 +2274,7 @@ class toolModule:
                             moveToPlace = "moveToPlace"
                             return moveToPlace
                         else:
+                            logging.error("bitte wählen Sie einen Unter Platz aus!")
                             messagebox.showerror("Error11", "bitte wählen Sie einen Unterplatz aus!")
                             return False
                     else:
@@ -2323,10 +2339,12 @@ class toolModule:
                 cur.execute("PRAGMA wal_checkpoint(NORMAL);")  # Force WAL to merge changes
                 # Ensure the connection is closed properly
                 conn.close()
+                logging.info(f"Das Werkzeug {movingTool} ist erfolgreich platziert - {self.userName}")
                 messagebox.showinfo("Success", f"Das Werkzeug {movingTool} ist erfolgreich platziert")
                 ende=True
             else:
                 if nicht_platzierte_rows:
+                    logging.error(f"Dieses Werkzeug {nicht_platzierte_rows} is nicht in der Datenbank")
                     messagebox.showerror("Error0", f"Dieses Werkzeug {nicht_platzierte_rows} is nicht in der Datenbank")
                     ende=False
         if ende==True:
@@ -2352,28 +2370,33 @@ class toolModule:
                     formatted_ip = f"[{ip_address}]"
                     TNC640DATEN_Rows.append(formatted_ip)  # Append formatted IP address
                 else:
+                    logging.error(f"Invalid IP address format: {ip_address}")
                     messagebox.showerror("Error", f"Invalid IP address format: {ip_address}")
                     return
         if self.preparePLCData():
             print("PLC Daten sind bereit")
         else:
+            logging.error("Fehler beim Erstellen der PLC-Daten")
             messagebox.showerror("Error", "Fehler beim Erstellen der PLC-Daten")
             return False
         
         if self.prepareDNCData(formatted_ip):
             print("DNC Daten sind bereit")
         else:
+            logging.error("DNC Daten sind NICHT bereit")
             messagebox.showerror("DNC Daten sind NICHT bereit")
             return False 
         if self.callDNCSchnittstelle():
             print("DNC Schnittstelle ist bereit")
         else:
+            logging.error("DNC Schnittstelle ist NICHT bereit")
             messagebox.showerror("DNC Schnittstelle ist NICHT bereit")
             return False
         if self.changeDataInDatabase(combobox_value):
             print("Nach DNC Erfolg")
             return True
         else:
+            logging.error("Nach DNC-SchnittStelle GESCHEITERT") 
             messagebox.showerror("Nach DNC-SchnittStelle GESCHEITERT")
             return False
 
@@ -2559,6 +2582,7 @@ class toolModule:
                     file.write(f"{formatted_ip}{row}\n")  # Join list elements with newlines and write to the file
                 return True
         except Exception as e:
+            logging.error(f"An error occurred while writing to DNC_INPUT: {e}")
             messagebox.showerror("Error3", f"An error occurred while writing to DNC_INPUT: {e}")
             return False
 
@@ -2705,6 +2729,7 @@ class toolModule:
                         conn.close()
                         print("db closed", time.time() - start_time)
         except Exception as e:
+            logging.error(f"An error occurred: {e}")
             messagebox.showerror("Erro4", f"An error occurred: {e}")
             return False
     
@@ -2725,24 +2750,29 @@ class toolModule:
                         success = self.addToolRowInToolTableBackup(i, PlcDataRow)
                         print (f"this is sucess {success}")
                         if success:
+                            logging.info(f"Das Werkzeug {i[2]} ist erfolgreich platziert\nUND\nsie wurde in toolTableBackup eingetragen - {self.userName}")
                             messagebox.showinfo(
                                 "Success",
                                 f"Das Werkzeug {i[2]} ist erfolgreich platziert\nUND\nsie wurde in toolTableBackup eingetragen"
                             )
                             
                         else:
+                            logging.error(f"Das Werkzeug {i[2]} konnte nicht platziert werden!!")
                             messagebox.showerror(
                                 "Error",
                                 f"Das Werkzeug {i[2]} konnte nicht platziert werden!!\nMÖGLICHE FEHLER\n-falsche Daten\nOder\nfehlende PLC-TT-Daten"
                             )
                     else:
+                        logging.error(f"Keine passenden PLC-Daten für CODE {i[0]} gefunden.")
                         # No matching PLC data found for the CODE
                         messagebox.showerror(f"Keine passenden PLC-Daten für CODE {i[0]} gefunden.")
                         return False
                 except sqlite3.OperationalError as e:
+                    logging.error(f"Fehler beim Zugriff auf die Datenbank: {e}")
                     messagebox.showerror("Fehler", f"Fehler beim Zugriff auf die Datenbank: {e}")
                     return False
                 except Exception as e:
+                    logging.error(f"Fehler: {str(e)}")
                     messagebox.showerror("Fehler", f"Fehler: {str(e)}")
                     return False    
                 finally:
