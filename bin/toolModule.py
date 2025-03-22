@@ -1,11 +1,14 @@
 import xml.etree.ElementTree as ET
 import os
 import csv
+import tkinter as tk
 # import cv2
 import tkinter.messagebox as messagebox
+import requests
+
+from tkinter import Toplevel, Label, Entry, Button, StringVar,ttk,font,PhotoImage,Listbox,SINGLE
 from PIL import Image, ImageTk
-from tkinter import Toplevel, Label, Entry, Button, StringVar,ttk,font
-import tkinter as tk
+
 # import requests
 # import io
 import os
@@ -17,6 +20,9 @@ import threading
 import time
 import sqlite3
 import logging
+from io import BytesIO
+from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
 
 #                                        Werkzeug einfügen
 #==========================================================================================================
@@ -25,7 +31,8 @@ import logging
 class toolModule:
     def __init__(self, mainFrame,userCode):
         self.mainFrame = mainFrame
-        mainFrame.config(width=2000, height=1250)
+        # mainFrame.config(width=2000, height=1250)
+        mainFrame.config(width=2000, height=800)
         # Connect to the database
         conn = sqlite3.connect(paths["MTMDB"])
         cursor = conn.cursor()
@@ -60,8 +67,13 @@ class toolModule:
         # Create a new frame inside the mainFrame with a specific size
         self.centerFrame = tk.Frame(mainFrame, bg=winconfig["bgcolor"])
         self.centerFrame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+
+
         self.rightFrame = tk.Frame(mainFrame, bg=winconfig["bgcolor"])
         self.rightFrame.place(relx=1.0, rely=0.5, anchor=tk.E)
+
+
+
         # self.centerFrame.grid_propagate(False)
         print(paths["imgpaths"]+"button7.png")
         
@@ -94,8 +106,12 @@ class toolModule:
             self.rightFrame.destroy()
 
     def goHome(self):
-        self.centerFrame.destroy()
-        self.rightFrame.destroy()
+        if self.centerFrame:
+            self.centerFrame.destroy()
+
+        if self.rightFrame:
+            self.rightFrame.destroy()
+
         self.__init__(self.mainFrame,self.userCode)
 
     def load_items_from_db(self,db_path):
@@ -117,6 +133,17 @@ class toolModule:
         self.centerFrame= tk.Frame(self.mainFrame, bg=winconfig["bgcolor"])
         self.centerFrame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
         
+
+
+
+        # Left Frame (Navigation / Tool List)
+        self.leftFrame = tk.Frame(self.mainFrame, bg="#202020", width=300, height=843)
+        self.leftFrame.place(x=0, rely=0.5, anchor="w")  # Position on the left center
+        self.leftFrame.pack_propagate(False)  # Prevent resizing
+ 
+        buttonleftside = tk.Button(self.leftFrame, text="<< Zurück",command=lambda:self.__init__(self.mainFrame,self.userCode),font=(winconfig["fonttype"], winconfig["fontsize"]+4,"bold"),bg=winconfig["fontcolor"])
+        buttonleftside.place(relx=0.5, rely=0.5, anchor="center")  # Center in leftFrame
+
         # QR_Code entry
         labelFontConfiguration = font.Font(family=winconfig["fonttype"], size=winconfig["fontsize"], weight="bold")
         labelCode = Label(self.centerFrame, text='QR_CODE',font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
@@ -133,6 +160,7 @@ class toolModule:
         
 
     def checkCodeAddTool(self):
+
         self.iDCode = self.iDCodeEntry.get()
         # Connect to the MTMDB.db SQLite database
         conn = sqlite3.connect(paths["MTMDB"])
@@ -155,7 +183,7 @@ class toolModule:
                     currentToolsData[i][13] == None and currentToolsData[i][14] == None  and
                     currentToolsData[i][16] == None and currentToolsData[i][17] == None and currentToolsData[i][18] == None):
                     
-                    self.addToolInputWindow(currentToolsData[i][0:12]+currentToolsData[i][13:])
+                    self.selectToolType(list(currentToolsData[i][0:12]+currentToolsData[i][13:]))
                     
                     return
 
@@ -245,18 +273,124 @@ class toolModule:
         messagebox.showerror("Warning", "Dieses Aufnahme ist nicht registriert !!!")
         self.iDCodeEntry.delete(0, tk.END)
    
-    def addToolInputWindow(self, data):
+
+    def selectToolType(self,data):
         self.clearFrame()
         self.centerFrame = tk.Frame(self.mainFrame, bg=winconfig["bgcolor"])
         self.centerFrame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        # Ensure centerFrame has a size
+        self.centerFrame.config(width=1500, height=843)  # Adjust as needed
+        self.centerFrame.pack_propagate(False)  # Prevent auto-resizing
 
-     
+
+
+        self.clearFrame()
+        self.centerFrame = tk.Frame(self.mainFrame, bg=winconfig["bgcolor"])
+        self.centerFrame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        self.centerFrame.config(width=1500, height=843)  # Adjust as needed
+        self.centerFrame.pack_propagate(False)  # Prevent auto-resizing
+        print(f"here is data  {data}")
+
+        # Left Frame (Navigation / Tool List)
+        self.leftFrame = tk.Frame(self.mainFrame, bg="#202020", width=300, height=843)
+        self.leftFrame.place(x=0, rely=0.5, anchor="w")  # Position on the left center
+        self.leftFrame.pack_propagate(False)  # Prevent resizing
+
+
+
+        self.ToolData=data
+        buttonleftside = tk.Button(self.leftFrame, text="<< Zurück",command=self.addToolFunction,font=(winconfig["fonttype"], winconfig["fontsize"]+4,"bold"),bg=winconfig["fontcolor"])
+        buttonleftside.place(relx=0.5, rely=0.5, anchor="center")  # Center in leftFrame
+
+
+
+
+        # Load images
+        self.img_bohrer = PhotoImage(file=paths["imgpaths"]+"toolicons/Bohrer.png")
+        self.img_mk = PhotoImage(file=paths["imgpaths"]+"toolicons/Messerkopf.png")
+        self.img_schaft = PhotoImage(file=paths["imgpaths"]+"toolicons/Schlichten.png")
+        self.img_gewinde = PhotoImage(file=paths["imgpaths"]+"toolicons/Gewinde.png")
+        self.img_kugel = PhotoImage(file=paths["imgpaths"]+"toolicons/Radius.png")
+        self.img_nuten = PhotoImage(file=paths["imgpaths"]+"toolicons/Nuten.png")
+        self.schuppentool = PhotoImage(file=paths["imgpaths"]+"toolicons/Schruppen.png")
+        self.reibentool = PhotoImage(file=paths["imgpaths"]+"toolicons/Reiben.png")
+        self.torustool = PhotoImage(file=paths["imgpaths"]+"toolicons/Torus.png")
+
+
+
+        # Create buttons with images
+        buttonBohrer = Button(self.centerFrame, image=self.img_bohrer, compound="top",
+                              command=lambda: self.addToolInputWindow("1"),width=150,height=150,bg=winconfig["fontcolor"])
+        buttonBohrer.grid(row=0, column=0, padx=20, pady=20)
+
+        buttonMK = Button(self.centerFrame, image=self.img_mk, compound="top",
+                          command=lambda: self.addToolInputWindow("0"),width=150,height=150,bg=winconfig["fontcolor"])
+        buttonMK.grid(row=0, column=1, padx=20, pady=20)
+
+        buttonSchaft = Button(self.centerFrame, image=self.img_schaft, compound="top",
+                              command=lambda: self.addToolInputWindow("10"),width=150,height=150,bg=winconfig["fontcolor"])
+        buttonSchaft.grid(row=0, column=2, padx=20, pady=20)
+
+        buttonGewinde = Button(self.centerFrame, image=self.img_gewinde, compound="top",
+                               command=lambda: self.addToolInputWindow("2"),width=150,height=150,bg=winconfig["fontcolor"])
+        buttonGewinde.grid(row=1, column=0, padx=20, pady=20)
+
+        buttonKugel = Button(self.centerFrame, image=self.img_kugel, compound="top",
+                             command=lambda: self.addToolInputWindow("22"),width=150,height=150,bg=winconfig["fontcolor"])
+        buttonKugel.grid(row=1, column=1, padx=20, pady=20)
+
+        buttonNuten = Button(self.centerFrame, image=self.img_nuten, compound="top",
+                             command=lambda: self.addToolInputWindow("7"),width=150,height=150,bg=winconfig["fontcolor"])
+        buttonNuten.grid(row=1, column=2, padx=20, pady=20)
+
+        buttonSchruppen = Button(self.centerFrame, image=self.schuppentool, compound="top",
+                             command=lambda: self.addToolInputWindow("9"),width=150,height=150,bg=winconfig["fontcolor"])
+        buttonSchruppen.grid(row=2, column=0, padx=20, pady=20)
+
+        buttonReiben = Button(self.centerFrame, image=self.reibentool, compound="top",
+                             command=lambda: self.addToolInputWindow("3"),width=150,height=150,bg=winconfig["fontcolor"])
+        buttonReiben.grid(row=2, column=1, padx=20, pady=20)
+
+        buttonTorus = Button(self.centerFrame, image=self.torustool, compound="top",
+                             command=lambda: self.addToolInputWindow("23"),width=150,height=150,bg=winconfig["fontcolor"])
+        buttonTorus.grid(row=2, column=2, padx=20, pady=20)
+
+
+
+    def addToolInputWindow(self,type):
+        self.clearFrame()
+        self.centerFrame = tk.Frame(self.mainFrame, bg=winconfig["bgcolor"])
+        self.centerFrame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        # Ensure centerFrame has a size
+        self.centerFrame.config(width=1500, height=843)  # Adjust as needed
+        self.centerFrame.pack_propagate(False)  # Prevent auto-resizing
+        
+        # Left Frame (Navigation / Tool List)
+        self.leftFrame = tk.Frame(self.mainFrame, bg="#202020", width=300, height=843)
+        self.leftFrame.place(x=0, rely=0.5, anchor="w")  # Position on the left center
+        self.leftFrame.pack_propagate(False)  # Prevent resizing
+
+
+        # Right Frame (Navigation / Tool List)
+        self.rightFrame = tk.Frame(self.mainFrame, bg="#202020", width=300, height=843)
+        self.rightFrame.place(relx=1.0, rely=0.5, anchor="e")  # Corrected Positioning
+        self.rightFrame.pack_propagate(False)  # Prevent resizing
+
+
+        data=[]
+        buttonleftside = tk.Button(self.rightFrame, text="Weiter >>",command=self.toolComponants,font=(winconfig["fonttype"], winconfig["fontsize"]+4,"bold"),bg=winconfig["fontcolor"])
+        buttonleftside.place(relx=0.5, rely=0.5, anchor="center")  # Center in leftFrame
+
+        data=[]
+        buttonleftside = tk.Button(self.leftFrame, text="<< Zurück",command=lambda: self.selectToolType(data),font=(winconfig["fonttype"], winconfig["fontsize"]+4,"bold"),bg=winconfig["fontcolor"])
+        buttonleftside.place(relx=0.5, rely=0.5, anchor="center")  # Center in leftFrame
+
         itemsDB=paths["MTMitems"]
         masterCsvFile=paths["mastercsv"]
         self.itemNameExamples = set()
         self.dataToolEntries = []
         self.toolNameExamples=set()
-        self.movingTools=[data[0]]
+        # self.movingTools=[data[0]]
 
         try:
             self.itemNameExamples.update(self.load_items_from_db(itemsDB))
@@ -293,218 +427,1275 @@ class toolModule:
         toolPlaces = list(toolPlaces)  # Convert set to list for use in Combobox
         clampingSystems=list(clampingSystems)
 
-        toolDataEntriesLabels = ['QR',
-            'Wzg_Nummer', 'Wzg_Name', 'Typ','Wzg_Radius','Eckenradius','Spitzenwinkel','EinTauchwinkel','Schneiden','Schnittlänge','Wzg_Ausspannlänge','Wzg_gesamtlänge','Steigung',
-            'Wzg_ArtNr', 'Aufn_ArtNr', 'Zusaufn_1', 'Zusaufn_2', 'Spannsys.', 'Wo?'
+        self.toolType=type
+        self.ToolData[3]=self.toolType
+        self.toolItems=self.toolComponants()
+
+
+    def toolDataInput(self,type):
+        self.clearFrame()
+        self.centerFrame = tk.Frame(self.mainFrame, bg=winconfig["bgcolor"])
+        self.centerFrame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        # Ensure centerFrame has a size
+        self.centerFrame.config(width=1500, height=843)  # Adjust as needed
+        self.centerFrame.pack_propagate(False)  # Prevent auto-resizing
+        
+
+
+
+
+        # Left Frame (Navigation / Tool List)
+        self.leftFrame = tk.Frame(self.mainFrame, bg="#202020", width=300, height=843)
+        self.leftFrame.place(x=0, rely=0.5, anchor="w")  # Position on the left center
+        self.leftFrame.pack_propagate(False)  # Prevent resizing
+
+
+        # Right Frame (Navigation / Tool List)
+        self.rightFrame = tk.Frame(self.mainFrame, bg="#202020", width=300, height=843)
+        self.rightFrame.place(relx=1.0, rely=0.5, anchor="e")  # Corrected Positioning
+        self.rightFrame.pack_propagate(False)  # Prevent resizing
+
+        data=[]
+        buttonleftside = tk.Button(self.rightFrame, text="Weiter >>",command=self.PLCINPUT,font=(winconfig["fonttype"], winconfig["fontsize"]+4,"bold"),bg=winconfig["fontcolor"])
+        buttonleftside.place(relx=0.5, rely=0.5, anchor="center")  # Center in leftFrame
+
+        data=[]
+        buttonleftside = tk.Button(self.leftFrame, text="<< Zurück",command=self.toolComponants,font=(winconfig["fonttype"], winconfig["fontsize"]+4,"bold"),bg=winconfig["fontcolor"])
+        buttonleftside.place(relx=0.5, rely=0.5, anchor="center")  # Center in leftFrame
+
+
+        if type=="1":
+            self.Bohrerinput=self.bohrerToolInput()
+        elif type=="10":
+            self.Schlichterinput=self.schaftToolInput()
+        elif type=="9":
+            self.SchrupperInput=self.schaftToolInput()          
+        elif type=="0":
+            self.MKInput=self.mkToolInput()
+        elif type=="3":
+            self.ReibahleInput=self.ReibenToolInput()
+        elif type=="2":
+            self.GewindeInput=self.gewindeToolInput()
+        elif type =="7":
+            self.NutenInput=self.NutenToolInput()
+        elif type=="23":
+            self.TorusInput=self.TorusToolInput()
+        elif type=="22":
+            self.KugelInput=self.KugelToolInput()
+
+        else:
+            messagebox.showerror("Error",f"Type {type} undefiend")
+        
+
+
+    def PLCINPUT(self):
+        print("PUT PLC DATA")
+
+
+    def toolComponants(self):
+        self.clearFrame()
+        self.centerFrame = tk.Frame(self.mainFrame, bg=winconfig["bgcolor"])
+        self.centerFrame.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        self.centerFrame.config(width=1500, height=843)  # Adjust as needed
+        self.centerFrame.pack_propagate(False)  # Prevent auto-resizing
+
+        # Top Frame (Centered at the top)
+        self.topFrame = tk.Frame(self.mainFrame, bg="#202020", width=300, height=843)  # Adjust height if needed
+        self.topFrame.place(relx=0.5, y=0, anchor="n")  # Centered horizontally at the top
+        self.topFrame.pack_propagate(False)  # Prevent resizing
+
+        # Left Frame (Navigation / Tool List)
+        self.leftFrame = tk.Frame(self.mainFrame, bg="#202020", width=300, height=843)
+        self.leftFrame.place(x=0, rely=0.5, anchor="w")  # Position on the left center
+        self.leftFrame.pack_propagate(False)  # Prevent resizing
+
+
+        # Right Frame (Navigation / Tool List)
+        self.rightFrame = tk.Frame(self.mainFrame, bg="#202020", width=300, height=843)
+        self.rightFrame.place(relx=1.0, rely=0.5, anchor="e")  # Corrected Positioning
+        self.rightFrame.pack_propagate(False)  # Prevent resizing
+
+        labelFontConfiguration = font.Font(family=winconfig["fonttype"], size=winconfig["fontsize"]+4, weight="bold")
+        labelFontConfiguration2 = font.Font(family=winconfig["fonttype"], size=winconfig["fontsize"], weight="bold")
+
+        # Create the label inside topFrame
+        labelidCode = Entry(self.topFrame, width=12,font=labelFontConfiguration, justify='center')
+        tool_id = self.ToolData[0] if self.ToolData else "No Tool ID"  # Default value if self.ToolData is empty
+        labelidCode.insert(0, tool_id)  # Set default value
+        labelidCode.config(state='readonly')  # Make it readonly
+        labelidCode.grid(row=0, column=0, pady=20)  # Add some padding for better spacing
+        print("Tool ID to be inserted:", tool_id)
+
+
+
+
+
+
+
+        # Create the label inside topFrame for tool name
+        toolNamelabel = Label(self.topFrame, text="Tool-Name:", bg=winconfig["bgcolor"], fg=winconfig["fontcolor"], font=labelFontConfiguration)
+        toolNamelabel.grid(row=0, column=1, padx=5, pady=80)
+
+        # Replace Combobox with an Entry widget for tool name
+        toolNameVar = StringVar()
+        toolNameEntry = Entry(self.topFrame, textvariable=toolNameVar, font=labelFontConfiguration2, width=32, justify='center')
+        toolNameEntry.grid(row=0, column=2, padx=5, pady=5, sticky='w')
+
+        # Create the Listbox for filtered values (hidden by default)
+        toolNameListBox = Listbox(self.topFrame, height=5, font=labelFontConfiguration2, bg='white', selectmode=SINGLE)
+        toolNameListBox.place_forget()  # Initially hide the Listbox
+
+        # Bind key events for filtering and interacting with the Listbox
+        toolNameEntry.bind('<KeyRelease>', lambda event: filter_tool_name(event, toolNameEntry, self.toolNameExamples, toolNameListBox))
+        toolNameListBox.bind('<ButtonRelease-1>', lambda event: select_from_listbox(event, toolNameEntry, toolNameListBox))
+
+        def filter_tool_name(event, entry, values, listbox):
+            """Filters values based on input and updates the Listbox."""
+            typed_value = entry.get()
+            if typed_value == "":
+                filtered_values = values  # Reset list if empty
+            else:
+                filtered_values = [item for item in values if typed_value.lower() in item.lower()]
+
+            # Update the Listbox with filtered values
+            listbox.delete(0, tk.END)
+            for item in filtered_values:
+                listbox.insert(tk.END, item)
+
+            # Adjust Listbox width and height dynamically
+            listbox_width = entry.winfo_width()  # Match width of the entry
+            listbox.config(width=listbox_width)  # Set width to entry width
+
+            listbox_height = min(len(filtered_values), 5)  # Limit the height to 5 items
+            listbox.config(height=listbox_height)  # Adjust height based on the number of filtered items
+
+            if filtered_values:  # If there are matches, show the Listbox
+                listbox.place(x=entry.winfo_x(), y=entry.winfo_y() + entry.winfo_height(), width=listbox_width)
+                listbox.lift()  # Make sure the listbox is on top
+            else:
+                listbox.place_forget()  # Hide the Listbox if no matches
+
+        def select_from_listbox(event, entry, listbox):
+            """Select an option from the Listbox and set it in the Entry."""
+            selected_index = listbox.curselection()
+            if selected_index:
+                selected_value = listbox.get(selected_index[0])
+                entry.delete(0, tk.END)  # Clear the Entry field
+                entry.insert(0, selected_value)  # Insert the selected value
+                listbox.place_forget()  # Hide the Listbox after selection
+
+        # Ensure focus remains on the entry field
+        toolNameEntry.focus_set()
+
+        # Create the label inside topFrame for tool number
+        toolNumberlabel = Label(self.topFrame, text="Tool-Nr.:", bg=winconfig["bgcolor"], fg=winconfig["fontcolor"], font=labelFontConfiguration)
+        toolNumberlabel.grid(row=0, column=3)  # Add some padding for better spacing
+
+        toolNumberentry = Entry(self.topFrame, font=labelFontConfiguration, width=10, justify='center')
+        toolNumberentry.grid(row=0, column=4)
+
+        # Function to close the listbox when clicking outside the toolNameEntry box
+        def close_listbox(event):
+            if toolNameListBox.winfo_ismapped():  # Check if the listbox is visible
+                if toolNameEntry.winfo_containing(event.x_root, event.y_root) is None and toolNameListBox.winfo_containing(event.x_root, event.y_root) is None:
+                    toolNameListBox.place_forget()  # Hide the Listbox when clicking outside
+
+        # Bind click event to the root window to detect clicks outside the Entry and Listbox
+        self.topFrame.bind('<Button-1>', close_listbox)  # Replace self.topFrame with the root window if needed
+
+
+
+        # Function to close the listbox if the click is outside the entry and listbox
+        def close_listbox(event):
+            if toolNameListBox.winfo_ismapped():  # Check if the listbox is visible
+                # Get the coordinates of the click and the positions of the entry and listbox
+                entry_pos = toolNameEntry.winfo_rootx(), toolNameEntry.winfo_rooty()
+                listbox_pos = toolNameListBox.winfo_rootx(), toolNameListBox.winfo_rooty()
+
+                entry_width = toolNameEntry.winfo_width()
+                listbox_width = toolNameListBox.winfo_width()
+                listbox_height = toolNameListBox.winfo_height()
+
+                # Check if the click is outside the entry or listbox
+                if not (entry_pos[0] <= event.x <= entry_pos[0] + entry_width and entry_pos[1] <= event.y <= entry_pos[1] + toolNameEntry.winfo_height()) and \
+                not (listbox_pos[0] <= event.x <= listbox_pos[0] + listbox_width and listbox_pos[1] <= event.y <= listbox_pos[1] + listbox_height):
+                    toolNameListBox.place_forget()  # Hide the Listbox
+
+        # Bind click event to the root window to detect clicks outside the Entry and Listbox
+        self.mainFrame = self.topFrame.winfo_toplevel()
+        self.mainFrame.bind('<Button-1>', close_listbox)  # Replace self.topFrame with the root window if needed
+
+
+        # Create the label inside topFrame for tool number
+        toolNumberlabel = Label(self.topFrame, text="Tool-Nr.:", bg=winconfig["bgcolor"], fg=winconfig["fontcolor"], font=labelFontConfiguration)
+        toolNumberlabel.grid(row=0, column=3)  # Add some padding for better spacing
+
+        toolNumberentry = Entry(self.topFrame, font=labelFontConfiguration, width=10, justify='center')
+        toolNumberentry.grid(row=0, column=4)
+
+        data=[]
+        buttonleftside = tk.Button(self.rightFrame, text="Weiter >>",command=lambda: self.toolDataInput(self.toolType),font=(winconfig["fonttype"], winconfig["fontsize"]+4,"bold"),bg=winconfig["fontcolor"])
+        buttonleftside.place(relx=0.5, rely=0.5, anchor="center")  # Center in leftFrame
+
+        data=[]
+        buttonleftside = tk.Button(self.leftFrame, text="<< Zurück",command=lambda: self.selectToolType(data),font=(winconfig["fonttype"], winconfig["fontsize"]+4,"bold"),bg=winconfig["fontcolor"])
+        buttonleftside.place(relx=0.5, rely=0.5, anchor="center")  # Center in leftFrame
+
+
+        entries = []
+        buttons = []
+        entries2 = []
+
+        # Default button image
+        fallback_image_path = paths["imgpaths"]+"toolicons/plus.png"
+        fallback_image = Image.open(fallback_image_path)
+        fallback_image = fallback_image.resize((200, 283), Image.Resampling.LANCZOS)  # Resize if needed
+        tk_fallback_image = ImageTk.PhotoImage(fallback_image)
+
+
+        self.buttonHerstellerComp1 = Button(self.centerFrame,text="Hersteller1", command=lambda: self.herstellerListe(self.buttonHerstellerComp1),font=labelFontConfiguration2, bg=winconfig["bgcolor"], fg=winconfig["fontcolor"], width=10, justify='center')
+        self.buttonHerstellerComp1.grid(row=1, column=0, padx=5, pady=5)
+
+        self.buttonHerstellerComp2 = Button(self.centerFrame,text="Hersteller2", command=lambda: self.herstellerListe(self.buttonHerstellerComp2),font=labelFontConfiguration2, bg=winconfig["bgcolor"], fg=winconfig["fontcolor"], width=10, justify='center')
+        self.buttonHerstellerComp2.grid(row=1, column=1, padx=5, pady=5)
+
+        self.buttonHerstellerComp3 = Button(self.centerFrame,text="Hoffmann", command=lambda: self.herstellerListe(self.buttonHerstellerComp3),font=labelFontConfiguration2, bg=winconfig["bgcolor"], fg=winconfig["fontcolor"], width=10, justify='center',state="disabled")
+        self.buttonHerstellerComp3.grid(row=1, column=2, padx=5, pady=5)
+
+        self.buttonHerstellerComp4 = Button(self.centerFrame,text="Hersteller3", command=lambda: self.herstellerListe(self.buttonHerstellerComp4),font=labelFontConfiguration2, bg=winconfig["bgcolor"], fg=winconfig["fontcolor"], width=10, justify='center')
+        self.buttonHerstellerComp4.grid(row=1, column=3, padx=5, pady=5)
+
+        for i in range(4):
+            entry = Entry(self.centerFrame, font=labelFontConfiguration, bg=winconfig["bgcolor"], fg=winconfig["fontcolor"], width=10, justify='center')
+
+            if i == 2:
+                entry.insert(0, "308196")  # Set default value
+                entry.config(state='readonly')  # Make it readonly
+            entry.grid(row=2, column=i, padx=5, pady=5)
+            entries.append(entry)
+
+            label = Label(self.centerFrame, text="Art.Nr:", bg=winconfig["bgcolor"], fg=winconfig["fontcolor"],font=labelFontConfiguration2)
+            label.grid(row=2, column=i, sticky='w', padx=5, pady=5)
+
+        buttonComp1 = Button(
+            self.centerFrame,
+            image=tk_fallback_image,
+            width=250,
+            height=250,
+            bg=winconfig["fontcolor"]
+        )
+        buttonComp1.grid(row=3, column=0, padx=20, pady=20)
+        buttonComp1.image = tk_fallback_image
+        buttonComp1.config(command=lambda e=entries[0], b=buttonComp1 : self.selectedHersteller(e, b,self.buttonHerstellerComp1))  # Fix button reference
+        buttons.append(buttonComp1)
+
+        buttonComp2 = Button(
+            self.centerFrame,
+            image=tk_fallback_image,
+            width=250,
+            height=250,
+            bg=winconfig["fontcolor"]
+        )
+        buttonComp2.grid(row=3, column=1, padx=20, pady=20)
+        buttonComp2.image = tk_fallback_image
+        buttonComp2.config(command=lambda e=entries[1], b=buttonComp2 : self.selectedHersteller(e, b,self.buttonHerstellerComp2))  # Fix button reference
+        buttons.append(buttonComp2)
+
+        buttonComp3 = Button(
+            self.centerFrame,
+            image=tk_fallback_image,
+            width=250,
+            height=250,
+            bg=winconfig["fontcolor"]
+        )
+        buttonComp3.grid(row=3, column=2, padx=20, pady=20)
+        buttonComp3.image = tk_fallback_image
+        buttonComp3.config(command=lambda e=entries[2], b=buttonComp3 : self.selectedHersteller(e, b,self.buttonHerstellerComp3))  # Fix button reference
+        buttons.append(buttonComp3)
+
+        buttonComp4 = Button(
+            self.centerFrame,
+            image=tk_fallback_image,
+            width=250,
+            height=250,
+            bg=winconfig["fontcolor"]
+        )
+        buttonComp4.grid(row=3, column=3, padx=20, pady=20)
+        buttonComp4.image = tk_fallback_image
+        buttonComp4.config(command=lambda e=entries[3], b=buttonComp4 : self.selectedHersteller(e, b,self.buttonHerstellerComp4))  # Fix button reference
+        buttons.append(buttonComp4)
+        # Automatically click the third button
+        self.centerFrame.after(100, lambda: buttons[2].invoke())
+
+    def selectedHersteller(self,entry, button,Herrsteller):
+        Herrsteller=Herrsteller["text"]
+        if Herrsteller=="Hoffmann":
+            self.HoffmannItemImage(entry,button)
+        elif Herrsteller=="Ingersoll":
+            self.IngersollItemImage(entry,button)
+        else:
+            self.IngersollItemImage(entry,button)
+
+
+    def IngersollItemImage(self, entry, button):
+        """Handles image fetching and displaying for the given entry."""
+
+        def show_loading_progress( button):
+            """Show a loading progress bar below the button."""
+            self.progress = ttk.Progressbar(button, orient="horizontal", length=200, mode="determinate")
+            self.progress.place(relx=0.5, rely=0.9, anchor="center")  # Position at bottom center
+
+            def update_progress(value=0):
+                if value <= 70:
+                    self.progress["value"] = value
+                    button.after(40, update_progress, value + 1)  # Update every 80ms
+                else:
+                    print("70%")
+                    # self.progress.destroy()  # Remove progress bar after completion
+
+            update_progress()
+
+        def get_image_with_title(url, target_title="Foto / Standardbild"):
+            """Fetches the image URL from the webpage."""
+            try:
+                with sync_playwright() as p:
+                    browser = p.chromium.launch(headless=True)
+                    page = browser.new_page()
+                    page.goto(url, wait_until="load")
+
+                    try:
+                        page.wait_for_selector("img[title]", timeout=10000)
+                    except:
+                        print("No image with title found within timeout.")
+                        browser.close()
+                        return None
+
+                    page.evaluate("window.scrollTo(0, document.body.scrollHeight);")
+                    images = page.locator("img").all()
+                    for img in images:
+                        title = img.get_attribute("title")
+                        print("Found:", title)
+                        if title and target_title.lower() in title.lower():
+                            img_url = img.get_attribute("src")
+
+                            if img_url and img_url.startswith("/"):
+                                img_url = "https://toolsunited.com" + img_url
+
+                            print("Image found:", img_url)
+                            browser.close()
+                            return img_url  
+
+                    print("No matching image found.")
+                    browser.close()
+                    return None  
+
+            except Exception as e:
+                print("Error:", e)
+                return None
+
+        def display_image(button, img_url):
+            """Displays the fetched image on the button."""
+            try:
+                response = requests.get(img_url)
+                response.raise_for_status()
+                img_data = BytesIO(response.content)
+
+                img = Image.open(img_data)
+                
+                # Maintain aspect ratio while fitting inside 250x250
+                img.thumbnail((250, 250), Image.Resampling.LANCZOS)
+
+                img_tk = ImageTk.PhotoImage(img)
+
+                button.config(image=img_tk)
+                button.image = img_tk  # Keep reference to avoid garbage collection
+
+                def update_progress(value=70):
+                    if value <= 100:
+                        self.progress["value"] = value
+                        button.after(10, update_progress, value + 1)  # Update every 10ms
+                    else:
+                        print("100%")
+                        self.progress.destroy()  # Remove progress bar after completion
+
+                update_progress()
+
+
+
+            except Exception as e:
+                print("Error loading image:", e)
+                img = Image.open(self.paths["imgpaths"] + "NOTFOUND.png")
+                img = img.resize((250, 250))
+                img_tk = ImageTk.PhotoImage(img)
+
+                button.config(image=img_tk)
+                button.image = img_tk
+
+        def on_button_click():
+            url = f"https://toolsunited.com/DE/TuMenu/ShowResult?search=[[%22Volltext%C2%A7{entry.get()}%22],%22Root%22,0,100,%22default%22,true,[],%22ToolsUnited%22]"
+
+            # Start progress bar immediately BEFORE loading the image
+            show_loading_progress(button)
+
+            def fetch_image():
+                img_url = get_image_with_title(url)
+
+                def update_ui():
+                    if img_url:
+                        display_image(button, img_url)
+                    else:
+                        messagebox.showwarning("Not Found", "Leider Bild ist nicht verfügbar\nbitte kontrollieren Sie die Art.Nr. nochmal")
+                        print("No matching image found.")
+
+                        fallback_image_path = paths["imgpaths"] + "toolicons/Plus.png"
+                        fallback_image = Image.open(fallback_image_path)
+                        fallback_image = fallback_image.resize((200, 283), Image.Resampling.LANCZOS)
+                        tk_fallback_image = ImageTk.PhotoImage(fallback_image)
+
+                        button.config(text="Loading...", image=tk_fallback_image)
+                        button.image = tk_fallback_image  # Keep reference
+                # Update UI safely from main thread
+                button.after(0, update_ui)
+
+            # Run the fetching function in a separate thread
+            threading.Thread(target=fetch_image, daemon=True).start()
+
+        on_button_click()
+
+
+    def HoffmannItemImage(self, entry, button):
+        def fetch_image():
+            url_value = entry.get()
+            webpage_url = f"https://www.hoffmann-group.com/DE/de/hom/p/{url_value}"
+            fallback_image_path = paths["imgpaths"] + "toolicons/Loading.png"
+            
+            try:
+                fallback_image = Image.open(fallback_image_path)
+                
+                # Maintain aspect ratio while fitting inside 250x250
+                fallback_image.thumbnail((250, 250), Image.Resampling.LANCZOS)
+                
+                tk_fallback_image = ImageTk.PhotoImage(fallback_image)
+
+                # Update button text and image (Must use after to update UI from main thread)
+                button.after(0, lambda: button.config(text="Loading...", image=tk_fallback_image))
+                button.after(0, button.update)
+
+                response = requests.get(webpage_url)
+                soup = BeautifulSoup(response.text, 'html.parser')
+                image_tags = soup.find_all('img')
+
+                largest_image_url = None
+                largest_width = 0
+                largest_height = 0
+
+                for img_tag in image_tags:
+                    if 'src' in img_tag.attrs:
+                        img_url = img_tag['src']
+                        if not img_url.startswith("http"):
+                            img_url = f"https://www.hoffmann-group.com{img_url}"
+
+                        width = img_tag.get('width')
+                        height = img_tag.get('height')
+
+                        if width and height:
+                            width = int(width)
+                            height = int(height)
+
+                            if width * height > largest_width * largest_height:
+                                largest_image_url = img_url
+                                largest_width = width
+                                largest_height = height
+
+                if largest_image_url:
+                    response = requests.get(largest_image_url)
+                    image_data = response.content
+                    image = Image.open(BytesIO(image_data))
+                else:
+                    image = fallback_image  # Use fallback image if none found
+
+                # Maintain aspect ratio while fitting inside 250x250
+                image.thumbnail((250, 250), Image.Resampling.LANCZOS)
+
+                tk_image = ImageTk.PhotoImage(image)
+
+                # Update button image on the main thread
+                button.after(0, lambda: button.config(image=tk_image))
+                button.after(0, lambda: setattr(button, "image", tk_image))  # Prevent garbage collection
+
+
+            except requests.exceptions.RequestException:
+                tk_fallback_image = ImageTk.PhotoImage(fallback_image)
+                button.after(0, lambda: button.config(image=tk_fallback_image))
+                button.after(0, lambda: setattr(button, "image", tk_fallback_image))  # Prevent garbage collection
+
+        
+        def show_loading_progress( button):
+            """Show a loading progress bar below the button."""
+            progress = ttk.Progressbar(button, orient="horizontal", length=200, mode="determinate")
+            progress.place(relx=0.5, rely=0.9, anchor="center")  # Position at bottom center
+
+            def update_progress(value=0):
+                if value <= 100:
+                    progress["value"] = value
+                    button.after(20, update_progress, value + 1)  # Update every 80ms
+                else:
+                    print("70%")
+                    if progress:
+                        progress.destroy()  # Remove progress bar after completion
+
+            update_progress()
+
+        show_loading_progress(button)
+        # Run fetch_image in a separate thread
+        thread = threading.Thread(target=fetch_image)
+        thread.start()
+
+
+    def herstellerListe(self, buttonHersteller):
+        popup = tk.Toplevel()
+        popup.overrideredirect(True)  # Remove title bar
+        popup.update_idletasks()  # Ensure correct geometry calculations
+        popup.config(bg='#202020')
+
+        popup_width = 260
+        popup_height = 260
+
+        # Get screen width and height
+        screen_width = popup.winfo_screenwidth()
+        screen_height = popup.winfo_screenheight()
+
+        # Center the popup in the middle of the screen
+        x_position = (screen_width - popup_width) // 2
+        y_position = (screen_height - popup_height) // 2
+
+        popup.geometry(f"{popup_width}x{popup_height}+{x_position}+{y_position}")
+
+        # Force focus on the popup window
+        popup.focus_force()
+
+        # Function to handle button clicks and close the popup
+        def button_action(label):
+            print(f"Button clicked: {label}")
+            buttonHersteller.config(text=label)
+            buttonHersteller.update()
+            popup.destroy()  # Close popup when a button is clicked
+
+        # Function to close the popup when clicking outside
+        def close_popup(event):
+            if not popup.winfo_containing(event.x_root, event.y_root):
+                popup.destroy()
+
+        # Bind click event to the root window to check if clicked outside the popup
+        root = popup.winfo_toplevel()
+        root.bind("<Button-1>", close_popup)
+
+        herstellerimg = paths["imgpaths"] + "/toolicons/"
+
+        # Load images and labels
+        button_data = [
+            ("Hoffmann", "Hoffmann.png"),
+            ("Ingersoll", "Ingersoll.png"),
+            ("Walter", "Walter.png"),
+            ("Haimer", "Haimer.png"),
+            ("Alesa", "Alesa.png"),
+            ("Horn", "Horn.png"),
+            ("Gühring", "Gühring.png")
         ]
 
-        self.dataToolEntries = []
-        for idx,  toolDataEntryLabel in enumerate(toolDataEntriesLabels):
-            # Calculate the row and column positions based on the index
-            row = idx % 8
-            col = (idx // 8) * 2  # Multiplying by 2 to leave space for entries
+        # Load images and create buttons
+        images = []
+        buttons = []
 
-            labelFontConfiguration = font.Font(family=winconfig["fonttype"], size=winconfig["fontsize"], weight="bold")
-            addToolEntryLabel = tk.Label(self.centerFrame, text=toolDataEntryLabel, font=labelFontConfiguration, bg=winconfig["bgcolor"], fg=winconfig["fontcolor"])
-            addToolEntryLabel.grid(row=row, column=col, padx=10, pady=5, sticky='e')
+        for label, img_name in button_data:
+            img_path = herstellerimg + img_name
+            img = ImageTk.PhotoImage(Image.open(img_path).resize((70, 70)))
+            images.append(img)  # Store reference to avoid garbage collection
 
-            if toolDataEntryLabel== 'QR':
-                addToolDataEntry = tk.StringVar(value=data[idx])
-                iDCodeEntry = tk.Entry(self.centerFrame, textvariable=addToolDataEntry, font=("Helvetica", 11), state='disabled')
-                iDCodeEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
-            elif toolDataEntryLabel == 'Wo?':
-                addToolDataEntry = tk.StringVar(value=data[idx])
-                self.toolPlace=addToolDataEntry
-                toolPlaceEntry = ttk.Combobox(self.centerFrame, textvariable=addToolDataEntry, font=(winconfig["fonttype"], winconfig["fontsize"]), state='readonly') #entry1
-                toolPlaceEntry['values'] = toolPlaces
-                toolPlaceEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
-                self.toolPlace.trace_add('write', self.checkTNC640PlcAndTTDatasButton)
-            elif toolDataEntryLabel == 'Spannsys.':
-                addToolDataEntry = tk.StringVar(value=data[idx])
-                toolClampingSystemEntry = ttk.Combobox(self.centerFrame, textvariable=addToolDataEntry, font=(winconfig["fonttype"], winconfig["fontsize"]), state='readonly') #entry2
-                toolClampingSystemEntry['values'] = clampingSystems
-                toolClampingSystemEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
-            elif toolDataEntryLabel== 'Wzg_Name':
-                addToolDataEntry = tk.StringVar(value=data[idx])
-                self.toolNameListBox = tk.Listbox(self.centerFrame ,bg='white', font=(winconfig["fonttype"], winconfig["fontsize"]-2))
-                self.toolNameListBox.place_forget()
-                self.toolNameComboBox = ttk.Combobox(self.centerFrame,textvariable=addToolDataEntry,font=(winconfig["fonttype"], winconfig["fontsize"]-2))
-                self.toolNameComboBox.grid(row=row,column=col+1,padx=10, pady=5, sticky='w')
-            elif toolDataEntryLabel== 'Typ':
-                addToolDataEntry = tk.StringVar(value=data[idx])
-                toolTypeComboBox = ttk.Combobox(self.centerFrame, textvariable=addToolDataEntry, font=(winconfig["fonttype"], winconfig["fontsize"]), state='readonly')
-                toolTypeComboBox['value'] = toolTypes
-                toolTypeComboBox.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
-                self.toolTypeEntry=addToolDataEntry
-                self.toolTypeEntry.trace_add('write', self.toolTypeCheck)
-            elif toolDataEntryLabel == 'Wzg_ArtNr':
-                addToolDataEntry = tk.StringVar(value=data[idx])
-                self.toolEntry = tk.Listbox(self.centerFrame ,bg='white', font=(winconfig["fonttype"], winconfig["fontsize"]))
-                self.toolEntry.place_forget()
-                self.toolComoboBox = ttk.Combobox(self.centerFrame,textvariable=addToolDataEntry,font=(winconfig["fonttype"], winconfig["fontsize"]))
-                self.toolComoboBox.grid(row=row,column=col+1,padx=10, pady=5, sticky='w')
-            elif toolDataEntryLabel == "Aufn_ArtNr":  # Checking if it's the 7th entry (0-based index)
-                addToolDataEntry = tk.StringVar(value=data[idx])
-                toolHolderEntry = tk.Entry(self.centerFrame, textvariable=addToolDataEntry, font=("Helvetica", 11))
-                toolHolderEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
-                toolHolderEntry.config(state='disabled')  # Disabling the entry
-                self.toolHolderEntry=toolHolderEntry.get()
-            elif toolDataEntryLabel== 'Steigung':
-                addToolDataEntry = tk.StringVar(value=data[idx])
-                toolPitchEntry = tk.Entry(self.centerFrame, textvariable=addToolDataEntry, font=("Helvetica", 11))
-                toolPitchEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
-                self.toolPitch = toolPitchEntry
-                self.toolPitchEntry=addToolDataEntry
-                self.toolTypeCheck()
-            elif toolDataEntryLabel == 'Wzg_gesamtlänge':
-                addToolDataEntry = tk.StringVar(value=data[idx])
-                toolLengthEntry = tk.Entry(self.centerFrame, textvariable=addToolDataEntry, font=("Helvetica", 11))
-                toolLengthEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
-                self.toolLengthEntry = addToolDataEntry  # Store the value in an instance variable for later use
-            elif toolDataEntryLabel== 'Zusaufn_1':
-                addToolDataEntry = tk.StringVar(value=data[idx])
-                self.holderAddition1ListBox = tk.Listbox(self.centerFrame ,bg='white', font=(winconfig["fonttype"], winconfig["fontsize"]))
-                self.holderAddition1ListBox.place_forget()
-                self.holderAddition1ComboBox = ttk.Combobox(self.centerFrame,textvariable=addToolDataEntry,font=(winconfig["fonttype"], winconfig["fontsize"]))
-                self.holderAddition1ComboBox.grid(row=row,column=col+1,padx=10, pady=5, sticky='w')
-            elif toolDataEntryLabel== 'Zusaufn_2':  # Storing the entry widget of 'Zusaufn_2' (9th entry) for later use
-                addToolDataEntry = tk.StringVar(value=data[idx])
-                self.holderAddition2ListBox = tk.Listbox(self.centerFrame ,bg='white', font=(winconfig["fonttype"], winconfig["fontsize"]))
-                self.holderAddition2ListBox.place_forget()
-                self.holderAddition2ComboBox = ttk.Combobox(self.centerFrame,textvariable=addToolDataEntry,font=(winconfig["fonttype"], winconfig["fontsize"]))
-                self.holderAddition2ComboBox.grid(row=row,column=col+1,padx=10, pady=5, sticky='w')
-                style = ttk.Style()
-                style.configure("Custom.TCheckbutton", background=winconfig["bgcolor"],foreground=winconfig["fontcolor"],font=(winconfig["fonttype"], winconfig["fontsize"], "bold"))
-                self.holderAddition2CheckBoxValue = tk.IntVar()
-                self.holderAddition2CheckBox = ttk.Checkbutton(self.centerFrame, text="IKZ-Röhrchen", variable=self.holderAddition2CheckBoxValue, command=self.coolerTubeImgCheckBox, style="Custom.TCheckbutton")
-                self.holderAddition2CheckBox.grid(row=row,column=col +2)
-            else:
-                addToolDataEntry = tk.StringVar(value=data[idx])
-                toolDataEntry = tk.Entry(self.centerFrame, textvariable=addToolDataEntry, font=("Helvetica", 11))
-                toolDataEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
+            btn = tk.Button(popup, image=img, command=lambda lbl=label: button_action(lbl), width=70, height=70)
+            buttons.append(btn)
 
-            self.dataToolEntries.append(addToolDataEntry)
+        # Arrange buttons in a grid (3 in first row, 3 in second row, 1 in third row)
+        rows = [3, 3, 1]
+        index = 0
 
-        self.TNC640PlcAndTTDatenButton = tk.Button(self.centerFrame, text="TNC640+Laser", command=lambda: TNC640Laser(data[0],self.toolHolderEntry,self.toolLengthEntry.get()),font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
-        self.TNC640PlcAndTTDatenButton.grid(row=4, column=5, padx=10, pady=5)
-        self.TNC640PlcAndTTDatenButton.grid_remove()  # Hide it initially
+        for row, cols in enumerate(rows):
+            for col in range(cols):
+                if index < len(buttons):
+                    buttons[index].grid(row=row, column=col, padx=5, pady=5)
+                    index += 1
+
+        popup.image_refs = images  # Prevent garbage collection
 
 
-        # Create a global reference to the subplace Combobox
-        self.subPlace_comboBox = None
+    def rest(self):
+        print("Halo")
+        # toolDataEntriesLabels = ['QR',
+        #     'Wzg_Nummer', 'Wzg_Name', 'Typ','Wzg_Radius','Eckenradius','Spitzenwinkel','EinTauchwinkel','Schneiden','Schnittlänge','Wzg_Ausspannlänge','Wzg_gesamtlänge','Steigung',
+        #     'Wzg_ArtNr', 'Aufn_ArtNr', 'Zusaufn_1', 'Zusaufn_2', 'Spannsys.', 'Wo?'
+        # ]
 
-        # Function to handle updates
-        def showSubPlaceComboBox(event=None):
-            # Get the current value of the combobox
-            maschineComboBoxValue = self.toolPlace.get()
+        # self.dataToolEntries = []
+        # for idx,  toolDataEntryLabel in enumerate(toolDataEntriesLabels):
+        #     # Calculate the row and column positions based on the index
+        #     row = idx % 8
+        #     col = (idx // 8) * 2  # Multiplying by 2 to leave space for entries
 
-            # Destroy the previous subplace Combobox if it exists
-            if self.subPlace_comboBox:
-                self.subPlace_comboBox.destroy()
-                self.subPlace_comboBox = None
+        #     labelFontConfiguration = font.Font(family=winconfig["fonttype"], size=winconfig["fontsize"], weight="bold")
+        #     addToolEntryLabel = tk.Label(self.centerFrame, text=toolDataEntryLabel, font=labelFontConfiguration, bg=winconfig["bgcolor"], fg=winconfig["fontcolor"])
+        #     addToolEntryLabel.grid(row=row, column=col, padx=10, pady=5, sticky='e')
 
-            # Search for the selected place in the data
-            for dictionary in places:
-                if dictionary["placename"] == maschineComboBoxValue:
-                    if dictionary["status"] == "place":
-                        # Extract subplace names
-                        subplace_names = [subplace["subplacename"] for subplace in dictionary.get("subplace", [])]
-                        if subplace_names:
-                            # Create a new subplace Combobox
-                            self.subPlace_Label= tk.Label(self.centerFrame, text="Unterplatz", font=labelFontConfiguration, bg=winconfig["bgcolor"], fg=winconfig["fontcolor"])
-                            self.subPlace_Label.grid(row=3, column=4, padx=10, pady=5, sticky='e')
-                            self.subPlace_comboBox = ttk.Combobox(self.centerFrame, values=subplace_names,font=(winconfig["fonttype"], winconfig["fontsize"]), state='readonly',default=None)
-                            self.subPlace_comboBox.grid(row=3, column=5, padx=5, pady=5, sticky="ew")
-                        else:
-                            print("No subplaces available.")
-                    elif dictionary["status"] == "maschine":
-                        print("Selected item is a machine. Subplace Combobox removed.")
-                    break
-            else:
-                print("No matching place found.")
+        #     if toolDataEntryLabel== 'QR':
+        #         addToolDataEntry = tk.StringVar(value=data[idx])
+        #         iDCodeEntry = tk.Entry(self.centerFrame, textvariable=addToolDataEntry, font=("Helvetica", 11), state='disabled')
+        #         iDCodeEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
+        #     elif toolDataEntryLabel == 'Wo?':
+        #         addToolDataEntry = tk.StringVar(value=data[idx])
+        #         self.toolPlace=addToolDataEntry
+        #         toolPlaceEntry = ttk.Combobox(self.centerFrame, textvariable=addToolDataEntry, font=(winconfig["fonttype"], winconfig["fontsize"]), state='readonly') #entry1
+        #         toolPlaceEntry['values'] = toolPlaces
+        #         toolPlaceEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
+        #         self.toolPlace.trace_add('write', self.checkTNC640PlcAndTTDatasButton)
+        #     elif toolDataEntryLabel == 'Spannsys.':
+        #         addToolDataEntry = tk.StringVar(value=data[idx])
+        #         toolClampingSystemEntry = ttk.Combobox(self.centerFrame, textvariable=addToolDataEntry, font=(winconfig["fonttype"], winconfig["fontsize"]), state='readonly') #entry2
+        #         toolClampingSystemEntry['values'] = clampingSystems
+        #         toolClampingSystemEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
+        #     elif toolDataEntryLabel== 'Wzg_Name':
+        #         addToolDataEntry = tk.StringVar(value=data[idx])
+        #         self.toolNameListBox = tk.Listbox(self.centerFrame ,bg='white', font=(winconfig["fonttype"], winconfig["fontsize"]-2))
+        #         self.toolNameListBox.place_forget()
+        #         self.toolNameComboBox = ttk.Combobox(self.centerFrame,textvariable=addToolDataEntry,font=(winconfig["fonttype"], winconfig["fontsize"]-2))
+        #         self.toolNameComboBox.grid(row=row,column=col+1,padx=10, pady=5, sticky='w')
+        #     elif toolDataEntryLabel== 'Typ':
+        #         addToolDataEntry = tk.StringVar(value=data[idx])
+        #         toolTypeComboBox = ttk.Combobox(self.centerFrame, textvariable=addToolDataEntry, font=(winconfig["fonttype"], winconfig["fontsize"]), state='readonly')
+        #         toolTypeComboBox['value'] = toolTypes
+        #         toolTypeComboBox.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
+        #         self.toolTypeEntry=addToolDataEntry
+        #         self.toolTypeEntry.trace_add('write', self.toolTypeCheck)
+        #     elif toolDataEntryLabel == 'Wzg_ArtNr':
+        #         addToolDataEntry = tk.StringVar(value=data[idx])
+        #         self.toolEntry = tk.Listbox(self.centerFrame ,bg='white', font=(winconfig["fonttype"], winconfig["fontsize"]))
+        #         self.toolEntry.place_forget()
+        #         self.toolComoboBox = ttk.Combobox(self.centerFrame,textvariable=addToolDataEntry,font=(winconfig["fonttype"], winconfig["fontsize"]))
+        #         self.toolComoboBox.grid(row=row,column=col+1,padx=10, pady=5, sticky='w')
+        #     elif toolDataEntryLabel == "Aufn_ArtNr":  # Checking if it's the 7th entry (0-based index)
+        #         addToolDataEntry = tk.StringVar(value=data[idx])
+        #         toolHolderEntry = tk.Entry(self.centerFrame, textvariable=addToolDataEntry, font=("Helvetica", 11))
+        #         toolHolderEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
+        #         toolHolderEntry.config(state='disabled')  # Disabling the entry
+        #         self.toolHolderEntry=toolHolderEntry.get()
+        #     elif toolDataEntryLabel== 'Steigung':
+        #         addToolDataEntry = tk.StringVar(value=data[idx])
+        #         toolPitchEntry = tk.Entry(self.centerFrame, textvariable=addToolDataEntry, font=("Helvetica", 11))
+        #         toolPitchEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
+        #         self.toolPitch = toolPitchEntry
+        #         self.toolPitchEntry=addToolDataEntry
+        #         self.toolTypeCheck()
+        #     elif toolDataEntryLabel == 'Wzg_gesamtlänge':
+        #         addToolDataEntry = tk.StringVar(value=data[idx])
+        #         toolLengthEntry = tk.Entry(self.centerFrame, textvariable=addToolDataEntry, font=("Helvetica", 11))
+        #         toolLengthEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
+        #         self.toolLengthEntry = addToolDataEntry  # Store the value in an instance variable for later use
+        #     elif toolDataEntryLabel== 'Zusaufn_1':
+        #         addToolDataEntry = tk.StringVar(value=data[idx])
+        #         self.holderAddition1ListBox = tk.Listbox(self.centerFrame ,bg='white', font=(winconfig["fonttype"], winconfig["fontsize"]))
+        #         self.holderAddition1ListBox.place_forget()
+        #         self.holderAddition1ComboBox = ttk.Combobox(self.centerFrame,textvariable=addToolDataEntry,font=(winconfig["fonttype"], winconfig["fontsize"]))
+        #         self.holderAddition1ComboBox.grid(row=row,column=col+1,padx=10, pady=5, sticky='w')
+        #     elif toolDataEntryLabel== 'Zusaufn_2':  # Storing the entry widget of 'Zusaufn_2' (9th entry) for later use
+        #         addToolDataEntry = tk.StringVar(value=data[idx])
+        #         self.holderAddition2ListBox = tk.Listbox(self.centerFrame ,bg='white', font=(winconfig["fonttype"], winconfig["fontsize"]))
+        #         self.holderAddition2ListBox.place_forget()
+        #         self.holderAddition2ComboBox = ttk.Combobox(self.centerFrame,textvariable=addToolDataEntry,font=(winconfig["fonttype"], winconfig["fontsize"]))
+        #         self.holderAddition2ComboBox.grid(row=row,column=col+1,padx=10, pady=5, sticky='w')
+        #         style = ttk.Style()
+        #         style.configure("Custom.TCheckbutton", background=winconfig["bgcolor"],foreground=winconfig["fontcolor"],font=(winconfig["fonttype"], winconfig["fontsize"], "bold"))
+        #         self.holderAddition2CheckBoxValue = tk.IntVar()
+        #         self.holderAddition2CheckBox = ttk.Checkbutton(self.centerFrame, text="IKZ-Röhrchen", variable=self.holderAddition2CheckBoxValue, command=self.coolerTubeImgCheckBox, style="Custom.TCheckbutton")
+        #         self.holderAddition2CheckBox.grid(row=row,column=col +2)
+        #     else:
+        #         addToolDataEntry = tk.StringVar(value=data[idx])
+        #         toolDataEntry = tk.Entry(self.centerFrame, textvariable=addToolDataEntry, font=("Helvetica", 11))
+        #         toolDataEntry.grid(row=row, column=col + 1, padx=10, pady=5, sticky='w')
 
-        # Bind user selection and trace variable changes
-        toolPlaceEntry.bind("<<ComboboxSelected>>", showSubPlaceComboBox)
-        self.toolPlace.trace_add("write", lambda *args: showSubPlaceComboBox())
+        #     self.dataToolEntries.append(addToolDataEntry)
 
 
-        self.clearFrameRight()
-        self.buttonsFrame = tk.Frame(self.mainFrame, bg=winconfig["bgcolor"])
-        self.buttonsFrame.place(relx=0.95, rely=0.42, anchor=tk.E)
-        self.rightFrame = tk.Frame(self.mainFrame, bg=winconfig["bgcolor"])
-        self.rightFrame.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
 
 
-        try:
-            # Attempt to open the specified image
-            toolHolderEntryImage = Image.open(paths["compimgs"] +self.toolHolderEntry[:6]+".jpg")
 
-        except FileNotFoundError:
-            # If the image is not found, open the default image
-            toolHolderEntryImage = Image.open(paths["compimgs"]+"NOTFOUND.png")
 
-        # Resize the image to fit the label
-        toolHolderEntryImage = toolHolderEntryImage.resize((150, 150), Image.LANCZOS)
-        # Rotate the image
-        toolHolderEntryImage = toolHolderEntryImage.rotate(0, expand=True)
-        # Convert the image to a PhotoImage object for Tkinter
-        toolHolderEntryPhoto = ImageTk.PhotoImage(toolHolderEntryImage)
 
-        toolHolderEntryImageLabel = tk.Label(self.rightFrame, image=toolHolderEntryPhoto)
-        toolHolderEntryImageLabel.image = toolHolderEntryPhoto  # Keep a reference to avoid garbage collection
-        toolHolderEntryImageLabel.grid(row=0,column=2,padx=50)
 
-        measurementsButton = tk.Button(self.buttonsFrame,width=20, text="Messwerte Übernehmen", command=lambda: self.messwerte_uebernehmen, font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
-        measurementsButton.grid(row=0, column=7, padx=10, pady=10, sticky='w')
 
-        takePictureButton = tk.Button(self.buttonsFrame, width=20,text="Bild machen", command=self.openCamera, font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
-        takePictureButton.grid(row=1, column=7, padx=10, pady=10, sticky='w')
 
-        toolDatasSubmitButton = tk.Button(self.buttonsFrame, width=20,text="EinFügen", command=self.toolDatasSubmitButton, font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
-        toolDatasSubmitButton.grid(row=2,column=7, padx=10, pady=10, sticky='w')
 
-        cancelButton = tk.Button(self.buttonsFrame, width=20,text="Abbrechen", command=self.goHome, font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
-        cancelButton.grid(row=3, column=7, padx=10, pady=10, sticky='w')
 
-        self.toolImageLabel = tk.Label(self.rightFrame)  # Label to display the image
-        self.toolImageLabel.grid(row=0,column=0,padx=50)
+        # self.TNC640PlcAndTTDatenButton = tk.Button(self.centerFrame, text="TNC640+Laser", command=lambda: TNC640Laser(data[0],self.toolHolderEntry,self.toolLengthEntry.get()),font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
+        # self.TNC640PlcAndTTDatenButton.grid(row=4, column=5, padx=10, pady=5)
+        # self.TNC640PlcAndTTDatenButton.grid_remove()  # Hide it initially
 
-        self.holderAddition1ImageLabel = tk.Label(self.rightFrame)  # Label to display the image
-        self.holderAddition1ImageLabel.grid(row=0,column=1,padx=50)
+
+        # # Create a global reference to the subplace Combobox
+        # self.subPlace_comboBox = None
+
+        # # Function to handle updates
+        # def showSubPlaceComboBox(event=None):
+        #     # Get the current value of the combobox
+        #     maschineComboBoxValue = self.toolPlace.get()
+
+        #     # Destroy the previous subplace Combobox if it exists
+        #     if self.subPlace_comboBox:
+        #         self.subPlace_comboBox.destroy()
+        #         self.subPlace_comboBox = None
+
+        #     # Search for the selected place in the data
+        #     for dictionary in places:
+        #         if dictionary["placename"] == maschineComboBoxValue:
+        #             if dictionary["status"] == "place":
+        #                 # Extract subplace names
+        #                 subplace_names = [subplace["subplacename"] for subplace in dictionary.get("subplace", [])]
+        #                 if subplace_names:
+        #                     # Create a new subplace Combobox
+        #                     self.subPlace_Label= tk.Label(self.centerFrame, text="Unterplatz", font=labelFontConfiguration, bg=winconfig["bgcolor"], fg=winconfig["fontcolor"])
+        #                     self.subPlace_Label.grid(row=3, column=4, padx=10, pady=5, sticky='e')
+        #                     self.subPlace_comboBox = ttk.Combobox(self.centerFrame, values=subplace_names,font=(winconfig["fonttype"], winconfig["fontsize"]), state='readonly',default=None)
+        #                     self.subPlace_comboBox.grid(row=3, column=5, padx=5, pady=5, sticky="ew")
+        #                 else:
+        #                     print("No subplaces available.")
+        #             elif dictionary["status"] == "maschine":
+        #                 print("Selected item is a machine. Subplace Combobox removed.")
+        #             break
+        #     else:
+        #         print("No matching place found.")
+
+        # # Bind user selection and trace variable changes
+        # toolPlaceEntry.bind("<<ComboboxSelected>>", showSubPlaceComboBox)
+        # self.toolPlace.trace_add("write", lambda *args: showSubPlaceComboBox())
+
+
+        # self.clearFrameRight()
+        # self.buttonsFrame = tk.Frame(self.mainFrame, bg=winconfig["bgcolor"])
+        # self.buttonsFrame.place(relx=0.95, rely=0.42, anchor=tk.E)
+        # self.rightFrame = tk.Frame(self.mainFrame, bg=winconfig["bgcolor"])
+        # self.rightFrame.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
+
+
+        # try:
+        #     # Attempt to open the specified image
+        #     toolHolderEntryImage = Image.open(paths["compimgs"] +self.toolHolderEntry[:6]+".jpg")
+
+        # except FileNotFoundError:
+        #     # If the image is not found, open the default image
+        #     toolHolderEntryImage = Image.open(paths["compimgs"]+"NOTFOUND.png")
+
+        # # Resize the image to fit the label
+        # toolHolderEntryImage = toolHolderEntryImage.resize((150, 150), Image.LANCZOS)
+        # # Rotate the image
+        # toolHolderEntryImage = toolHolderEntryImage.rotate(0, expand=True)
+        # # Convert the image to a PhotoImage object for Tkinter
+        # toolHolderEntryPhoto = ImageTk.PhotoImage(toolHolderEntryImage)
+
+        # toolHolderEntryImageLabel = tk.Label(self.rightFrame, image=toolHolderEntryPhoto)
+        # toolHolderEntryImageLabel.image = toolHolderEntryPhoto  # Keep a reference to avoid garbage collection
+        # toolHolderEntryImageLabel.grid(row=0,column=2,padx=50)
+
+        # measurementsButton = tk.Button(self.buttonsFrame,width=20, text="Messwerte Übernehmen", command=lambda: self.messwerte_uebernehmen, font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
+        # measurementsButton.grid(row=0, column=7, padx=10, pady=10, sticky='w')
+
+        # takePictureButton = tk.Button(self.buttonsFrame, width=20,text="Bild machen", command=self.openCamera, font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
+        # takePictureButton.grid(row=1, column=7, padx=10, pady=10, sticky='w')
+
+        # toolDatasSubmitButton = tk.Button(self.buttonsFrame, width=20,text="EinFügen", command=self.toolDatasSubmitButton, font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
+        # toolDatasSubmitButton.grid(row=2,column=7, padx=10, pady=10, sticky='w')
+
+        # cancelButton = tk.Button(self.buttonsFrame, width=20,text="Abbrechen", command=self.goHome, font=(winconfig["fonttype"], winconfig["fontsize"],"bold"),bg=winconfig["fontcolor"])
+        # cancelButton.grid(row=3, column=7, padx=10, pady=10, sticky='w')
+
+        # self.toolImageLabel = tk.Label(self.rightFrame)  # Label to display the image
+        # self.toolImageLabel.grid(row=0,column=0,padx=50)
+
+        # self.holderAddition1ImageLabel = tk.Label(self.rightFrame)  # Label to display the image
+        # self.holderAddition1ImageLabel.grid(row=0,column=1,padx=50)
         
-        self.holderAddition2ImageLabel = tk.Label(self.rightFrame)
-        self.holderAddition2ImageLabel.grid(row=0,column=3)
+        # self.holderAddition2ImageLabel = tk.Label(self.rightFrame)
+        # self.holderAddition2ImageLabel.grid(row=0,column=3)
 
-        toolRemarkLabel = tk.Label(self.centerFrame,text="Bemerkung",font=labelFontConfiguration, bg=winconfig["bgcolor"], fg=winconfig["fontcolor"])
-        toolRemarkLabel.grid(row=8,column=0)
+        # toolRemarkLabel = tk.Label(self.centerFrame,text="Bemerkung",font=labelFontConfiguration, bg=winconfig["bgcolor"], fg=winconfig["fontcolor"])
+        # toolRemarkLabel.grid(row=8,column=0)
 
-        self.toolRemarkEntry = tk.Text(self.centerFrame, height=4, width=25, font=(winconfig["fonttype"], winconfig["fontsize"]))
-        self.toolRemarkEntry.grid(row=8, column=1, padx=10, pady=10)
+        # self.toolRemarkEntry = tk.Text(self.centerFrame, height=4, width=25, font=(winconfig["fonttype"], winconfig["fontsize"]))
+        # self.toolRemarkEntry.grid(row=8, column=1, padx=10, pady=10)
 
-        self.toolComoboBox.bind('<KeyRelease>', self.toolArticlesListBoxUpdate)
-        self.toolEntry.bind('<ButtonRelease-1>', self.toolArticlesAndRadiusSelection)
-        self.toolComoboBox.bind("<<ValueChanged>>",self.toolArticlesAndRadiusSelection)
-        self.toolComoboBox.bind('<FocusOut>', self.toolArticlesListBoxHide)
-        self.toolEntry.bind('<FocusOut>', self.toolArticlesListBoxHide)
+        # self.toolComoboBox.bind('<KeyRelease>', self.toolArticlesListBoxUpdate)
+        # self.toolEntry.bind('<ButtonRelease-1>', self.toolArticlesAndRadiusSelection)
+        # self.toolComoboBox.bind("<<ValueChanged>>",self.toolArticlesAndRadiusSelection)
+        # self.toolComoboBox.bind('<FocusOut>', self.toolArticlesListBoxHide)
+        # self.toolEntry.bind('<FocusOut>', self.toolArticlesListBoxHide)
         
-        self.toolNameComboBox.bind('<KeyRelease>', self.toolNameListBoxUpdate)
-        self.toolNameListBox.bind('<ButtonRelease-1>', self.toolNameSelection)
-        self.toolNameComboBox.bind("<<ValueChanged>>",self.toolNameSelection)
-        self.toolNameComboBox.bind('<FocusOut>', self.toolNameListBoxHide)
-        self.toolNameListBox.bind('<FocusOut>', self.toolNameListBoxHide)
+        # self.toolNameComboBox.bind('<KeyRelease>', self.toolNameListBoxUpdate)
+        # self.toolNameListBox.bind('<ButtonRelease-1>', self.toolNameSelection)
+        # self.toolNameComboBox.bind("<<ValueChanged>>",self.toolNameSelection)
+        # self.toolNameComboBox.bind('<FocusOut>', self.toolNameListBoxHide)
+        # self.toolNameListBox.bind('<FocusOut>', self.toolNameListBoxHide)
         
-        self.holderAddition1ComboBox.bind('<KeyRelease>', self.holderAddition1ListBoxUpdate)
-        self.holderAddition1ListBox.bind('<ButtonRelease-1>', self.holderAddition1Selection)
-        self.holderAddition1ComboBox.bind("<<ValueChanged>>",self.holderAddition1Selection)
-        self.holderAddition1ComboBox.bind('<FocusOut>', self.holderAddition1ListBoxHide)
-        self.holderAddition1ListBox.bind('<FocusOut>', self.holderAddition1ListBoxHide)
+        # self.holderAddition1ComboBox.bind('<KeyRelease>', self.holderAddition1ListBoxUpdate)
+        # self.holderAddition1ListBox.bind('<ButtonRelease-1>', self.holderAddition1Selection)
+        # self.holderAddition1ComboBox.bind("<<ValueChanged>>",self.holderAddition1Selection)
+        # self.holderAddition1ComboBox.bind('<FocusOut>', self.holderAddition1ListBoxHide)
+        # self.holderAddition1ListBox.bind('<FocusOut>', self.holderAddition1ListBoxHide)
 
-        self.holderAddition2ComboBox.bind('<KeyRelease>', self.holderAddition1Update)
-        self.holderAddition2ListBox.bind('<ButtonRelease-1>', self.holderAddition2Selection)
-        self.holderAddition2ComboBox.bind("<<ValueChanged>>",self.holderAddition2Selection)
-        self.holderAddition2ComboBox.bind('<FocusOut>', self.holderAddition2ListBoxHide)
-        self.holderAddition2ListBox.bind('<FocusOut>', self.holderAddition2ListBoxHide)
+        # self.holderAddition2ComboBox.bind('<KeyRelease>', self.holderAddition1Update)
+        # self.holderAddition2ListBox.bind('<ButtonRelease-1>', self.holderAddition2Selection)
+        # self.holderAddition2ComboBox.bind("<<ValueChanged>>",self.holderAddition2Selection)
+        # self.holderAddition2ComboBox.bind('<FocusOut>', self.holderAddition2ListBoxHide)
+        # self.holderAddition2ListBox.bind('<FocusOut>', self.holderAddition2ListBoxHide)
         
+
+    def schaftToolInput(self):
+                # Load and resize the image
+            image = Image.open(paths["imgpaths"] + "schaftinput.png")
+            resized_image = image.resize((1500, 843), Image.Resampling.LANCZOS)  # Set desired width & height
+
+            # Convert to PhotoImage
+            photo = ImageTk.PhotoImage(resized_image)
+
+            # Create Label for the image
+            img_label = Label(self.centerFrame, image=photo, bg=winconfig["bgcolor"])
+
+            # Place in the center using relx and rely
+            img_label.place(relx=0.5, rely=0.5, anchor="center")
+
+            # Prevent garbage collection
+            img_label.image_ = photo
+
+            labelFontConfiguration = font.Font(family=winconfig["fonttype"], size=winconfig["fontsize"]+6, weight="bold")
+
+            label1=Label(self.centerFrame,text="Z",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label1.place(x=400,y=70)
+            entry1=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry1.place(x=430,y=70)
+
+
+
+            label2=Label(self.centerFrame,text="R2",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label2.place(x=440,y=450)
+            entry2=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry2.place(x=490,y=450)
+
+
+            label3=Label(self.centerFrame,text="\u2220",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label3.place(x=400,y=770)
+            entry3=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry3.place(x=440,y=770)
+
+            label4=Label(self.centerFrame,text="R",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label4.place(x=910,y=30)
+            entry4=Entry(self.centerFrame,font=labelFontConfiguration,width=6)
+            entry4.place(x=940,y=30)
+
+            label5=Label(self.centerFrame,text="L2",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label5.place(x=790,y=200)
+            entry5=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+            entry5.place(x=825,y=200)
+
+            label6=Label(self.centerFrame,text="L3",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label6.place(x=1060,y=230)
+            entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+            entry6.place(x=1095,y=230)
+
+
+            label6=Label(self.centerFrame,text="L",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label6.place(x=1200,y=400)
+            entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=8)
+            entry6.place(x=1230,y=400)
+
+    def mkToolInput(self):
+                # Load and resize the image
+            image = Image.open(paths["imgpaths"] + "mkinput.png")
+            resized_image = image.resize((1500, 843), Image.Resampling.LANCZOS)  # Set desired width & height
+
+            # Convert to PhotoImage
+            photo = ImageTk.PhotoImage(resized_image)
+
+            # Create Label for the image
+            img_label = Label(self.centerFrame, image=photo, bg=winconfig["bgcolor"])
+
+            # Place in the center using relx and rely
+            img_label.place(relx=0.5, rely=0.5, anchor="center")
+
+            # Prevent garbage collection
+            img_label.image_ = photo
+
+            labelFontConfiguration = font.Font(family=winconfig["fonttype"], size=winconfig["fontsize"]+6, weight="bold")
+
+            label1=Label(self.centerFrame,text="Z",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label1.place(x=370,y=90)
+            entry1=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry1.place(x=400,y=90)
+
+
+
+            label2=Label(self.centerFrame,text="R2",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label2.place(x=440,y=430)
+            entry2=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry2.place(x=490,y=430)
+
+
+            label3=Label(self.centerFrame,text="\u2220",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label3.place(x=370,y=725)
+            entry3=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry3.place(x=400,y=725)
+
+            label4=Label(self.centerFrame,text="R",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label4.place(x=850,y=80)
+            entry4=Entry(self.centerFrame,font=labelFontConfiguration,width=6)
+            entry4.place(x=880,y=80)
+
+            label5=Label(self.centerFrame,text="L2",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label5.place(x=670,y=185)
+            entry5=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+            entry5.place(x=705,y=185)
+
+            label6=Label(self.centerFrame,text="L3",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label6.place(x=1050,y=240)
+            entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+            entry6.place(x=1085,y=240)
+
+
+            label6=Label(self.centerFrame,text="L",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label6.place(x=1160,y=400)
+            entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=8)
+            entry6.place(x=1190,y=400)
+
+    def bohrerToolInput(self):
+                # Load and resize the image
+            image = Image.open(paths["imgpaths"] + "bohrerinput.png")
+            resized_image = image.resize((1500, 843), Image.Resampling.LANCZOS)  # Set desired width & height
+
+            # Convert to PhotoImage
+            photo = ImageTk.PhotoImage(resized_image)
+
+            # Create Label for the image
+            img_label = Label(self.centerFrame, image=photo, bg=winconfig["bgcolor"])
+
+            # Place in the center using relx and rely
+            img_label.place(relx=0.5, rely=0.5, anchor="center")
+
+            # Prevent garbage collection
+            img_label.image_ = photo
+
+            labelFontConfiguration = font.Font(family=winconfig["fonttype"], size=winconfig["fontsize"]+6, weight="bold")
+
+            label1=Label(self.centerFrame,text="Z",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label1.place(x=400,y=140)
+            entry1=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry1.place(x=430,y=140)
+
+
+
+            label3=Label(self.centerFrame,text="\u2220",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label3.place(x=400,y=620)
+            entry3=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry3.place(x=430,y=620)
+
+            label4=Label(self.centerFrame,text="R",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label4.place(x=910,y=25)
+            entry4=Entry(self.centerFrame,font=labelFontConfiguration,width=6)
+            entry4.place(x=940,y=25)
+
+            label5=Label(self.centerFrame,text="L2",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label5.place(x=770,y=190)
+            entry5=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+            entry5.place(x=805,y=190)
+
+            label6=Label(self.centerFrame,text="L3",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label6.place(x=1030,y=220)
+            entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+            entry6.place(x=1065,y=220)
+
+
+            label6=Label(self.centerFrame,text="L",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label6.place(x=1160,y=390)
+            entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=8)
+            entry6.place(x=1190,y=390)
+
+    def gewindeToolInput(self):
+                # Load and resize the image
+            image = Image.open(paths["imgpaths"] + "gewindeinput.png")
+            resized_image = image.resize((1500, 843), Image.Resampling.LANCZOS)  # Set desired width & height
+
+            # Convert to PhotoImage
+            photo = ImageTk.PhotoImage(resized_image)
+
+            # Create Label for the image
+            img_label = Label(self.centerFrame, image=photo, bg=winconfig["bgcolor"])
+
+            # Place in the center using relx and rely
+            img_label.place(relx=0.5, rely=0.5, anchor="center")
+
+            # Prevent garbage collection
+            img_label.image_ = photo
+
+            labelFontConfiguration = font.Font(family=winconfig["fonttype"], size=winconfig["fontsize"]+6, weight="bold")
+
+
+
+            label3=Label(self.centerFrame,text="P",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label3.place(x=370,y=580)
+            entry3=Entry(self.centerFrame,font=labelFontConfiguration,width=6)
+            entry3.place(x=400,y=580)
+
+            label4=Label(self.centerFrame,text="R",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label4.place(x=860,y=10)
+            entry4=Entry(self.centerFrame,font=labelFontConfiguration,width=6)
+            entry4.place(x=890,y=10)
+
+            label5=Label(self.centerFrame,text="L2",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label5.place(x=730,y=150)
+            entry5=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+            entry5.place(x=765,y=150)
+
+            label6=Label(self.centerFrame,text="L3",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label6.place(x=990,y=190)
+            entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+            entry6.place(x=1025,y=190)
+
+
+            label6=Label(self.centerFrame,text="L",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label6.place(x=1140,y=390)
+            entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=8)
+            entry6.place(x=1175,y=390)
+
+    def KugelToolInput(self):
+                # Load and resize the image
+            image = Image.open(paths["imgpaths"] + "kugelinput.png")
+            resized_image = image.resize((1500, 843), Image.Resampling.LANCZOS)  # Set desired width & height
+
+            # Convert to PhotoImage
+            photo = ImageTk.PhotoImage(resized_image)
+
+            # Create Label for the image
+            img_label = Label(self.centerFrame, image=photo, bg=winconfig["bgcolor"])
+
+            # Place in the center using relx and rely
+            img_label.place(relx=0.5, rely=0.5, anchor="center")
+
+            # Prevent garbage collection
+            img_label.image_ = photo
+
+            labelFontConfiguration = font.Font(family=winconfig["fonttype"], size=winconfig["fontsize"]+6, weight="bold")
+
+            label1=Label(self.centerFrame,text="Z",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label1.place(x=360,y=85)
+            entry1=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry1.place(x=390,y=85)
+
+
+
+            label2=Label(self.centerFrame,text="R2",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label2.place(x=440,y=430)
+            entry2=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry2.place(x=490,y=430)
+
+
+            label3=Label(self.centerFrame,text="\u2220",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label3.place(x=360,y=720)
+            entry3=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry3.place(x=390,y=720)
+
+            label4=Label(self.centerFrame,text="R",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label4.place(x=840,y=25)
+            entry4=Entry(self.centerFrame,font=labelFontConfiguration,width=6)
+            entry4.place(x=870,y=25)
+
+            label5=Label(self.centerFrame,text="L2",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label5.place(x=720,y=160)
+            entry5=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+            entry5.place(x=755,y=160)
+
+            label6=Label(self.centerFrame,text="L3",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label6.place(x=1020,y=190)
+            entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+            entry6.place(x=1055,y=190)
+
+
+            label6=Label(self.centerFrame,text="L",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label6.place(x=1160,y=350)
+            entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=8)
+            entry6.place(x=1190,y=350)
+
+    def TorusToolInput(self):
+                # Load and resize the image
+            image = Image.open(paths["imgpaths"] + "torusinput.png")
+            resized_image = image.resize((1500, 843), Image.Resampling.LANCZOS)  # Set desired width & height
+
+            # Convert to PhotoImage
+            photo = ImageTk.PhotoImage(resized_image)
+
+            # Create Label for the image
+            img_label = Label(self.centerFrame, image=photo, bg=winconfig["bgcolor"])
+
+            # Place in the center using relx and rely
+            img_label.place(relx=0.5, rely=0.5, anchor="center")
+
+            # Prevent garbage collection
+            img_label.image_ = photo
+
+            labelFontConfiguration = font.Font(family=winconfig["fonttype"], size=winconfig["fontsize"]+6, weight="bold")
+
+            label1=Label(self.centerFrame,text="Z",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label1.place(x=360,y=85)
+            entry1=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry1.place(x=390,y=85)
+
+
+
+            label2=Label(self.centerFrame,text="R2",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label2.place(x=440,y=430)
+            entry2=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry2.place(x=490,y=430)
+
+
+            label3=Label(self.centerFrame,text="\u2220",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label3.place(x=360,y=720)
+            entry3=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry3.place(x=390,y=720)
+
+            label4=Label(self.centerFrame,text="R",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label4.place(x=840,y=25)
+            entry4=Entry(self.centerFrame,font=labelFontConfiguration,width=6)
+            entry4.place(x=870,y=25)
+
+            label5=Label(self.centerFrame,text="L2",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label5.place(x=720,y=145)
+            entry5=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+            entry5.place(x=755,y=145)
+
+            label6=Label(self.centerFrame,text="L3",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label6.place(x=1020,y=175)
+            entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+            entry6.place(x=1055,y=175)
+
+
+            label6=Label(self.centerFrame,text="L",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label6.place(x=1160,y=350)
+            entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=8)
+            entry6.place(x=1190,y=350)
+
+    
+    def NutenToolInput(self):
+                # Load and resize the image
+            image = Image.open(paths["imgpaths"] + "nuteninput.png")
+            resized_image = image.resize((1500, 843), Image.Resampling.LANCZOS)  # Set desired width & height
+
+            # Convert to PhotoImage
+            photo = ImageTk.PhotoImage(resized_image)
+
+            # Create Label for the image
+            img_label = Label(self.centerFrame, image=photo, bg=winconfig["bgcolor"])
+
+            # Place in the center using relx and rely
+            img_label.place(relx=0.5, rely=0.5, anchor="center")
+
+            # Prevent garbage collection
+            img_label.image_ = photo
+
+            labelFontConfiguration = font.Font(family=winconfig["fonttype"], size=winconfig["fontsize"]+6, weight="bold")
+
+            label1=Label(self.centerFrame,text="Z",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label1.place(x=380,y=250)
+            entry1=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry1.place(x=410,y=250)
+
+
+
+            label2=Label(self.centerFrame,text="R2",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label2.place(x=440,y=505)
+            entry2=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+            entry2.place(x=490,y=505)
+
+
+            label4=Label(self.centerFrame,text="R",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label4.place(x=840,y=60)
+            entry4=Entry(self.centerFrame,font=labelFontConfiguration,width=6)
+            entry4.place(x=870,y=60)
+
+            label5=Label(self.centerFrame,text="L2",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label5.place(x=710,y=160)
+            entry5=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+            entry5.place(x=745,y=160)
+
+            label6=Label(self.centerFrame,text="L3",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label6.place(x=1010,y=215)
+            entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+            entry6.place(x=1045,y=215)
+
+
+            label6=Label(self.centerFrame,text="L",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+            label6.place(x=1170,y=370)
+            entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=8)
+            entry6.place(x=1200,y=370)
+
+    def ReibenToolInput(self):
+            # Load and resize the image
+        image = Image.open(paths["imgpaths"] + "reibahleinput.png")
+        resized_image = image.resize((1500, 843), Image.Resampling.LANCZOS)  # Set desired width & height
+
+        # Convert to PhotoImage
+        photo = ImageTk.PhotoImage(resized_image)
+
+        # Create Label for the image
+        img_label = Label(self.centerFrame, image=photo, bg=winconfig["bgcolor"])
+
+        # Place in the center using relx and rely
+        img_label.place(relx=0.5, rely=0.5, anchor="center")
+
+        # Prevent garbage collection
+        img_label.image_ = photo
+
+        labelFontConfiguration = font.Font(family=winconfig["fonttype"], size=winconfig["fontsize"]+6, weight="bold")
+
+        label1=Label(self.centerFrame,text="Z",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+        label1.place(x=360,y=180)
+        entry1=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+        entry1.place(x=390,y=180)
+
+
+
+
+        label3=Label(self.centerFrame,text="\u2220",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+        label3.place(x=360,y=600)
+        entry3=Entry(self.centerFrame,font=labelFontConfiguration,width=3)
+        entry3.place(x=390,y=600)
+
+        label4=Label(self.centerFrame,text="R",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+        label4.place(x=840,y=20)
+        entry4=Entry(self.centerFrame,font=labelFontConfiguration,width=6)
+        entry4.place(x=870,y=20)
+
+        label5=Label(self.centerFrame,text="L2",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+        label5.place(x=720,y=160)
+        entry5=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+        entry5.place(x=755,y=160)
+
+        label6=Label(self.centerFrame,text="L3",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+        label6.place(x=1010,y=200)
+        entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=4)
+        entry6.place(x=1045,y=200)
+
+
+        label6=Label(self.centerFrame,text="L",font=labelFontConfiguration,bg=winconfig["bgcolor"],fg=winconfig["fontcolor"])
+        label6.place(x=1160,y=350)
+        entry6=Entry(self.centerFrame,font=labelFontConfiguration,width=8)
+        entry6.place(x=1190,y=350)
+
+
+
+
+
     def editToolInputWindow(self, data):
         self.clearFrame()
         self.centerFrame = tk.Frame(self.mainFrame, bg=winconfig["bgcolor"])

@@ -251,7 +251,7 @@
         }
     ],
     "winconfig": {
-        "fullscreen": false,
+        "fullscreen": true,
         "fonttype": "Helvetica",
         "fontsize": 13,
         "fontcolor": "#facf0e",

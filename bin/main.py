@@ -68,7 +68,7 @@ class WelcomeWindow:
         # Start checking paths
         self.path_keys = list(paths.keys())  # Store keys for iteration
         self.current_index = 0  # Track which path is being checked
-        self.welcome_window.after(100, self.MTMLoad)  # Start checking
+        self.welcome_window.after(1, self.MTMLoad)  # Start checking
 
     def MTMLoad(self):
         """Check paths one by one, updating a single label dynamically."""
@@ -89,7 +89,7 @@ class WelcomeWindow:
                     # self.checkResult = False  # Prevent further execution
                     logging.warning(f"{key} Path not found: {path}")
 
-                    messagebox.showwarning("Error",f"{key} Path not found: {path}")
+                    # messagebox.showwarning("Error",f"{key} Path not found: {path}")
                     self.checkListe.append(f"{key} ❌")
                     
                     # self.welcome_window.destroy()  # Close the welcome window
@@ -106,7 +106,7 @@ class WelcomeWindow:
                 # self.checkResult = False  # Prevent further execution
                 logging.warning(f"{key} Path not found: {path}")
 
-                messagebox.showwarning("Error",f"{key} Path not found: {path}")
+                # messagebox.showwarning("Error",f"{key} Path not found: {path}")
                 self.checkListe.append(f"{key} ❌")
                 # self.welcome_window.destroy()  # Close the welcome window
                 # self.welcome.quit()  # Exit the program
@@ -117,7 +117,7 @@ class WelcomeWindow:
         elif self.checkResult:
             logging.info("Application started")
             # If all paths are valid, close the window after 5 seconds
-            self.welcome_window.after(500, self.close_welcome)
+            self.welcome_window.after(1, self.close_welcome)
             
 
 
@@ -670,9 +670,6 @@ class HauptFenster:
             for widget in self.center.winfo_children():
                 widget.destroy()
             # self.center.destroy()
-
-
-
 
 
     def databaseUpdate(self):
